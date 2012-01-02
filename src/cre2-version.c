@@ -5,7 +5,7 @@
 
   Abstract
 
-
+	Interface version functions.
 
   Copyright (C) 2012 Marco Maggi <marco.maggi-ipsu@poste.it>
 

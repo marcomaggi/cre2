@@ -143,6 +143,10 @@
 @acronym{ASCII}
 @end macro
 
+@macro asciiz{}
+@acronym{ASCIIZ}
+@end macro
+
 @macro cdrom{}
 @acronym{CDROM}
 @end macro
@@ -445,10 +449,14 @@ expression engines like those used in PCRE, Perl, and Python.
 The package is distributed under the terms of the @gnu{} General Public
 License (@gpl{}) and can be downloaded from:
 
-@center @url{http://gna.org/projects/@value{PACKAGE_NICKNAME}}
+@center @url{http://github.com/marcomaggi/@value{PACKAGE_NICKNAME}}
 
 @noindent
-Copyright @copyright{} @value{COPYRIGHT_YEARS} by @value{AUTHOR} @value{AUTHOR_EMAIL}
+Copyright @copyright{} @value{COPYRIGHT_YEARS} by @value{AUTHOR} @value{AUTHOR_EMAIL}@*
+Copyright @copyright{} 2011 by Keegan McAllister
+
+Portions of this document come from the source code of RE2 itself, see
+the file @file{LICENSE.re2} for the license notice.
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
@@ -493,6 +501,7 @@ entitled ``@gnu{} Free Documentation License''.
 
 @menu
 * overview::                    Overview of the package.
+* version::                     Version functions.
 
 Appendices
 
@@ -518,6 +527,38 @@ This document describes version @value{VERSION} of @value{PACKAGE}, a C
 language wrapper for the RE2 library, which is implemented in C++.  RE2
 is a fast, safe, thread--friendly alternative to backtracking regular
 expression engines like those used in PCRE, Perl, and Python.
+
+@c page
+@node version
+@chapter Version functions
+
+
+For an explanation of interface numbers as managed by @gnu{} Libtool
+@xref{Libtool versioning, interface, Libtool's versioning system,
+libtool, Shared library support for @gnu{}}.
+
+
+@deftypefun {const char *} cre2_version_string (void)
+Return a pointer to a statically allocated @asciiz{} string representing
+the interface version number.
+@end deftypefun
+
+
+@deftypefun int cre2_version_interface_current (void)
+Return an integer representing the library interface current number.
+@end deftypefun
+
+
+@deftypefun int cre2_version_interface_revision (void)
+Return an integer representing the library interface current revision
+number.
+@end deftypefun
+
+
+@deftypefun int cre2_version_interface_age (void)
+Return an integer representing the library interface current age.
+@end deftypefun
+
 
 
 @c page
