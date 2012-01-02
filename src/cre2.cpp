@@ -22,8 +22,9 @@ cre2_options *
 cre2_opt_new(void)
 /* Allocate and return a new options object. */
 {
-  // FIXME: This allocation may raise exceptions!!!
-  return reinterpret_cast<void*>(new RE2::Options());
+  // FIXME: is  this use of  "nothrow" good to avoid  raising exceptions
+  // when memory allocation fails and to return NULL instead?
+  return reinterpret_cast<void*>(new (std::nothrow) RE2::Options());
 }
 void
 cre2_opt_delete (cre2_options *opt)
@@ -80,8 +81,10 @@ cre2 *
 cre2_new (const char *pattern, int pattern_len, const cre2_options *opt)
 {
   re2::StringPiece pattern_re2(pattern, pattern_len);
-  // FIXME: This allocation may raise exceptions!!!
-  return reinterpret_cast<void*>(new RE2(pattern_re2, *reinterpret_cast<const RE2::Options *>(opt)));
+  // FIXME: is  this use of  "nothrow" good to avoid  raising exceptions
+  // when memory allocation fails and to return NULL instead?
+  return reinterpret_cast<void*>
+    (new (std::nothrow) RE2(pattern_re2, *reinterpret_cast<const RE2::Options *>(opt)));
 }
 void
 cre2_delete(cre2 *re)
