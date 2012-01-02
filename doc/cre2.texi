@@ -679,8 +679,10 @@ cre2_opt_delete(opt);
 
 
 @deftp {Opaque Type} cre2
-Opaque type for regular expression objects.  It is meant to be used to
-declare pointers to objects.
+Opaque type for regular expression objects; it is meant to be used to
+declare pointers to objects.  Instances of this type can be used for any
+number of matching operations and are safe for concurrent use by
+multiple threads.
 @end deftp
 
 
