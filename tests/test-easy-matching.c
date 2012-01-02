@@ -40,6 +40,22 @@ main (int argc, const char *const argv[])
   }
 
 /* ------------------------------------------------------------------ */
+/* wrong pattern */
+
+  pattern = "ci(ao";
+  text    = "ciao";
+  {
+    cre2_substring_t	match;
+    int			nmatch = 1;
+    int			retval;
+    retval = cre2_easy_match(pattern, strlen(pattern),
+			     text,    strlen(text),
+			     &match, nmatch);
+    if (2 != retval)
+      goto error;
+  }
+
+/* ------------------------------------------------------------------ */
 /* two groups */
 
   pattern = "(ciao) (hello)";

@@ -904,8 +904,9 @@ parenthetical subexpression, and so on.
 Like @cfunc{cre2_match} but expect a pointer to string as pattern.  Also
 the text is fully matched without anchoring.
 
-If the pattern is invalid: the return value is false, with no way to
-distinguish between this case and a no match result.
+If the text matches the pattern: the return value is @math{1}.  If the
+text does not match the pattern: the return value is @math{0}.  If the
+pattern is invalid: the return value is @math{2}.
 @end deftypefun
 
 @c page
