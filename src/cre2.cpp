@@ -103,7 +103,7 @@ cre2_error_string (const cre2 *re)
   return TO_CONST_RE2(re)->error().c_str();
 }
 void
-cre2_error_arg (const cre2 *re, cre2_string_t *arg)
+cre2_error_arg (const cre2 *re, cre2_substring_t *arg)
 {
   const std::string &argstr = TO_CONST_RE2(re)->error_arg();
   arg->data   = argstr.data();
@@ -122,17 +122,18 @@ cre2_program_size (const cre2 *re)
 int
 cre2_match (const cre2 *re , const char *text,
 	    int textlen, int startpos, int endpos, cre2_anchor_t anchor,
-	    cre2_string_t *match, int nmatch)
+	    cre2_substring_t *match, int nmatch)
 {
   re2::StringPiece text_re2(text, textlen);
-  // FIXME: exceptions?
-  re2::StringPiece *match_re2 = new re2::StringPiece[nmatch];
+  re2::StringPiece *match_re2 = new re2::StringPiece[nmatch]; // FIXME: exceptions?
   RE2::Anchor anchor_re2 = RE2::UNANCHORED;
   switch (anchor) {
   case CRE2_ANCHOR_START:
-    anchor_re2 = RE2::ANCHOR_START; break;
+    anchor_re2 = RE2::ANCHOR_START;
+    break;
   case CRE2_ANCHOR_BOTH:
-    anchor_re2 = RE2::ANCHOR_BOTH;  break;
+    anchor_re2 = RE2::ANCHOR_BOTH;
+    break;
   }
   bool ret = TO_CONST_RE2(re)->Match(text_re2, startpos, endpos, anchor_re2, match_re2, nmatch);
   if (ret) {

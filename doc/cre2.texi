@@ -504,6 +504,7 @@ entitled ``@gnu{} Free Documentation License''.
 * version::                     Version functions.
 * options::                     Matching configuration.
 * rexes::                       Regular expressions construction.
+* matching::                    Matching regular expressions.
 
 Appendices
 
@@ -577,8 +578,8 @@ Type of opaque pointers to options objects.
 
 
 @deftp {Enumeration Typedef} cre2_encoding_t
-@cindex CRE2_UTF8
-@cindex CRE2_Latin1
+@cindex @code{CRE2_UTF8}
+@cindex @code{CRE2_Latin1}
 Enumeration type for constants selecting encoding.  It contains the
 following values:
 
@@ -805,6 +806,85 @@ prints:
 arg: len=5 data="ci(ao"
 @end example
 @end deftypefun
+
+@c page
+@node matching
+@chapter Matching regular expressions
+
+
+Basic pattern matching goes as follows:
+
+@example
+cre2 *          rex;
+cre2_options *  opt;
+const char *    pattern = "(ciao) (hello)";
+
+opt = cre2_opt_new();
+cre2_opt_posix_syntax(opt, 1);
+rex = cre2_new(pattern, strlen(pattern), opt);
+/* error checking omitted */
+@{
+  int               nmatch = 3;
+  cre2_substring_t  match[nmatch];
+  const char *      text     = "ciao hello";
+  int               text_len = strlen(text);
+
+  cre2_match(rex, text, text_len, 0, text_len, CRE2_UNANCHORED,
+             match, nmatch);
+
+  /* prints: full match: ciao hello */
+  printf("full match: ");
+  fwrite(match[0].data, match[0].length, 1, stdout);
+  printf("\n");
+
+  /* prints: first group: ciao */
+  printf("first group: ");
+  fwrite(match[1].data, match[1].length, 1, stdout);
+  printf("\n");
+
+  /* prints: second group: hello */
+  printf("second group: ");
+  fwrite(match[2].data, match[2].length, 1, stdout);
+  printf("\n");
+@}
+cre2_delete(rex);
+cre2_opt_delete(opt);
+@end example
+
+
+@deftp {Enumeration Typedef} cre2_anchor_t
+@cindex @code{CRE2_UNANCHORED}
+@cindex @code{CRE2_ANCHOR_START}
+@cindex @code{CRE2_ANCHOR_BOTH}
+Enumeration type for the anchor point of matching operations.  It
+contains the following constants:
+
+@example
+CRE2_UNANCHORED
+CRE2_ANCHOR_START
+CRE2_ANCHOR_BOTH
+@end example
+@end deftp
+
+
+@deftypefun int cre2_match (const cre2 * @var{rex}, const char * @var{text}, int @var{text_len}, int @var{start_pos}, int @var{end_pos}, cre2_anchor_t @var{anchor}, cre2_substring_t * @var{match}, int @var{nmatch})
+Match a substring of the text referenced by @var{text} and holding
+@var{text_len} bytes against the regular expression object @var{rex}.
+
+The zero--based indices @var{start_pos} (inclusive) and @var{end_pos}
+(exclusive) select the substring of @var{text} to be examined.
+@var{anchor} selects the anchor point for the matching operation.
+
+Data about the matching groups is stored in the array @var{match}, which
+must have at least @var{nmatch} entries.  The first element of
+@var{match} (index @math{0}) references the full portion of the
+substring of @var{text} which matched, the second element of @var{match}
+(index @math{1}) references the portion of text which matched the first
+parenthetical subexpression, the third element of @var{match} (index
+@math{2}) references the portion of text which matched the second
+parenthetical subexpression, and so on.
+@end deftypefun
+
 
 @c page
 @node Package License

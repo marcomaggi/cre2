@@ -26,7 +26,7 @@ main (int argc, const char *const argv[])
   cre2_opt_posix_syntax(opt, 1);
   rex = cre2_new("ciao", 4, opt);
   {
-    cre2_string_t	S;
+    cre2_substring_t	S;
     printf("error code: %d\n", cre2_error_code(rex));
     printf("error string: \"%s\"\n", cre2_error_string(rex));
     printf("number of capturing groups: %d\n", cre2_num_capturing_groups(rex));
@@ -71,7 +71,7 @@ main (int argc, const char *const argv[])
   {
     int			code = cre2_error_code(rex);
     const char *	msg  = cre2_error_string(rex);
-    cre2_string_t	S;
+    cre2_substring_t	S;
     cre2_error_arg(rex, &S);
     printf("error: code=%d, msg=\"%s\"\n", code, msg);
     printf("error arg: len=%d, data=\"%s\"\n", S.length, S.data);

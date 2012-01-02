@@ -3,7 +3,8 @@
 check_PROGRAMS	= \
 	test-version		\
 	test-options		\
-	test-rex-alloc
+	test-rex-alloc		\
+	test-matching
 
 AM_CPPFLAGS	= -I$(top_srcdir)/src
 LDADD		= ../src/libcre2.la
