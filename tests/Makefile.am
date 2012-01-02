@@ -1,6 +1,9 @@
 ## Process this file with automake to produce Makefile.in
 
-check_PROGRAMS	= test-version
+check_PROGRAMS	= \
+	test-version		\
+	test-options		\
+	test-rex-alloc
 
 AM_CPPFLAGS	= -I$(top_srcdir)/src
 LDADD		= ../src/libcre2.la

@@ -502,6 +502,8 @@ entitled ``@gnu{} Free Documentation License''.
 @menu
 * overview::                    Overview of the package.
 * version::                     Version functions.
+* options::                     Matching configuration.
+* rexes::                       Regular expressions construction.
 
 Appendices
 
@@ -564,7 +566,245 @@ number.
 Return an integer representing the library interface current age.
 @end deftypefun
 
+@c page
+@node options
+@chapter Matching configuration
 
+
+@deftp {Opaque Typedef} cre2_options
+Type of opaque pointers to options objects.
+@end deftp
+
+
+@deftp {Enumeration Typedef} cre2_encoding_t
+@cindex CRE2_UTF8
+@cindex CRE2_Latin1
+Enumeration type for constants selecting encoding.  It contains the
+following values:
+
+@example
+CRE2_UTF8       CRE2_Latin1
+@end example
+@end deftp
+
+
+@deftypefun {cre2_options *} cre2_opt_new (void)
+Allocate and return a new options object.
+@end deftypefun
+
+
+@deftypefun void cre2_opt_delete (cre2_options * @var{opt})
+Finalise an options object.
+@end deftypefun
+
+
+@deftypefun void cre2_opt_posix_syntax (cre2_options * @var{opt}, int @var{flag})
+Set or unset
+@end deftypefun
+
+
+@deftypefun void cre2_opt_longest_match (cre2_options * @var{opt}, int @var{flag})
+Set or unset
+@end deftypefun
+
+
+@deftypefun void cre2_opt_log_errors (cre2_options * @var{opt}, int @var{flag})
+Set or unset
+@end deftypefun
+
+
+@deftypefun void cre2_opt_literal (cre2_options * @var{opt}, int @var{flag})
+Set or unset
+@end deftypefun
+
+
+@deftypefun void cre2_opt_never_nl (cre2_options * @var{opt}, int @var{flag})
+Set or unset
+@end deftypefun
+
+
+@deftypefun void cre2_opt_case_sensitive (cre2_options * @var{opt}, int @var{flag})
+Set or unset
+@end deftypefun
+
+
+@deftypefun void cre2_opt_perl_classes (cre2_options * @var{opt}, int @var{flag})
+Set or unset
+@end deftypefun
+
+
+@deftypefun void cre2_opt_word_boundary (cre2_options * @var{opt}, int @var{flag})
+Set or unset
+@end deftypefun
+
+
+@deftypefun void cre2_opt_one_line (cre2_options * @var{opt}, int @var{flag})
+Set or unset
+@end deftypefun
+
+
+@deftypefun void cre2_opt_encoding (cre2_options * @var{opt}, cre2_encoding_t @var{enc})
+Set or unset
+@end deftypefun
+
+
+@deftypefun void cre2_opt_max_mem (cre2_options * @var{opt}, int @var{m})
+Set or unset
+@end deftypefun
+
+@c page
+@node rexes
+@chapter Regular expressions construction
+
+
+Regular expression objects are built and finalised as follows:
+
+@example
+cre2 *          rex;
+cre2_options *  opt;
+
+opt = cre2_opt_new();
+cre2_opt_posix_syntax(opt, 1);
+rex = cre2_new("ciao", 4, opt);
+@{
+  if (cre2_ok(rex))
+    /* successfully built */
+  else
+    /* an error occurred */
+@}
+cre2_delete(rex);
+cre2_opt_delete(opt);
+@end example
+
+
+@deftp {Opaque Type} cre2
+Opaque type for regular expression objects.  It is meant to be used to
+declare pointers to objects.
+@end deftp
+
+
+@deftp {Struct Typedef} cre2_string_t
+Simple data structure used to reference a portion of another string.  It
+has the following fields:
+
+@table @code
+@item const char * data
+Pointer to the first byte in the referenced substring.
+
+@item int length
+The number of bytes in the referenced substring.
+@end table
+@end deftp
+
+
+@deftypefun {cre2 *} cre2_new (const char * @var{pattern}, int @var{pattern_len}, const cre2_options * @var{opt})
+Build and return a new regular expression object representing the
+@var{pattern} of length @var{pattern_len}; the object is configured with
+the options in @var{opt}.
+@end deftypefun
+
+
+@deftypefun void cre2_delete (cre2 * @var{rex})
+Finalise a regular expression object releasing all the associated
+resources.
+@end deftypefun
+
+
+@deftypefun int cre2_ok (cre2 * @var{rex})
+Return true if @var{rex} is a successfully built regular expression
+object, else return false.
+@end deftypefun
+
+
+@deftypefun int cre2_num_capturing_groups (const cre2 * @var{rex})
+If @var{rex} is a successfully built regular expression object: return a
+non--negative integer representing the number of capturing groups in the
+pattern.  If an error occurred while building @var{rex}: return
+@code{-1}.
+@end deftypefun
+
+
+@deftypefun int cre2_program_size (const cre2 * @var{rex})
+If @var{rex} is a successfully built regular expression object: return a
+non--negative integer representing the program size.  If an error
+occurred while building @var{rex}: return @code{-1}.
+@end deftypefun
+
+
+@deftypefun int cre2_error_code (const cre2 * @var{rex})
+In case an error occurred while building @var{rex}: return an integer
+representing the associated error code.  Return zero if no error
+occurred.
+@end deftypefun
+
+
+@deftypefun {const char *} cre2_error_string (const cre2 * @var{rex})
+If an error occurred while building @var{rex}: return a pointer to an
+@asciiz{} string representing the associated error message.  The
+returned pointer is valid only while @var{rex} is alive: if
+@cfunc{cre2_delete} is applied to @var{rex} the pointer becomes invalid.
+
+If @var{rex} is a successfully built regular expression object: return a
+pointer to an empty string.
+
+The following code:
+
+@example
+cre2 *          rex;
+cre2_options *  opt;
+cre2_string_t   S;
+
+opt = cre2_opt_new();
+rex = cre2_new("ci(ao", 5, opt);
+@{
+  printf("error: code=%d, msg=\"%s\"\n",
+         cre2_error_code(rex),
+         cre2_error_string(rex));
+@}
+cre2_delete(rex);
+cre2_opt_delete(opt);
+@end example
+
+@noindent
+prints:
+
+@example
+error: code=6, msg="missing ): ci(ao"
+@end example
+@end deftypefun
+
+
+@deftypefun void cre2_error_arg (const cre2 * @var{rex}, cre2_string_t * @var{arg})
+If an error occurred while building @var{rex}: fill the structure
+referenced by @var{arg} with the interval of bytes representing the
+offending portion of the pattern.
+
+If @var{rex} is a successfully built regular expression object:
+@var{arg} references an empty string.
+
+The following code:
+
+@example
+cre2 *          rex;
+cre2_options *  opt;
+cre2_string_t   S;
+
+opt = cre2_opt_new();
+rex = cre2_new("ci(ao", 5, opt);
+@{
+  printf("arg: len=%d, data=\"%s\"\n", S.length, S.data);
+@}
+cre2_delete(rex);
+cre2_opt_delete(opt);
+@end example
+
+@noindent
+prints:
+
+@example
+arg: len=5 data="ci(ao"
+@end example
+@end deftypefun
 
 @c page
 @node Package License
