@@ -22,6 +22,7 @@ cre2_options *
 cre2_opt_new(void)
 /* Allocate and return a new options object. */
 {
+  // FIXME: This allocation may raise exceptions!!!
   return reinterpret_cast<void*>(new RE2::Options());
 }
 void
@@ -79,6 +80,7 @@ cre2 *
 cre2_new (const char *pattern, int pattern_len, const cre2_options *opt)
 {
   re2::StringPiece pattern_re2(pattern, pattern_len);
+  // FIXME: This allocation may raise exceptions!!!
   return reinterpret_cast<void*>(new RE2(pattern_re2, *reinterpret_cast<const RE2::Options *>(opt)));
 }
 void
@@ -139,7 +141,7 @@ cre2_match (const cre2 *re , const char *text,
   // throw any exception.
   //
   // re2::StringPiece *match_re2 = new re2::StringPiece[nmatch];
-  re2::StringPiece match_re2[nmatch]; // FIXME: exceptions?
+  re2::StringPiece match_re2[nmatch];
   RE2::Anchor anchor_re2 = RE2::UNANCHORED;
   switch (anchor) {
   case CRE2_ANCHOR_START:
