@@ -1,3 +1,11 @@
+/*
+  Copyright (c) 2012 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (c) 2011 Keegan McAllister
+  All rights reserved.
+
+  For the license notice see the COPYING file.
+*/
+
 #include <re2/re2.h>
 #include "cre2.h"
 

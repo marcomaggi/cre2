@@ -1,6 +1,21 @@
+/*
+  Copyright (c) 2012 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (c) 2011 Keegan McAllister
+  All rights reserved.
+
+  For the license notice see the COPYING file.
+*/
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#define cre2_decl	extern
+
+cre2_decl const char *	cre2_version_string (void);
+cre2_decl int		cre2_version_interface_current	(void);
+cre2_decl int		cre2_version_interface_revision	(void);
+cre2_decl int		cre2_version_interface_age	(void);
 
 
 typedef void cre2_options;
@@ -64,3 +79,5 @@ int cre2_match(
 #ifdef __cplusplus
 } // extern "C"
 #endif
+
+/* end of file */
