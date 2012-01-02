@@ -41,7 +41,7 @@ main (int argc, const char *const argv[])
     int			text_len = strlen(text);
 
     e = cre2_match(rex, text, text_len, 0, text_len, CRE2_UNANCHORED, &match, nmatch);
-    printf("match: retval=%d, ");
+    printf("match: retval=%d, ", e);
     fwrite(match.data, match.length, 1, stdout);
     printf("\n");
   }

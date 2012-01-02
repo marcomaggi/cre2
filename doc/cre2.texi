@@ -883,6 +883,7 @@ CRE2_ANCHOR_BOTH
 @deftypefun int cre2_match (const cre2 * @var{rex}, const char * @var{text}, int @var{text_len}, int @var{start_pos}, int @var{end_pos}, cre2_anchor_t @var{anchor}, cre2_substring_t * @var{match}, int @var{nmatch})
 Match a substring of the text referenced by @var{text} and holding
 @var{text_len} bytes against the regular expression object @var{rex}.
+Return true if the text matched, false otherwise.
 
 The zero--based indices @var{start_pos} (inclusive) and @var{end_pos}
 (exclusive) select the substring of @var{text} to be examined.
@@ -897,7 +898,6 @@ parenthetical subexpression, the third element of @var{match} (index
 @math{2}) references the portion of text which matched the second
 parenthetical subexpression, and so on.
 @end deftypefun
-
 
 @c page
 @node Package License
