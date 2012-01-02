@@ -899,6 +899,15 @@ parenthetical subexpression, the third element of @var{match} (index
 parenthetical subexpression, and so on.
 @end deftypefun
 
+
+@deftypefun int cre2_easy_match (const char * @var{pattern}, int @var{pattern_len}, const char * @var{text}, int @var{text_len}, cre2_substring_t * @var{match}, int @var{nmatch})
+Like @cfunc{cre2_match} but expect a pointer to string as pattern.  Also
+the text is fully matched without anchoring.
+
+If the pattern is invalid: the return value is false, with no way to
+distinguish between this case and a no match result.
+@end deftypefun
+
 @c page
 @node Package License
 @appendix Package license

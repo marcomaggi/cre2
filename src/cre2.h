@@ -71,9 +71,14 @@ typedef enum cre2_anchor_t {
   CRE2_ANCHOR_BOTH  = 3
 } cre2_anchor_t;
 
-cre2_decl int cre2_match (const cre2 *re, const char *text,
-			  int textlen, int startpos, int endpos, cre2_anchor_t anchor,
-			  cre2_substring_t *match, int nmatch);
+cre2_decl int cre2_match	(const cre2 * re,
+				 const char * text, int textlen,
+				 int startpos, int endpos, cre2_anchor_t anchor,
+				 cre2_substring_t * match, int nmatch);
+
+cre2_decl int cre2_easy_match	(const char * pattern, int pattern_len,
+				 const char * text, int text_len,
+				 cre2_substring_t *match, int nmatch);
 
 #ifdef __cplusplus
 } // extern "C"

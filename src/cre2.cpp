@@ -155,5 +155,27 @@ cre2_match (const cre2 *re , const char *text,
   delete [] match_re2;
   return int(ret);
 }
+int
+cre2_easy_match (const char * pattern, int pattern_len,
+		 const char *text, int text_len,
+		 cre2_substring_t *match, int nmatch)
+{
+  cre2 *		rex;
+  cre2_options *	opt;
+  int			matched;
+  opt	= cre2_opt_new();
+  cre2_opt_posix_syntax(opt, 1);
+  rex	= cre2_new(pattern, pattern_len, opt);
+  {
+    if (cre2_ok(rex)) {
+      matched = cre2_match(rex, text, text_len, 0, text_len, CRE2_UNANCHORED, match, nmatch);
+    } else {
+      matched = 0;
+    }
+  }
+  cre2_delete(rex);
+  cre2_opt_delete(opt);
+  return matched;
+}
 
 /* end of file */
