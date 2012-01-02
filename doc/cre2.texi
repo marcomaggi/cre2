@@ -503,7 +503,8 @@ entitled ``@gnu{} Free Documentation License''.
 * overview::                    Overview of the package.
 * version::                     Version functions.
 * options::                     Matching configuration.
-* rexes::                       Regular expressions construction.
+* rexes::                       Precompiled regular expressions
+                                construction.
 * matching::                    Matching regular expressions.
 
 Appendices
@@ -655,7 +656,7 @@ Set or unset
 
 @c page
 @node rexes
-@chapter Regular expressions construction
+@chapter Precompiled regular expressions construction
 
 
 Regular expression objects are built and finalised as follows:
@@ -719,6 +720,14 @@ object, else return false.
 @end deftypefun
 
 
+@deftypefun {const char *} cre2_pattern (const cre2 * @var{re})
+Whether @var{rex} is a successfully built regular expression object or
+not: return a pointer to the pattern string.  The returned pointer is
+valid only while @var{rex} is alive: if @cfunc{cre2_delete} is applied
+to @var{rex} the pointer becomes invalid.
+@end deftypefun
+
+
 @deftypefun int cre2_num_capturing_groups (const cre2 * @var{rex})
 If @var{rex} is a successfully built regular expression object: return a
 non--negative integer representing the number of capturing groups in the
@@ -729,8 +738,10 @@ pattern.  If an error occurred while building @var{rex}: return
 
 @deftypefun int cre2_program_size (const cre2 * @var{rex})
 If @var{rex} is a successfully built regular expression object: return a
-non--negative integer representing the program size.  If an error
-occurred while building @var{rex}: return @code{-1}.
+non--negative integer representing the program size, a very approximate
+measure of a regexp's ``cost''; larger numbers are more expensive than
+smaller numbers.  If an error occurred while building @var{rex}: return
+@code{-1}.
 @end deftypefun
 
 

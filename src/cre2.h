@@ -55,6 +55,7 @@ cre2_decl void    cre2_delete	(cre2 *re);
 
 /* regular expression inspection */
 cre2_decl int cre2_ok (cre2 *re);
+cre2_decl const char * cre2_pattern	(const cre2 *re);
 cre2_decl int cre2_error_code		(const cre2 *re);
 cre2_decl int cre2_num_capturing_groups	(const cre2 *re);
 cre2_decl int cre2_program_size		(const cre2 *re);
@@ -63,7 +64,7 @@ cre2_decl int cre2_program_size		(const cre2 *re);
 cre2_decl const char *cre2_error_string(const cre2 *re);
 cre2_decl void cre2_error_arg(const cre2 *re, cre2_substring_t * arg);
 
-
+/* matching with precompiled regular expressions objects */
 typedef enum cre2_anchor_t {
   CRE2_UNANCHORED   = 1,
   CRE2_ANCHOR_START = 2,

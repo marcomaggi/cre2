@@ -69,7 +69,7 @@ cre2_opt_max_mem (cre2_options *opt, int m)
 
 
 /** --------------------------------------------------------------------
- ** Regular expressions objects.
+ ** Precompiled regular expressions objects.
  ** ----------------------------------------------------------------- */
 
 #define TO_RE2(re)       (reinterpret_cast<RE2 *>(re))
@@ -91,7 +91,11 @@ cre2_ok (cre2 *re)
 {
   return TO_RE2(re)->ok();
 }
-
+const char *
+cre2_pattern (const cre2 *re)
+{
+  return TO_CONST_RE2(re)->pattern().c_str();
+}
 int
 cre2_error_code (const cre2 *re)
 {
@@ -119,6 +123,12 @@ cre2_program_size (const cre2 *re)
 {
   return TO_CONST_RE2(re)->ProgramSize();
 }
+
+
+/** --------------------------------------------------------------------
+ ** Matching with precompiled regular expressions objects.
+ ** ----------------------------------------------------------------- */
+
 int
 cre2_match (const cre2 *re , const char *text,
 	    int textlen, int startpos, int endpos, cre2_anchor_t anchor,

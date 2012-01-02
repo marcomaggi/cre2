@@ -27,6 +27,7 @@ main (int argc, const char *const argv[])
   rex = cre2_new("ciao", 4, opt);
   {
     cre2_substring_t	S;
+    printf("pattern: %s\n", cre2_pattern(rex));
     printf("error code: %d\n", cre2_error_code(rex));
     printf("error string: \"%s\"\n", cre2_error_string(rex));
     printf("number of capturing groups: %d\n", cre2_num_capturing_groups(rex));
@@ -73,6 +74,7 @@ main (int argc, const char *const argv[])
     const char *	msg  = cre2_error_string(rex);
     cre2_substring_t	S;
     cre2_error_arg(rex, &S);
+    printf("pattern: %s\n", cre2_pattern(rex));
     printf("error: code=%d, msg=\"%s\"\n", code, msg);
     printf("error arg: len=%d, data=\"%s\"\n", S.length, S.data);
   }
