@@ -10,7 +10,9 @@
 extern "C" {
 #endif
 
-#define cre2_decl	extern
+#ifndef cre2_decl
+#  define cre2_decl	extern
+#endif
 
 cre2_decl const char *	cre2_version_string (void);
 cre2_decl int		cre2_version_interface_current	(void);
