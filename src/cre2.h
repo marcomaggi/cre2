@@ -47,6 +47,11 @@ typedef struct cre2_string_t {
   int		length;
 } cre2_string_t;
 
+typedef struct cre2_range_t {
+  long	start;	/* inclusive start index for bytevector */
+  long	past;	/* exclusive end index for bytevector */
+} cre2_range_t;
+
 typedef void cre2;
 
 /* construction and destruction */
@@ -79,7 +84,10 @@ cre2_decl int cre2_match	(const cre2 * re,
 
 cre2_decl int cre2_easy_match	(const char * pattern, int pattern_len,
 				 const char * text, int text_len,
-				 cre2_string_t *match, int nmatch);
+				 cre2_string_t * match, int nmatch);
+
+cre2_decl void cre2_strings_to_ranges (const char * text, cre2_range_t * ranges,
+				       cre2_string_t * strings, int nmatch);
 
 #ifdef __cplusplus
 } // extern "C"

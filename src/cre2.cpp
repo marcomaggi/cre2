@@ -142,7 +142,8 @@ cre2_match (const cre2 *re , const char *text,
   re2::StringPiece	text_re2(text, textlen);
   re2::StringPiece	match_re2[nmatch];
   RE2::Anchor		anchor_re2 = RE2::UNANCHORED;
-  bool			retval; // 0 for no match, 1 for successful matching
+  bool			retval; // 0 for no match
+                                // 1 for successful matching
   switch (anchor) {
   case CRE2_ANCHOR_START:
     anchor_re2 = RE2::ANCHOR_START;
@@ -152,7 +153,7 @@ cre2_match (const cre2 *re , const char *text,
     break;
   }
   retval = TO_CONST_RE2(re)->Match(text_re2, startpos, endpos, anchor_re2, match_re2, nmatch);
-  if (ret) {
+  if (retval) {
     for (int i=0; i<nmatch; i++) {
       match[i].data   = match_re2[i].data();
       match[i].length = match_re2[i].length();
@@ -182,6 +183,14 @@ cre2_easy_match (const char * pattern, int pattern_len,
   cre2_delete(rex);
   cre2_opt_delete(opt);
   return retval;
+}
+void
+cre2_strings_to_ranges (const char * text, cre2_range_t * ranges, cre2_string_t * strings, int nmatch)
+{
+  for (int i=0; i<nmatch; ++i) {
+    ranges[i].start = strings[i].data - text;
+    ranges[i].past  = ranges[i].start + strings[i].length;
+  }
 }
 
 /* end of file */

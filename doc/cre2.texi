@@ -882,6 +882,20 @@ CRE2_ANCHOR_BOTH
 @end deftp
 
 
+@deftp {Struct Typedef} cre2_range_t
+Structure type used to represent a substring of the text to be matched
+as starting and ending indices.  It has the following fields:
+
+@table @code
+@item long start
+Inclusive start index.
+
+@item long past
+Exclusive end index.
+@end table
+@end deftp
+
+
 @deftypefun int cre2_match (const cre2 * @var{rex}, const char * @var{text}, int @var{text_len}, int @var{start_pos}, int @var{end_pos}, cre2_anchor_t @var{anchor}, cre2_string_t * @var{match}, int @var{nmatch})
 Match a substring of the text referenced by @var{text} and holding
 @var{text_len} bytes against the regular expression object @var{rex}.
@@ -909,6 +923,14 @@ the text is fully matched without anchoring.
 If the text matches the pattern: the return value is @math{1}.  If the
 text does not match the pattern: the return value is @math{0}.  If the
 pattern is invalid: the return value is @math{2}.
+@end deftypefun
+
+
+@deftypefun void cre2_strings_to_ranges (const char * @var{text}, cre2_range_t * @var{ranges}, cre2_string_t * @var{strings}, int @var{nmatch})
+Given an array of @var{strings} with @var{nmatch} elements being the
+result of matching @var{text} against a regular expression: fill the
+array of @var{ranges} with the index intervals representing the same
+results.
 @end deftypefun
 
 @c page
