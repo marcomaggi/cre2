@@ -19,7 +19,7 @@
 int
 main (int argc, const char *const argv[])
 {
-  cre2_options *	opt;
+  cre2_options_t *	opt;
 
   opt = cre2_opt_new();
   {

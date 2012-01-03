@@ -29,7 +29,7 @@ int
 main (int argc, const char *const argv[])
 {
   cre2 *		rex;
-  cre2_options *	opt;
+  cre2_options_t *	opt;
   opt = cre2_opt_new();
   cre2_opt_posix_syntax(opt, 1);
   rex = cre2_new("ciao", 4, opt);

@@ -19,28 +19,27 @@ cre2_decl int		cre2_version_interface_current	(void);
 cre2_decl int		cre2_version_interface_revision	(void);
 cre2_decl int		cre2_version_interface_age	(void);
 
-
-typedef void cre2_options;
+typedef void cre2_options_t;
 
 typedef enum cre2_encoding_t {
   CRE2_UTF8   = 1,
   CRE2_Latin1 = 2
 } cre2_encoding_t;
 
-cre2_decl cre2_options *cre2_opt_new	(void);
-cre2_decl void		cre2_opt_delete	(cre2_options *opt);
+cre2_decl cre2_options_t *cre2_opt_new		(void);
+cre2_decl void		  cre2_opt_delete	(cre2_options_t *opt);
 
-cre2_decl void cre2_opt_posix_syntax	(cre2_options *opt, int flag);
-cre2_decl void cre2_opt_longest_match	(cre2_options *opt, int flag);
-cre2_decl void cre2_opt_log_errors	(cre2_options *opt, int flag);
-cre2_decl void cre2_opt_literal		(cre2_options *opt, int flag);
-cre2_decl void cre2_opt_never_nl	(cre2_options *opt, int flag);
-cre2_decl void cre2_opt_case_sensitive	(cre2_options *opt, int flag);
-cre2_decl void cre2_opt_perl_classes	(cre2_options *opt, int flag);
-cre2_decl void cre2_opt_word_boundary	(cre2_options *opt, int flag);
-cre2_decl void cre2_opt_one_line	(cre2_options *opt, int flag);
-cre2_decl void cre2_opt_encoding	(cre2_options *opt, cre2_encoding_t enc);
-cre2_decl void cre2_opt_max_mem		(cre2_options *opt, int m);
+cre2_decl void cre2_opt_posix_syntax	(cre2_options_t *opt, int flag);
+cre2_decl void cre2_opt_longest_match	(cre2_options_t *opt, int flag);
+cre2_decl void cre2_opt_log_errors	(cre2_options_t *opt, int flag);
+cre2_decl void cre2_opt_literal		(cre2_options_t *opt, int flag);
+cre2_decl void cre2_opt_never_nl	(cre2_options_t *opt, int flag);
+cre2_decl void cre2_opt_case_sensitive	(cre2_options_t *opt, int flag);
+cre2_decl void cre2_opt_perl_classes	(cre2_options_t *opt, int flag);
+cre2_decl void cre2_opt_word_boundary	(cre2_options_t *opt, int flag);
+cre2_decl void cre2_opt_one_line	(cre2_options_t *opt, int flag);
+cre2_decl void cre2_opt_encoding	(cre2_options_t *opt, cre2_encoding_t enc);
+cre2_decl void cre2_opt_max_mem		(cre2_options_t *opt, int m);
 
 typedef struct cre2_string_t {
   const char *	data;
@@ -56,7 +55,7 @@ typedef void cre2;
 
 /* construction and destruction */
 cre2_decl cre2 *  cre2_new	(const char *pattern, int pattern_len,
-				 const cre2_options *opt);
+				 const cre2_options_t *opt);
 cre2_decl void    cre2_delete	(cre2 *re);
 
 /* regular expression inspection */

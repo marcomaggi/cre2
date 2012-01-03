@@ -18,7 +18,7 @@
    "RE2::Options*". */
 #define TO_OPT(opt) (reinterpret_cast<RE2::Options *>(opt))
 
-cre2_options *
+cre2_options_t *
 cre2_opt_new(void)
 /* Allocate and return a new options object. */
 {
@@ -27,7 +27,7 @@ cre2_opt_new(void)
   return reinterpret_cast<void*>(new (std::nothrow) RE2::Options());
 }
 void
-cre2_opt_delete (cre2_options *opt)
+cre2_opt_delete (cre2_options_t *opt)
 /* Finalise an options object. */
 {
   delete TO_OPT(opt);
@@ -35,7 +35,7 @@ cre2_opt_delete (cre2_options *opt)
 
 /* Set or unset option flags in an options object. */
 #define OPT_BOOL(name)  \
-void cre2_opt_##name(cre2_options *opt, int flag) {  \
+void cre2_opt_##name(cre2_options_t *opt, int flag) {  \
     TO_OPT(opt)->set_##name(bool(flag));             \
 }
 OPT_BOOL(posix_syntax)
@@ -50,7 +50,7 @@ OPT_BOOL(one_line)
 #undef OPT_BOOL
 
 void
-cre2_opt_encoding (cre2_options *opt, cre2_encoding_t enc)
+cre2_opt_encoding (cre2_options_t *opt, cre2_encoding_t enc)
 /* Select the encoding in an options object. */
 {
   switch (enc) {
@@ -63,7 +63,7 @@ cre2_opt_encoding (cre2_options *opt, cre2_encoding_t enc)
   }
 }
 void
-cre2_opt_max_mem (cre2_options *opt, int m)
+cre2_opt_max_mem (cre2_options_t *opt, int m)
 /* Configure the maximum amount of memory in an options object. */
 {
   TO_OPT(opt)->set_max_mem(m);
@@ -78,7 +78,7 @@ cre2_opt_max_mem (cre2_options *opt, int m)
 #define TO_CONST_RE2(re) (reinterpret_cast<const RE2 *>(re))
 
 cre2 *
-cre2_new (const char *pattern, int pattern_len, const cre2_options *opt)
+cre2_new (const char *pattern, int pattern_len, const cre2_options_t *opt)
 {
   re2::StringPiece pattern_re2(pattern, pattern_len);
   // FIXME: is  this use of  "nothrow" good to avoid  raising exceptions
@@ -167,7 +167,7 @@ cre2_easy_match (const char * pattern, int pattern_len,
 		 cre2_string_t *match, int nmatch)
 {
   cre2 *		rex;
-  cre2_options *	opt;
+  cre2_options_t *	opt;
   int			retval; // 0  for  no  match, 1  for  successful
 				// matching, 2 for wrong regexp
   opt	= cre2_opt_new();

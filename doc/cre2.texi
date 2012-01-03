@@ -573,7 +573,7 @@ Return an integer representing the library interface current age.
 @chapter Matching configuration
 
 
-@deftp {Opaque Typedef} cre2_options
+@deftp {Opaque Typedef} cre2_options_t
 Type of opaque pointers to options objects.
 @end deftp
 
@@ -590,68 +590,68 @@ CRE2_UTF8       CRE2_Latin1
 @end deftp
 
 
-@deftypefun {cre2_options *} cre2_opt_new (void)
+@deftypefun {cre2_options_t *} cre2_opt_new (void)
 Allocate and return a new options object.  If memory allocation fails:
 the return value is a @cnull{} pointer.
 @end deftypefun
 
 
-@deftypefun void cre2_opt_delete (cre2_options * @var{opt})
+@deftypefun void cre2_opt_delete (cre2_options_t * @var{opt})
 Finalise an options object.
 @end deftypefun
 
 
-@deftypefun void cre2_opt_posix_syntax (cre2_options * @var{opt}, int @var{flag})
+@deftypefun void cre2_opt_posix_syntax (cre2_options_t * @var{opt}, int @var{flag})
 Set or unset
 @end deftypefun
 
 
-@deftypefun void cre2_opt_longest_match (cre2_options * @var{opt}, int @var{flag})
+@deftypefun void cre2_opt_longest_match (cre2_options_t * @var{opt}, int @var{flag})
 Set or unset
 @end deftypefun
 
 
-@deftypefun void cre2_opt_log_errors (cre2_options * @var{opt}, int @var{flag})
+@deftypefun void cre2_opt_log_errors (cre2_options_t * @var{opt}, int @var{flag})
 Set or unset
 @end deftypefun
 
 
-@deftypefun void cre2_opt_literal (cre2_options * @var{opt}, int @var{flag})
+@deftypefun void cre2_opt_literal (cre2_options_t * @var{opt}, int @var{flag})
 Set or unset
 @end deftypefun
 
 
-@deftypefun void cre2_opt_never_nl (cre2_options * @var{opt}, int @var{flag})
+@deftypefun void cre2_opt_never_nl (cre2_options_t * @var{opt}, int @var{flag})
 Set or unset
 @end deftypefun
 
 
-@deftypefun void cre2_opt_case_sensitive (cre2_options * @var{opt}, int @var{flag})
+@deftypefun void cre2_opt_case_sensitive (cre2_options_t * @var{opt}, int @var{flag})
 Set or unset
 @end deftypefun
 
 
-@deftypefun void cre2_opt_perl_classes (cre2_options * @var{opt}, int @var{flag})
+@deftypefun void cre2_opt_perl_classes (cre2_options_t * @var{opt}, int @var{flag})
 Set or unset
 @end deftypefun
 
 
-@deftypefun void cre2_opt_word_boundary (cre2_options * @var{opt}, int @var{flag})
+@deftypefun void cre2_opt_word_boundary (cre2_options_t * @var{opt}, int @var{flag})
 Set or unset
 @end deftypefun
 
 
-@deftypefun void cre2_opt_one_line (cre2_options * @var{opt}, int @var{flag})
+@deftypefun void cre2_opt_one_line (cre2_options_t * @var{opt}, int @var{flag})
 Set or unset
 @end deftypefun
 
 
-@deftypefun void cre2_opt_encoding (cre2_options * @var{opt}, cre2_encoding_t @var{enc})
+@deftypefun void cre2_opt_encoding (cre2_options_t * @var{opt}, cre2_encoding_t @var{enc})
 Set or unset
 @end deftypefun
 
 
-@deftypefun void cre2_opt_max_mem (cre2_options * @var{opt}, int @var{m})
+@deftypefun void cre2_opt_max_mem (cre2_options_t * @var{opt}, int @var{m})
 Set or unset
 @end deftypefun
 
@@ -663,8 +663,8 @@ Set or unset
 Regular expression objects are built and finalised as follows:
 
 @example
-cre2 *          rex;
-cre2_options *  opt;
+cre2 *            rex;
+cre2_options_t *  opt;
 
 opt = cre2_opt_new();
 cre2_opt_posix_syntax(opt, 1);
@@ -702,7 +702,7 @@ The number of bytes in the referenced substring.
 @end deftp
 
 
-@deftypefun {cre2 *} cre2_new (const char * @var{pattern}, int @var{pattern_len}, const cre2_options * @var{opt})
+@deftypefun {cre2 *} cre2_new (const char * @var{pattern}, int @var{pattern_len}, const cre2_options_t * @var{opt})
 Build and return a new regular expression object representing the
 @var{pattern} of length @var{pattern_len}; the object is configured with
 the options in @var{opt}.  If memory allocation fails: the return value
@@ -766,9 +766,9 @@ pointer to an empty string.
 The following code:
 
 @example
-cre2 *          rex;
-cre2_options *  opt;
-cre2_string_t   S;
+cre2 *            rex;
+cre2_options_t *  opt;
+cre2_string_t     S;
 
 opt = cre2_opt_new();
 rex = cre2_new("ci(ao", 5, opt);
@@ -801,9 +801,9 @@ If @var{rex} is a successfully built regular expression object:
 The following code:
 
 @example
-cre2 *          rex;
-cre2_options *  opt;
-cre2_string_t   S;
+cre2 *            rex;
+cre2_options_t *  opt;
+cre2_string_t     S;
 
 opt = cre2_opt_new();
 rex = cre2_new("ci(ao", 5, opt);
@@ -830,9 +830,9 @@ arg: len=5 data="ci(ao"
 Basic pattern matching goes as follows:
 
 @example
-cre2 *          rex;
-cre2_options *  opt;
-const char *    pattern = "(ciao) (hello)";
+cre2 *            rex;
+cre2_options_t *  opt;
+const char *      pattern = "(ciao) (hello)";
 
 opt = cre2_opt_new();
 cre2_opt_posix_syntax(opt, 1);
