@@ -504,9 +504,9 @@ entitled ``@gnu{} Free Documentation License''.
 @menu
 * overview::                    Overview of the package.
 * version::                     Version functions.
-* options::                     Matching configuration.
-* rexes::                       Precompiled regular expressions
+* regexps::                     Precompiled regular expressions
                                 construction.
+* options::                     Matching configuration.
 * matching::                    Matching regular expressions.
 
 Appendices
@@ -598,6 +598,171 @@ number.
 
 @deftypefun int cre2_version_interface_age (void)
 Return an integer representing the library interface current age.
+@end deftypefun
+
+@c page
+@node regexps
+@chapter Precompiled regular expressions construction
+
+
+Regular expression objects are built and finalised as follows:
+
+@example
+cre2_regexp_t *   rex;
+cre2_options_t *  opt;
+
+opt = cre2_opt_new();
+if (opt) @{
+  cre2_opt_set_log_errors(opt, 0);
+  rex = cre2_new("ciao", 4, opt);
+  if (rex) @{
+    if (!cre2_error_code(rex))
+      /* successfully built */
+    else
+      /* an error occurred while compiling rex */
+    cre2_delete(rex);
+  @} else @{
+    /* rex memory allocation error */
+  @}
+  cre2_opt_delete(opt);
+@} else @{
+  /* opt memory allocation error */
+@}
+@end example
+
+
+@deftp {Opaque Type} cre2_regexp_t
+Opaque type for regular expression objects; it is meant to be used to
+declare pointers to objects.  Instances of this type can be used for any
+number of matching operations and are safe for concurrent use by
+multiple threads.
+@end deftp
+
+
+@deftp {Struct Typedef} cre2_string_t
+Simple data structure used to reference a portion of another string.  It
+has the following fields:
+
+@table @code
+@item const char * data
+Pointer to the first byte in the referenced substring.
+
+@item int length
+The number of bytes in the referenced substring.
+@end table
+@end deftp
+
+
+@deftypefun {cre2_regexp_t *} cre2_new (const char * @var{pattern}, int @var{pattern_len}, const cre2_options_t * @var{opt})
+Build and return a new regular expression object representing the
+@var{pattern} of length @var{pattern_len} bytes; the object is
+configured with the options in @var{opt}.  If memory allocation fails:
+the return value is a @cnull{} pointer.
+
+The options object @var{opt} is duplicated in the internal state of the
+regular expression instance, so @var{opt} can be safely mutated or
+finalised after this call.  If @var{opt} is @cnull{}: the regular
+expression object is built with the default set of options.
+@end deftypefun
+
+
+@deftypefun void cre2_delete (cre2_regexp_t * @var{rex})
+Finalise a regular expression object releasing all the associated
+resources.
+@end deftypefun
+
+
+@deftypefun {const char *} cre2_pattern (const cre2_regexp_t * @var{rex})
+Whether @var{rex} is a successfully built regular expression object or
+not: return a pointer to the pattern string.  The returned pointer is
+valid only while @var{rex} is alive: if @cfunc{cre2_delete} is applied
+to @var{rex} the pointer becomes invalid.
+@end deftypefun
+
+
+@deftypefun int cre2_num_capturing_groups (const cre2_regexp_t * @var{rex})
+If @var{rex} is a successfully built regular expression object: return a
+non--negative integer representing the number of capturing groups
+(parenthetical subexpressions) in the pattern.  If an error occurred
+while building @var{rex}: return @code{-1}.
+@end deftypefun
+
+
+@deftypefun int cre2_program_size (const cre2_regexp_t * @var{rex})
+If @var{rex} is a successfully built regular expression object: return a
+non--negative integer representing the program size, a very approximate
+measure of a regexp's ``cost''; larger numbers are more expensive than
+smaller numbers.  If an error occurred while building @var{rex}: return
+@code{-1}.
+@end deftypefun
+
+
+@deftypefun int cre2_error_code (const cre2_regexp_t * @var{rex})
+In case an error occurred while building @var{rex}: return an integer
+representing the associated error code.  Return zero if no error
+occurred.
+@end deftypefun
+
+
+@deftypefun {const char *} cre2_error_string (const cre2_regexp_t * @var{rex})
+If an error occurred while building @var{rex}: return a pointer to an
+@asciiz{} string representing the associated error message.  The
+returned pointer is valid only while @var{rex} is alive: if
+@cfunc{cre2_delete} is applied to @var{rex} the pointer becomes invalid.
+
+If @var{rex} is a successfully built regular expression object: return a
+pointer to an empty string.
+
+The following code:
+
+@example
+cre2_regexp_t *   rex;
+
+rex = cre2_new("ci(ao", 5, NULL);
+@{
+  printf("error: code=%d, msg=\"%s\"\n",
+         cre2_error_code(rex),
+         cre2_error_string(rex));
+@}
+cre2_delete(rex);
+@end example
+
+@noindent
+prints:
+
+@example
+error: code=6, msg="missing ): ci(ao"
+@end example
+@end deftypefun
+
+
+@deftypefun void cre2_error_arg (const cre2_regexp_t * @var{rex}, cre2_string_t * @var{arg})
+If an error occurred while building @var{rex}: fill the structure
+referenced by @var{arg} with the interval of bytes representing the
+offending portion of the pattern.
+
+If @var{rex} is a successfully built regular expression object:
+@var{arg} references an empty string.
+
+The following code:
+
+@example
+cre2_regexp_t *   rex;
+cre2_string_t     S;
+
+rex = cre2_new("ci(ao", 5, NULL);
+@{
+  printf("arg: len=%d, data=\"%s\"\n", S.length, S.data);
+@}
+cre2_delete(rex);
+@end example
+
+@noindent
+prints:
+
+@example
+arg: len=5 data="ci(ao"
+@end example
 @end deftypefun
 
 @c page
@@ -773,177 +938,11 @@ of the text.  Default is disabled.
 @end deftypefun
 
 @c page
-@node rexes
-@chapter Precompiled regular expressions construction
-
-
-Regular expression objects are built and finalised as follows:
-
-@example
-cre2_regexp_t *   rex;
-cre2_options_t *  opt;
-
-opt = cre2_opt_new();
-cre2_opt_posix_syntax(opt, 1);
-rex = cre2_new("ciao", 4, opt);
-@{
-  if (!cre2_error_code(rex))
-    /* successfully built */
-  else
-    /* an error occurred */
-@}
-cre2_delete(rex);
-cre2_opt_delete(opt);
-@end example
-
-
-@deftp {Opaque Type} cre2_regexp_t
-Opaque type for regular expression objects; it is meant to be used to
-declare pointers to objects.  Instances of this type can be used for any
-number of matching operations and are safe for concurrent use by
-multiple threads.
-@end deftp
-
-
-@deftp {Struct Typedef} cre2_string_t
-Simple data structure used to reference a portion of another string.  It
-has the following fields:
-
-@table @code
-@item const char * data
-Pointer to the first byte in the referenced substring.
-
-@item int length
-The number of bytes in the referenced substring.
-@end table
-@end deftp
-
-
-@deftypefun {cre2_regexp_t *} cre2_new (const char * @var{pattern}, int @var{pattern_len}, const cre2_options_t * @var{opt})
-Build and return a new regular expression object representing the
-@var{pattern} of length @var{pattern_len}; the object is configured with
-the options in @var{opt}.  If memory allocation fails: the return value
-is a @cnull{} pointer.
-
-The options object @var{opt} is duplicated in the internal state of the
-regular expression instance, so @var{op} can be safely mutated after
-this call.  If @var{opt} is @cnull{}: the regular expression object is
-built with the default set of options.
-@end deftypefun
-
-
-@deftypefun void cre2_delete (cre2_regexp_t * @var{rex})
-Finalise a regular expression object releasing all the associated
-resources.
-@end deftypefun
-
-
-@deftypefun {const char *} cre2_pattern (const cre2_regexp_t * @var{re})
-Whether @var{rex} is a successfully built regular expression object or
-not: return a pointer to the pattern string.  The returned pointer is
-valid only while @var{rex} is alive: if @cfunc{cre2_delete} is applied
-to @var{rex} the pointer becomes invalid.
-@end deftypefun
-
-
-@deftypefun int cre2_num_capturing_groups (const cre2_regexp_t * @var{rex})
-If @var{rex} is a successfully built regular expression object: return a
-non--negative integer representing the number of capturing groups in the
-pattern.  If an error occurred while building @var{rex}: return
-@code{-1}.
-@end deftypefun
-
-
-@deftypefun int cre2_program_size (const cre2_regexp_t * @var{rex})
-If @var{rex} is a successfully built regular expression object: return a
-non--negative integer representing the program size, a very approximate
-measure of a regexp's ``cost''; larger numbers are more expensive than
-smaller numbers.  If an error occurred while building @var{rex}: return
-@code{-1}.
-@end deftypefun
-
-
-@deftypefun int cre2_error_code (const cre2_regexp_t * @var{rex})
-In case an error occurred while building @var{rex}: return an integer
-representing the associated error code.  Return zero if no error
-occurred.
-@end deftypefun
-
-
-@deftypefun {const char *} cre2_error_string (const cre2_regexp_t * @var{rex})
-If an error occurred while building @var{rex}: return a pointer to an
-@asciiz{} string representing the associated error message.  The
-returned pointer is valid only while @var{rex} is alive: if
-@cfunc{cre2_delete} is applied to @var{rex} the pointer becomes invalid.
-
-If @var{rex} is a successfully built regular expression object: return a
-pointer to an empty string.
-
-The following code:
-
-@example
-cre2_regexp_t *   rex;
-cre2_options_t *  opt;
-cre2_string_t     S;
-
-opt = cre2_opt_new();
-rex = cre2_new("ci(ao", 5, opt);
-@{
-  printf("error: code=%d, msg=\"%s\"\n",
-         cre2_error_code(rex),
-         cre2_error_string(rex));
-@}
-cre2_delete(rex);
-cre2_opt_delete(opt);
-@end example
-
-@noindent
-prints:
-
-@example
-error: code=6, msg="missing ): ci(ao"
-@end example
-@end deftypefun
-
-
-@deftypefun void cre2_error_arg (const cre2_regexp_t * @var{rex}, cre2_string_t * @var{arg})
-If an error occurred while building @var{rex}: fill the structure
-referenced by @var{arg} with the interval of bytes representing the
-offending portion of the pattern.
-
-If @var{rex} is a successfully built regular expression object:
-@var{arg} references an empty string.
-
-The following code:
-
-@example
-cre2_regexp_t *   rex;
-cre2_options_t *  opt;
-cre2_string_t     S;
-
-opt = cre2_opt_new();
-rex = cre2_new("ci(ao", 5, opt);
-@{
-  printf("arg: len=%d, data=\"%s\"\n", S.length, S.data);
-@}
-cre2_delete(rex);
-cre2_opt_delete(opt);
-@end example
-
-@noindent
-prints:
-
-@example
-arg: len=5 data="ci(ao"
-@end example
-@end deftypefun
-
-@c page
 @node matching
 @chapter Matching regular expressions
 
 
-Basic pattern matching goes as follows:
+Basic pattern matching goes as follows (with error checking omitted):
 
 @example
 cre2_regexp_t *   rex;
@@ -952,8 +951,8 @@ const char *      pattern = "(ciao) (hello)";
 
 opt = cre2_opt_new();
 cre2_opt_posix_syntax(opt, 1);
+
 rex = cre2_new(pattern, strlen(pattern), opt);
-/* error checking omitted */
 @{
   const char *   text     = "ciao hello";
   int            text_len = strlen(text);
@@ -998,20 +997,6 @@ CRE2_ANCHOR_BOTH
 @end deftp
 
 
-@deftp {Struct Typedef} cre2_range_t
-Structure type used to represent a substring of the text to be matched
-as starting and ending indices.  It has the following fields:
-
-@table @code
-@item long start
-Inclusive start index.
-
-@item long past
-Exclusive end index.
-@end table
-@end deftp
-
-
 @deftypefun int cre2_match (const cre2_regexp_t * @var{rex}, const char * @var{text}, int @var{text_len}, int @var{start_pos}, int @var{end_pos}, cre2_anchor_t @var{anchor}, cre2_string_t * @var{match}, int @var{nmatch})
 Match a substring of the text referenced by @var{text} and holding
 @var{text_len} bytes against the regular expression object @var{rex}.
@@ -1022,19 +1007,25 @@ The zero--based indices @var{start_pos} (inclusive) and @var{end_pos}
 @var{anchor} selects the anchor point for the matching operation.
 
 Data about the matching groups is stored in the array @var{match}, which
-must have at least @var{nmatch} entries.  The first element of
-@var{match} (index @math{0}) references the full portion of the
-substring of @var{text} which matched, the second element of @var{match}
-(index @math{1}) references the portion of text which matched the first
-parenthetical subexpression, the third element of @var{match} (index
-@math{2}) references the portion of text which matched the second
-parenthetical subexpression, and so on.
+must have at least @var{nmatch} entries; the referenced substrings are
+portions of the @var{text} buffer.  If we are only interested in
+verifying if the text matches or not (ignoring the matching portions of
+text): we can use @cnull{} as @var{match} argument and @math{0} as
+@var{nmatch} argument.
+
+The first element of @var{match} (index @math{0}) references the full
+portion of the substring of @var{text} which matched, the second element
+of @var{match} (index @math{1}) references the portion of text which
+matched the first parenthetical subexpression, the third element of
+@var{match} (index @math{2}) references the portion of text which
+matched the second parenthetical subexpression, and so on.
 @end deftypefun
 
 
 @deftypefun int cre2_easy_match (const char * @var{pattern}, int @var{pattern_len}, const char * @var{text}, int @var{text_len}, cre2_string_t * @var{match}, int @var{nmatch})
-Like @cfunc{cre2_match} but expect a pointer to string as pattern.  Also
-the text is fully matched without anchoring.
+Like @cfunc{cre2_match} but the pattern is specified as string
+@var{pattern} holding @var{pattern_len} bytes.  Also the text is fully
+matched without anchoring.
 
 If the text matches the pattern: the return value is @math{1}.  If the
 text does not match the pattern: the return value is @math{0}.  If the
@@ -1042,11 +1033,25 @@ pattern is invalid: the return value is @math{2}.
 @end deftypefun
 
 
+@deftp {Struct Typedef} cre2_range_t
+Structure type used to represent a substring of the text to be matched
+as starting and ending indices.  It has the following fields:
+
+@table @code
+@item long start
+Inclusive start byte index.
+
+@item long past
+Exclusive end byte index.
+@end table
+@end deftp
+
+
 @deftypefun void cre2_strings_to_ranges (const char * @var{text}, cre2_range_t * @var{ranges}, cre2_string_t * @var{strings}, int @var{nmatch})
 Given an array of @var{strings} with @var{nmatch} elements being the
 result of matching @var{text} against a regular expression: fill the
-array of @var{ranges} with the index intervals representing the same
-results.
+array of @var{ranges} with the index intervals in the @var{text} buffer
+representing the same results.
 @end deftypefun
 
 @c page
