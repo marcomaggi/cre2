@@ -431,6 +431,8 @@ the main purpose of this document is to provide an Info version.
 @c email of the *single* author of this document.
 @set AUTHOR_EMAIL               @email{marco.maggi-ipsu@@poste.it}
 
+@set AUTHOR_URL                 @url{http://github.com/marcomaggi}
+
 @c To be used as @value{COPYRIGHT_YEARS} whenever we need to include the
 @c list of copyright years.
 @set COPYRIGHT_YEARS            2012
@@ -442,9 +444,9 @@ the main purpose of this document is to provide an Info version.
 
 @copying
 This document describes version @value{VERSION} of @value{PACKAGE}, a C
-language wrapper for the RE2 library, which is implemented in C++.  RE2
-is a fast, safe, thread--friendly alternative to backtracking regular
-expression engines like those used in PCRE, Perl, and Python.
+language wrapper for the C++ library RE2: a fast, safe, thread--friendly
+alternative to backtracking regular expression engines like those used
+in PCRE, Perl, and Python.
 
 The package is distributed under the terms of a @acronym{BSD}--like
 license and can be downloaded from:
@@ -452,8 +454,8 @@ license and can be downloaded from:
 @center @url{http://github.com/marcomaggi/@value{PACKAGE_NICKNAME}}
 
 @noindent
-Copyright @copyright{} @value{COPYRIGHT_YEARS} by @value{AUTHOR} @value{AUTHOR_EMAIL}@*
-Copyright @copyright{} 2011 by Keegan McAllister
+Copyright @copyright{} @value{COPYRIGHT_YEARS} by @value{AUTHOR} @value{AUTHOR_URL}@*
+Copyright @copyright{} 2011 by Keegan McAllister @url{http://github.com/kmcallister/}
 
 Portions of this document come from the source code of RE2 itself, see
 the file @file{LICENSE.re2} for the license notice.
@@ -527,24 +529,54 @@ Indexes
 @chapter Overview of the package
 
 
-This document describes version @value{VERSION} of @value{PACKAGE}, a C
-language wrapper for the RE2 library, which is implemented in C++.  RE2
-is a fast, safe, thread--friendly alternative to backtracking regular
-expression engines like those used in PCRE, Perl, and Python.
-
-@value{PACKAGE} is based on code by Keegan McAllister for the
-@code{haskell-re2} binding:
+@value{PACKAGE} is a C language wrapper for the C++ library RE2: a fast,
+safe, thread--friendly alternative to backtracking regular expression
+engines like those used in PCRE, Perl, and Python.  @value{PACKAGE} is
+based on code by Keegan McAllister for the @code{haskell-re2} binding:
 
 @center @url{https://github.com/kmcallister/haskell-re2}
+
+The C wrapper is meant to make it easier to interface RE2 with other
+languages.  The exposed @api{} allows searching for substrings of text
+matching regular expressions and subexpressions.
+
+It is customary for regular expression engines to provide methods to
+replace backslash sequences like @code{\1}, @code{\2}, @dots{} in a
+given string with portions of text that matched the first, second,
+@dots{} parenthetical subexpression; @value{PACKAGE} does @strong{not}
+provide such methods because they require interacting with the storage
+mechanism in the client code.  However, it is not difficult to implement
+such substitutions given the results of a regular expression matching
+operation.
+
+All the function names in the @api{} are prefixed with @code{cre2_}; all
+the constant names are prefixed with @code{CRE2_}; all the type names
+are prefixed with @code{cre2_} and suffixed with @code{_t}.
+
+When searching for the installed libraries with the @gnu{} Autotools, we
+can use the following macros in @file{configure.ac}:
+
+@example
+AC_CHECK_LIB([re2],[main],,
+  [AC_MSG_FAILURE([test for RE2 library failed])])
+AC_CHECK_HEADERS([re2/re2.h],,
+  [AC_MSG_ERROR([test for RE2 header failed])])
+
+AC_CHECK_LIB([cre2],[cre2_version_string],,
+  [AC_MSG_FAILURE([test for CRE2 library failed])])
+AC_CHECK_HEADERS([cre2.h],,
+  [AC_MSG_ERROR([test for RE2 header failed])])
+@end example
 
 @c page
 @node version
 @chapter Version functions
 
 
-For an explanation of interface numbers as managed by @gnu{} Libtool
-@xref{Libtool versioning, interface, Libtool's versioning system,
-libtool, Shared library support for @gnu{}}.
+The installed libraries follow version numbering as established by the
+@gnu{} Autotools.  For an explanation of interface numbers as managed by
+@gnu{} Libtool @xref{Libtool versioning, interface, Libtool's versioning
+system, libtool, Shared library support for @gnu{}}.
 
 
 @deftypefun {const char *} cre2_version_string (void)
@@ -981,8 +1013,8 @@ results.
 @appendix Package license
 
 
-Copyright @copyright{} 2012 Marco Maggi @email{marco.maggi-ipsu@@poste.it}@*
-Copyright @copyright{} 2011 Keegan McAllister@*
+Copyright @copyright{} 2012 Marco Maggi @value{AUTHOR_URL}@*
+Copyright @copyright{} 2011 Keegan McAllister @url{http://github.com/kmcallister/}@*
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
