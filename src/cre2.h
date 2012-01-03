@@ -25,24 +25,37 @@ cre2_decl int		cre2_version_interface_age	(void);
 typedef void cre2_options_t;
 
 typedef enum cre2_encoding_t {
-  CRE2_UTF8   = 1,
-  CRE2_Latin1 = 2
+  CRE2_UNKNOWN	= 0,	/* should never happen */
+  CRE2_UTF8	= 1,
+  CRE2_Latin1	= 2
 } cre2_encoding_t;
 
 cre2_decl cre2_options_t *cre2_opt_new		(void);
 cre2_decl void		  cre2_opt_delete	(cre2_options_t *opt);
 
-cre2_decl void cre2_opt_posix_syntax	(cre2_options_t *opt, int flag);
-cre2_decl void cre2_opt_longest_match	(cre2_options_t *opt, int flag);
-cre2_decl void cre2_opt_log_errors	(cre2_options_t *opt, int flag);
-cre2_decl void cre2_opt_literal		(cre2_options_t *opt, int flag);
-cre2_decl void cre2_opt_never_nl	(cre2_options_t *opt, int flag);
-cre2_decl void cre2_opt_case_sensitive	(cre2_options_t *opt, int flag);
-cre2_decl void cre2_opt_perl_classes	(cre2_options_t *opt, int flag);
-cre2_decl void cre2_opt_word_boundary	(cre2_options_t *opt, int flag);
-cre2_decl void cre2_opt_one_line	(cre2_options_t *opt, int flag);
-cre2_decl void cre2_opt_encoding	(cre2_options_t *opt, cre2_encoding_t enc);
-cre2_decl void cre2_opt_max_mem		(cre2_options_t *opt, int m);
+cre2_decl void cre2_opt_set_posix_syntax	(cre2_options_t *opt, int flag);
+cre2_decl void cre2_opt_set_longest_match	(cre2_options_t *opt, int flag);
+cre2_decl void cre2_opt_set_log_errors		(cre2_options_t *opt, int flag);
+cre2_decl void cre2_opt_set_literal		(cre2_options_t *opt, int flag);
+cre2_decl void cre2_opt_set_never_nl		(cre2_options_t *opt, int flag);
+cre2_decl void cre2_opt_set_case_sensitive	(cre2_options_t *opt, int flag);
+cre2_decl void cre2_opt_set_perl_classes	(cre2_options_t *opt, int flag);
+cre2_decl void cre2_opt_set_word_boundary	(cre2_options_t *opt, int flag);
+cre2_decl void cre2_opt_set_one_line		(cre2_options_t *opt, int flag);
+cre2_decl void cre2_opt_set_max_mem		(cre2_options_t *opt, int m);
+cre2_decl void cre2_opt_set_encoding		(cre2_options_t *opt, cre2_encoding_t enc);
+
+cre2_decl int cre2_opt_posix_syntax		(cre2_options_t *opt);
+cre2_decl int cre2_opt_longest_match		(cre2_options_t *opt);
+cre2_decl int cre2_opt_log_errors		(cre2_options_t *opt);
+cre2_decl int cre2_opt_literal			(cre2_options_t *opt);
+cre2_decl int cre2_opt_never_nl			(cre2_options_t *opt);
+cre2_decl int cre2_opt_case_sensitive		(cre2_options_t *opt);
+cre2_decl int cre2_opt_perl_classes		(cre2_options_t *opt);
+cre2_decl int cre2_opt_word_boundary		(cre2_options_t *opt);
+cre2_decl int cre2_opt_one_line			(cre2_options_t *opt);
+cre2_decl int cre2_opt_max_mem			(cre2_options_t *opt);
+cre2_decl cre2_encoding_t cre2_opt_encoding	(cre2_options_t *opt);
 
 typedef struct cre2_string_t {
   const char *	data;

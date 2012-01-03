@@ -573,20 +573,32 @@ Return an integer representing the library interface current age.
 @chapter Matching configuration
 
 
+Compiled regular expressions can be configured with a number of options
+collected in a @code{cre2_options_t} object.
+
+
 @deftp {Opaque Typedef} cre2_options_t
-Type of opaque pointers to options objects.
+Type of opaque pointers to options objects.  Any instance of this type
+can be used to configure any number of regular expression objects.
 @end deftp
 
 
 @deftp {Enumeration Typedef} cre2_encoding_t
+@cindex @code{CRE2_UNKNOWN}
 @cindex @code{CRE2_UTF8}
 @cindex @code{CRE2_Latin1}
 Enumeration type for constants selecting encoding.  It contains the
 following values:
 
 @example
-CRE2_UTF8       CRE2_Latin1
+CRE2_UNKNOWN
+CRE2_UTF8
+CRE2_Latin1
 @end example
+
+The value @code{CRE2_UNKNOWN} should never be used: it exists only in
+case there is a mismatch between the definitions of RE2 and
+@value{PACKAGE}.
 @end deftp
 
 
@@ -601,58 +613,95 @@ Finalise an options object.
 @end deftypefun
 
 
-@deftypefun void cre2_opt_posix_syntax (cre2_options_t * @var{opt}, int @var{flag})
-Set or unset
+All the following functions are getters and setters for regular
+expression options; the @var{flag} argument to the setter must be false
+to disable the option and true to enable it; unless otherwise specified
+the @code{int} return value is true if the option is enabled and false
+if it is disabled.
+
+
+@deftypefun cre2_encoding_t cre2_opt_encoding (cre2_options_t * @var{opt})
+@deftypefunx void cre2_opt_set_encoding (cre2_options_t * @var{opt}, cre2_encoding_t @var{enc})
+By default, the regular expression pattern and input text are
+interpreted as @utf{}-8.  CRE2_Latin1 encoding causes them to be
+interpreted as Latin-1.
+
+The getter returns @code{CRE2_UNKNOWN} if the encoding value returned by
+RE2 is unknown.
 @end deftypefun
 
 
-@deftypefun void cre2_opt_longest_match (cre2_options_t * @var{opt}, int @var{flag})
-Set or unset
+@deftypefun int cre2_opt_posix_syntax (cre2_options_t * @var{opt})
+@deftypefunx void cre2_opt_set_posix_syntax (cre2_options_t * @var{opt}, int @var{flag})
+Restrict regexps to @posix{} egrep syntax.  Default is disabled.
 @end deftypefun
 
 
-@deftypefun void cre2_opt_log_errors (cre2_options_t * @var{opt}, int @var{flag})
-Set or unset
+@deftypefun int cre2_opt_longest_match (cre2_options_t * @var{opt})
+@deftypefunx void cre2_opt_set_longest_match (cre2_options_t * @var{opt}, int @var{flag})
+Search for longest match, not first match.  Default is disabled.
 @end deftypefun
 
 
-@deftypefun void cre2_opt_literal (cre2_options_t * @var{opt}, int @var{flag})
-Set or unset
+@deftypefun int cre2_opt_log_errors (cre2_options_t * @var{opt})
+@deftypefunx void cre2_opt_set_log_errors (cre2_options_t * @var{opt}, int @var{flag})
+Log syntax and execution errors to @code{stderr}.  Default is enabled.
 @end deftypefun
 
 
-@deftypefun void cre2_opt_never_nl (cre2_options_t * @var{opt}, int @var{flag})
-Set or unset
+@deftypefun int cre2_opt_literal (cre2_options_t * @var{opt})
+@deftypefunx void cre2_opt_set_literal (cre2_options_t * @var{opt}, int @var{flag})
+Interpret string as literal, not regexp.  Default is disabled.
 @end deftypefun
 
 
-@deftypefun void cre2_opt_case_sensitive (cre2_options_t * @var{opt}, int @var{flag})
-Set or unset
+@deftypefun int cre2_opt_never_nl (cre2_options_t * @var{opt})
+@deftypefunx void cre2_opt_set_never_nl (cre2_options_t * @var{opt}, int @var{flag})
+Never match a newline character, even if it is in the regular expression
+pattern.  Default is disabled.
 @end deftypefun
 
 
-@deftypefun void cre2_opt_perl_classes (cre2_options_t * @var{opt}, int @var{flag})
-Set or unset
+@deftypefun int cre2_opt_case_sensitive (cre2_options_t * @var{opt})
+@deftypefunx void cre2_opt_set_case_sensitive (cre2_options_t * @var{opt}, int @var{flag})
+Match is case--sensitive; the regular expression pattern can override
+this setting with @code{(?i)} unless configured in @posix{} syntax
+mode.  Default is enabled.
 @end deftypefun
 
 
-@deftypefun void cre2_opt_word_boundary (cre2_options_t * @var{opt}, int @var{flag})
-Set or unset
+@deftypefun int cre2_opt_max_mem (cre2_options_t * @var{opt})
+@deftypefunx void cre2_opt_set_max_mem (cre2_options_t * @var{opt}, int @var{m})
+The max memory option controls how much memory can be used to hold the
+compiled form of the regular expression and its cached @acronym{DFA}
+graphs.  These functions set and get such amount of memory.  See the
+documentation of RE2 for details.
 @end deftypefun
 
 
-@deftypefun void cre2_opt_one_line (cre2_options_t * @var{opt}, int @var{flag})
-Set or unset
+The following options are only consulted when @posix{} syntax is
+enabled; when @posix{} syntax is disabled: these features are always
+enabled and cannot be turned off.
+
+
+@deftypefun int cre2_opt_perl_classes (cre2_options_t * @var{opt})
+@deftypefunx void cre2_opt_set_perl_classes (cre2_options_t * @var{opt}, int @var{flag})
+Allow Perl's @code{\d}, @code{\s}, @code{\w}, @code{\D}, @code{\S},
+@code{\W}.  Default is disabled.
 @end deftypefun
 
 
-@deftypefun void cre2_opt_encoding (cre2_options_t * @var{opt}, cre2_encoding_t @var{enc})
-Set or unset
+@deftypefun int cre2_opt_word_boundary (cre2_options_t * @var{opt})
+@deftypefunx void cre2_opt_set_word_boundary (cre2_options_t * @var{opt}, int @var{flag})
+Allow Perl's @code{\b}, @code{\B} (word boundary and not).  Default is
+disabled.
 @end deftypefun
 
 
-@deftypefun void cre2_opt_max_mem (cre2_options_t * @var{opt}, int @var{m})
-Set or unset
+@deftypefun int cre2_opt_one_line (cre2_options_t * @var{opt})
+@deftypefunx void cre2_opt_set_one_line (cre2_options_t * @var{opt}, int @var{flag})
+@code{^} and @code{$} only match beginning and end of text.  Default is
+disabled.
 @end deftypefun
 
 @c page

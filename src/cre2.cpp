@@ -67,9 +67,14 @@ cre2_opt_delete (cre2_options_t *opt)
 
 /* Set or unset option flags in an options object. */
 #define OPT_BOOL(name)  \
-void cre2_opt_##name(cre2_options_t *opt, int flag) {  \
-    TO_OPT(opt)->set_##name(bool(flag));             \
-}
+ void cre2_opt_set_##name (cre2_options_t *opt, int flag)	\
+ {								\
+   TO_OPT(opt)->set_##name(bool(flag));				\
+ }								\
+ int cre2_opt_##name (cre2_options_t *opt)			\
+ {								\
+   return TO_OPT(opt)->name();					\
+ }
 OPT_BOOL(posix_syntax)
 OPT_BOOL(longest_match)
 OPT_BOOL(log_errors)
@@ -82,7 +87,7 @@ OPT_BOOL(one_line)
 #undef OPT_BOOL
 
 void
-cre2_opt_encoding (cre2_options_t *opt, cre2_encoding_t enc)
+cre2_opt_set_encoding (cre2_options_t *opt, cre2_encoding_t enc)
 /* Select the encoding in an options object. */
 {
   switch (enc) {
@@ -94,11 +99,29 @@ cre2_opt_encoding (cre2_options_t *opt, cre2_encoding_t enc)
     break;
   }
 }
+cre2_encoding_t
+cre2_opt_encoding (cre2_options_t *opt)
+{
+  RE2::Options::Encoding	E = TO_OPT(opt)->encoding();
+  switch (E) {
+  case RE2::Options::EncodingUTF8:
+    return CRE2_UTF8;
+  case RE2::Options::EncodingLatin1:
+    return CRE2_Latin1;
+  default:
+    return CRE2_UNKNOWN;
+  }
+}
 void
-cre2_opt_max_mem (cre2_options_t *opt, int m)
+cre2_opt_set_max_mem (cre2_options_t *opt, int m)
 /* Configure the maximum amount of memory in an options object. */
 {
   TO_OPT(opt)->set_max_mem(m);
+}
+int
+cre2_opt_max_mem (cre2_options_t *opt)
+{
+  return TO_OPT(opt)->max_mem();
 }
 
 
@@ -198,7 +221,7 @@ cre2_easy_match (const char * pattern, int pattern_len,
   int			retval; // 0  for  no  match, 1  for  successful
 				// matching, 2 for wrong regexp
   opt	= cre2_opt_new();
-  cre2_opt_log_errors(opt, 0);
+  cre2_opt_set_log_errors(opt, 0);
   rex	= cre2_new(pattern, pattern_len, opt);
   {
     if (!cre2_error_code(rex)) {

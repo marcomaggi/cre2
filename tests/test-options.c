@@ -23,18 +23,18 @@ main (int argc, const char *const argv[])
 
   opt = cre2_opt_new();
   {
-    cre2_opt_posix_syntax(opt, 1);
-    cre2_opt_longest_match(opt, 1);
-    cre2_opt_log_errors(opt, 1);
-    cre2_opt_literal(opt, 1);
-    cre2_opt_never_nl(opt, 1);
-    cre2_opt_case_sensitive(opt, 1);
-    cre2_opt_perl_classes(opt, 1);
-    cre2_opt_word_boundary(opt, 1);
-    cre2_opt_one_line(opt, 1);
-    cre2_opt_encoding(opt, CRE2_UTF8);
-    cre2_opt_encoding(opt, CRE2_Latin1);
-    cre2_opt_max_mem(opt, 4096);
+    cre2_opt_set_posix_syntax(opt, 1);
+    cre2_opt_set_longest_match(opt, 1);
+    cre2_opt_set_log_errors(opt, 1);
+    cre2_opt_set_literal(opt, 1);
+    cre2_opt_set_never_nl(opt, 1);
+    cre2_opt_set_case_sensitive(opt, 1);
+    cre2_opt_set_perl_classes(opt, 1);
+    cre2_opt_set_word_boundary(opt, 1);
+    cre2_opt_set_one_line(opt, 1);
+    cre2_opt_set_encoding(opt, CRE2_UTF8);
+    cre2_opt_set_encoding(opt, CRE2_Latin1);
+    cre2_opt_set_max_mem(opt, 4096);
   }
   cre2_opt_delete(opt);
   exit(EXIT_SUCCESS);

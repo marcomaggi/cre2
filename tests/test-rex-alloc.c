@@ -31,7 +31,7 @@ main (int argc, const char *const argv[])
   cre2_t *		rex;
   cre2_options_t *	opt;
   opt = cre2_opt_new();
-  cre2_opt_posix_syntax(opt, 1);
+  cre2_opt_set_posix_syntax(opt, 1);
   rex = cre2_new("ciao", 4, opt);
   {
     cre2_string_t	S;
@@ -59,7 +59,7 @@ main (int argc, const char *const argv[])
 /* ------------------------------------------------------------------ */
 
   opt = cre2_opt_new();
-  cre2_opt_posix_syntax(opt, 1);
+  cre2_opt_set_posix_syntax(opt, 1);
   rex = cre2_new("ci(ao)", 6, opt);
   {
     PRINTF("error code: %d\n", cre2_error_code(rex));
@@ -76,7 +76,7 @@ main (int argc, const char *const argv[])
 /* ------------------------------------------------------------------ */
 
   opt = cre2_opt_new();
-  cre2_opt_log_errors(opt, 0);
+  cre2_opt_set_log_errors(opt, 0);
   rex = cre2_new("ci(ao", 5, opt);
   {
     int			code = cre2_error_code(rex);

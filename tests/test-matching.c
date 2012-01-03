@@ -37,7 +37,7 @@ main (int argc, const char *const argv[])
 
   pattern = "ciao";
   opt     = cre2_opt_new();
-  cre2_opt_posix_syntax(opt, 1);
+  cre2_opt_set_posix_syntax(opt, 1);
   rex = cre2_new(pattern, strlen(pattern), opt);
   {
     if (cre2_error_code(rex))
