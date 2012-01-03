@@ -88,6 +88,27 @@ main (int argc, const char *const argv[])
   cre2_opt_delete(opt);
 
 /* ------------------------------------------------------------------ */
+/* test literal option */
+
+  pattern = "(ciao) (hello)";
+  opt = cre2_opt_new();
+  cre2_opt_set_literal(opt, 1);
+  rex = cre2_new(pattern, strlen(pattern), opt);
+  {
+    if (cre2_error_code(rex))
+      goto error;
+    int			nmatch = 0;
+    int			e;
+    const char *	text = "(ciao) (hello)";
+    int			text_len = strlen(text);
+    e = cre2_match(rex, text, text_len, 0, text_len, CRE2_UNANCHORED, NULL, nmatch);
+    if (0 == e)
+      goto error;
+  }
+  cre2_delete(rex);
+  cre2_opt_delete(opt);
+
+/* ------------------------------------------------------------------ */
 
   exit(EXIT_SUCCESS);
  error:
