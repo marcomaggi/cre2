@@ -605,8 +605,19 @@ Return an integer representing the library interface current age.
 @chapter Matching configuration
 
 
-Compiled regular expressions can be configured with a number of options
-collected in a @code{cre2_options_t} object.
+Compiled regular expressions can be configured, at construction--time,
+with a number of options collected in a @code{cre2_options_t} object.
+Notice that, by default, when attempting to compile an invalid regular
+expression pattern, RE2 will print to @code{stderr} an error message;
+usually we want to avoid this logging by disabling the associated
+option:
+
+@example
+cre2_options_t *  opt;
+
+opt = cre2_opt_new();
+cre2_opt_set_log_errors(opt, 0);
+@end example
 
 
 @deftp {Opaque Typedef} cre2_options_t
@@ -641,7 +652,9 @@ the return value is a @cnull{} pointer.
 
 
 @deftypefun void cre2_opt_delete (cre2_options_t * @var{opt})
-Finalise an options object.
+Finalise an options object releasing all the associated resources.
+Compiled regular expressions configured with this object are
+@strong{not} affected by its destruction.
 @end deftypefun
 
 
@@ -683,7 +696,30 @@ Log syntax and execution errors to @code{stderr}.  Default is enabled.
 
 @deftypefun int cre2_opt_literal (cre2_options_t * @var{opt})
 @deftypefunx void cre2_opt_set_literal (cre2_options_t * @var{opt}, int @var{flag})
-Interpret string as literal, not regexp.  Default is disabled.
+Interpret the pattern string as literal, not as regular expression.
+Default is disabled.
+
+Setting this option is equivalent to quoting all the special characters
+defining a regular expression pattern:
+
+@example
+cre2_regexp_t *   rex;
+cre2_options_t *  opt;
+const char *      pattern = "(ciao) (hello)";
+const char *      text    = pattern;
+int               len     = strlen(pattern);
+
+opt = cre2_opt_new();
+cre2_opt_set_literal(opt, 1);
+rex = cre2_new(pattern, len, opt);
+@{
+  /* successful match */
+  cre2_match(rex, text, len, 0, len,
+             CRE2_UNANCHORED, NULL, 0);
+@}
+cre2_delete(rex);
+cre2_opt_delete(opt);
+@end example
 @end deftypefun
 
 
@@ -732,8 +768,8 @@ disabled.
 
 @deftypefun int cre2_opt_one_line (cre2_options_t * @var{opt})
 @deftypefunx void cre2_opt_set_one_line (cre2_options_t * @var{opt}, int @var{flag})
-@code{^} and @code{$} only match beginning and end of text.  Default is
-disabled.
+The patterns @code{^} and @code{$} only match at the beginning and end
+of the text.  Default is disabled.
 @end deftypefun
 
 @c page
@@ -788,6 +824,11 @@ Build and return a new regular expression object representing the
 @var{pattern} of length @var{pattern_len}; the object is configured with
 the options in @var{opt}.  If memory allocation fails: the return value
 is a @cnull{} pointer.
+
+The options object @var{opt} is duplicated in the internal state of the
+regular expression instance, so @var{op} can be safely mutated after
+this call.  If @var{opt} is @cnull{}: the regular expression object is
+built with the default set of options.
 @end deftypefun
 
 
