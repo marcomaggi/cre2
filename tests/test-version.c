@@ -19,8 +19,8 @@
 int
 main (int argc, const char *const argv[])
 {
-  printf("version number: %s\n", cre2_version_string());
-  printf("version number: %d:%d:%d\n",
+  printf("version number string: %s\n", cre2_version_string());
+  printf("libtool version number: %d:%d:%d\n",
 	 cre2_version_interface_current(),
 	 cre2_version_interface_revision(),
 	 cre2_version_interface_age());
