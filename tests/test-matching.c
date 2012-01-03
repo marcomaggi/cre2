@@ -34,7 +34,7 @@ main (int argc, const char *const argv[])
   {
     if (!cre2_ok(rex))
       goto error;
-    cre2_substring_t	match;
+    cre2_string_t	match;
     int			nmatch = 1;
     int			e;
     const char *	text = "ciao";
@@ -59,7 +59,7 @@ main (int argc, const char *const argv[])
     if (!cre2_ok(rex))
       goto error;
     int			nmatch = 3;
-    cre2_substring_t	match[nmatch];
+    cre2_string_t	match[nmatch];
     int			e;
     const char *	text = "ciao hello";
     int			text_len = strlen(text);

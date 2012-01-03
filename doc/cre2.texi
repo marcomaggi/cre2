@@ -839,10 +839,10 @@ cre2_opt_posix_syntax(opt, 1);
 rex = cre2_new(pattern, strlen(pattern), opt);
 /* error checking omitted */
 @{
-  int               nmatch = 3;
-  cre2_substring_t  match[nmatch];
-  const char *      text     = "ciao hello";
-  int               text_len = strlen(text);
+  const char *   text     = "ciao hello";
+  int            text_len = strlen(text);
+  int            nmatch   = 3;
+  cre2_string_t  match[nmatch];
 
   cre2_match(rex, text, text_len, 0, text_len, CRE2_UNANCHORED,
              match, nmatch);
@@ -882,7 +882,7 @@ CRE2_ANCHOR_BOTH
 @end deftp
 
 
-@deftypefun int cre2_match (const cre2 * @var{rex}, const char * @var{text}, int @var{text_len}, int @var{start_pos}, int @var{end_pos}, cre2_anchor_t @var{anchor}, cre2_substring_t * @var{match}, int @var{nmatch})
+@deftypefun int cre2_match (const cre2 * @var{rex}, const char * @var{text}, int @var{text_len}, int @var{start_pos}, int @var{end_pos}, cre2_anchor_t @var{anchor}, cre2_string_t * @var{match}, int @var{nmatch})
 Match a substring of the text referenced by @var{text} and holding
 @var{text_len} bytes against the regular expression object @var{rex}.
 Return true if the text matched, false otherwise.
@@ -902,7 +902,7 @@ parenthetical subexpression, and so on.
 @end deftypefun
 
 
-@deftypefun int cre2_easy_match (const char * @var{pattern}, int @var{pattern_len}, const char * @var{text}, int @var{text_len}, cre2_substring_t * @var{match}, int @var{nmatch})
+@deftypefun int cre2_easy_match (const char * @var{pattern}, int @var{pattern_len}, const char * @var{text}, int @var{text_len}, cre2_string_t * @var{match}, int @var{nmatch})
 Like @cfunc{cre2_match} but expect a pointer to string as pattern.  Also
 the text is fully matched without anchoring.
 

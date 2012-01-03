@@ -112,7 +112,7 @@ cre2_error_string (const cre2 *re)
   return TO_CONST_RE2(re)->error().c_str();
 }
 void
-cre2_error_arg (const cre2 *re, cre2_substring_t *arg)
+cre2_error_arg (const cre2 *re, cre2_string_t *arg)
 {
   const std::string &argstr = TO_CONST_RE2(re)->error_arg();
   arg->data   = argstr.data();
@@ -137,7 +137,7 @@ cre2_program_size (const cre2 *re)
 int
 cre2_match (const cre2 *re , const char *text,
 	    int textlen, int startpos, int endpos, cre2_anchor_t anchor,
-	    cre2_substring_t *match, int nmatch)
+	    cre2_string_t *match, int nmatch)
 {
   re2::StringPiece text_re2(text, textlen);
   // It is better to allocate this on the stack.  Faster and it does not
@@ -167,7 +167,7 @@ cre2_match (const cre2 *re , const char *text,
 int
 cre2_easy_match (const char * pattern, int pattern_len,
 		 const char *text, int text_len,
-		 cre2_substring_t *match, int nmatch)
+		 cre2_string_t *match, int nmatch)
 {
   cre2 *		rex;
   cre2_options *	opt;

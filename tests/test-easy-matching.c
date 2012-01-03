@@ -29,7 +29,7 @@ main (int argc, const char *const argv[])
   pattern = "ciao";
   text    = "ciao";
   {
-    cre2_substring_t	match;
+    cre2_string_t	match;
     int			nmatch = 1;
     cre2_easy_match(pattern, strlen(pattern),
 		    text,    strlen(text),
@@ -45,7 +45,7 @@ main (int argc, const char *const argv[])
   pattern = "ci(ao";
   text    = "ciao";
   {
-    cre2_substring_t	match;
+    cre2_string_t	match;
     int			nmatch = 1;
     int			retval;
     retval = cre2_easy_match(pattern, strlen(pattern),
@@ -62,7 +62,7 @@ main (int argc, const char *const argv[])
   text    = "ciao hello";
   {
     int			nmatch = 3;
-    cre2_substring_t	match[nmatch];
+    cre2_string_t	match[nmatch];
     cre2_easy_match(pattern, strlen(pattern),
 		    text,    strlen(text),
 		    match, nmatch);

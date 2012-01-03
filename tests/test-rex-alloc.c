@@ -26,7 +26,7 @@ main (int argc, const char *const argv[])
   cre2_opt_posix_syntax(opt, 1);
   rex = cre2_new("ciao", 4, opt);
   {
-    cre2_substring_t	S;
+    cre2_string_t	S;
     printf("pattern: %s\n", cre2_pattern(rex));
     printf("error code: %d\n", cre2_error_code(rex));
     printf("error string: \"%s\"\n", cre2_error_string(rex));
@@ -72,7 +72,7 @@ main (int argc, const char *const argv[])
   {
     int			code = cre2_error_code(rex);
     const char *	msg  = cre2_error_string(rex);
-    cre2_substring_t	S;
+    cre2_string_t	S;
     cre2_error_arg(rex, &S);
     printf("pattern: %s\n", cre2_pattern(rex));
     printf("error: code=%d, msg=\"%s\"\n", code, msg);
