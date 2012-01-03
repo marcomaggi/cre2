@@ -140,10 +140,6 @@ cre2_match (const cre2 *re , const char *text,
 	    cre2_string_t *match, int nmatch)
 {
   re2::StringPiece text_re2(text, textlen);
-  // It is better to allocate this on the stack.  Faster and it does not
-  // throw any exception.
-  //
-  // re2::StringPiece *match_re2 = new re2::StringPiece[nmatch];
   re2::StringPiece match_re2[nmatch];
   RE2::Anchor anchor_re2 = RE2::UNANCHORED;
   switch (anchor) {
@@ -161,7 +157,6 @@ cre2_match (const cre2 *re , const char *text,
       match[i].length = match_re2[i].length();
     }
   }
-  // delete [] match_re2;
   return int(ret);
 }
 int
