@@ -17,6 +17,14 @@
 #include <string.h>
 #include <cre2.h>
 
+#if 0
+#  define PRINTF		printf
+#  define FWRITE		fwrite
+#else
+#  define PRINTF(MSG, ...)	/* empty string */
+#  define FWRITE(BUF, ...)	/* empty string */
+#endif
+
 int
 main (int argc, const char *const argv[])
 {
@@ -41,9 +49,9 @@ main (int argc, const char *const argv[])
     int			text_len = strlen(text);
 
     e = cre2_match(rex, text, text_len, 0, text_len, CRE2_UNANCHORED, &match, nmatch);
-    printf("match: retval=%d, ", e);
-    fwrite(match.data, match.length, 1, stdout);
-    printf("\n");
+    PRINTF("match: retval=%d, ", e);
+    FWRITE(match.data, match.length, 1, stdout);
+    PRINTF("\n");
   }
   cre2_delete(rex);
   cre2_opt_delete(opt);
@@ -53,27 +61,28 @@ main (int argc, const char *const argv[])
 
   pattern = "(ciao) (hello)";
   opt = cre2_opt_new();
-  cre2_opt_posix_syntax(opt, 1);
   rex = cre2_new(pattern, strlen(pattern), opt);
   {
     if (!cre2_ok(rex))
       goto error;
     int			nmatch = 3;
-    cre2_string_t	match[nmatch];
+    cre2_string_t	strings[nmatch];
+    cre2_range_t	ranges[nmatch];
     int			e;
     const char *	text = "ciao hello";
     int			text_len = strlen(text);
 
-    e = cre2_match(rex, text, text_len, 0, text_len, CRE2_UNANCHORED, match, nmatch);
-    printf("full match: ");
-    fwrite(match[0].data, match[0].length, 1, stdout);
-    printf("\n");
-    printf("first group: ");
-    fwrite(match[1].data, match[1].length, 1, stdout);
-    printf("\n");
-    printf("second group: ");
-    fwrite(match[2].data, match[2].length, 1, stdout);
-    printf("\n");
+    e = cre2_match(rex, text, text_len, 0, text_len, CRE2_UNANCHORED, strings, nmatch);
+    cre2_strings_to_ranges(text, ranges, strings, nmatch);
+    PRINTF("full match: ");
+    FWRITE(text+ranges[0].start, ranges[0].past-ranges[0].start, 1, stdout);
+    PRINTF("\n");
+    PRINTF("first group: ");
+    FWRITE(text+ranges[1].start, ranges[1].past-ranges[1].start, 1, stdout);
+    PRINTF("\n");
+    PRINTF("second group: ");
+    FWRITE(text+ranges[2].start, ranges[2].past-ranges[2].start, 1, stdout);
+    PRINTF("\n");
   }
   cre2_delete(rex);
   cre2_opt_delete(opt);

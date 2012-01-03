@@ -17,6 +17,14 @@
 #include <string.h>
 #include <cre2.h>
 
+#if 0
+#  define PRINTF		printf
+#  define FWRITE		fwrite
+#else
+#  define PRINTF(MSG, ...)	/* empty string */
+#  define FWRITE(BUF, ...)	/* empty string */
+#endif
+
 int
 main (int argc, const char *const argv[])
 {
@@ -27,13 +35,13 @@ main (int argc, const char *const argv[])
   rex = cre2_new("ciao", 4, opt);
   {
     cre2_string_t	S;
-    printf("pattern: %s\n", cre2_pattern(rex));
-    printf("error code: %d\n", cre2_error_code(rex));
-    printf("error string: \"%s\"\n", cre2_error_string(rex));
-    printf("number of capturing groups: %d\n", cre2_num_capturing_groups(rex));
-    printf("program size: %d\n", cre2_program_size(rex));
+    PRINTF("pattern: %s\n", cre2_pattern(rex));
+    PRINTF("error code: %d\n", cre2_error_code(rex));
+    PRINTF("error string: \"%s\"\n", cre2_error_string(rex));
+    PRINTF("number of capturing groups: %d\n", cre2_num_capturing_groups(rex));
+    PRINTF("program size: %d\n", cre2_program_size(rex));
     cre2_error_arg(rex, &S);
-    printf("error arg: len=%d, data=\"%s\"\n", S.length, S.data);
+    PRINTF("error arg: len=%d, data=\"%s\"\n", S.length, S.data);
     if (cre2_error_code(rex))
       goto error;
     if (cre2_num_capturing_groups(rex))
@@ -54,9 +62,9 @@ main (int argc, const char *const argv[])
   cre2_opt_posix_syntax(opt, 1);
   rex = cre2_new("ci(ao)", 6, opt);
   {
-    printf("error code: %d\n", cre2_error_code(rex));
-    printf("number of capturing groups: %d\n", cre2_num_capturing_groups(rex));
-    printf("program size: %d\n", cre2_program_size(rex));
+    PRINTF("error code: %d\n", cre2_error_code(rex));
+    PRINTF("number of capturing groups: %d\n", cre2_num_capturing_groups(rex));
+    PRINTF("program size: %d\n", cre2_program_size(rex));
     if (cre2_error_code(rex))
       goto error;
     if (1 != cre2_num_capturing_groups(rex))
@@ -68,15 +76,16 @@ main (int argc, const char *const argv[])
 /* ------------------------------------------------------------------ */
 
   opt = cre2_opt_new();
+  cre2_opt_log_errors(opt, 0);
   rex = cre2_new("ci(ao", 5, opt);
   {
     int			code = cre2_error_code(rex);
     const char *	msg  = cre2_error_string(rex);
     cre2_string_t	S;
     cre2_error_arg(rex, &S);
-    printf("pattern: %s\n", cre2_pattern(rex));
-    printf("error: code=%d, msg=\"%s\"\n", code, msg);
-    printf("error arg: len=%d, data=\"%s\"\n", S.length, S.data);
+    PRINTF("pattern: %s\n", cre2_pattern(rex));
+    PRINTF("error: code=%d, msg=\"%s\"\n", code, msg);
+    PRINTF("error arg: len=%d, data=\"%s\"\n", S.length, S.data);
   }
   cre2_delete(rex);
   cre2_opt_delete(opt);

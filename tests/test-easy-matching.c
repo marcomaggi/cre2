@@ -17,6 +17,14 @@
 #include <string.h>
 #include <cre2.h>
 
+#if 0
+#  define PRINTF		printf
+#  define FWRITE		fwrite
+#else
+#  define PRINTF(MSG, ...)	/* empty string */
+#  define FWRITE(BUF, ...)	/* empty string */
+#endif
+
 int
 main (int argc, const char *const argv[])
 {
@@ -34,9 +42,11 @@ main (int argc, const char *const argv[])
     cre2_easy_match(pattern, strlen(pattern),
 		    text,    strlen(text),
 		    &match, nmatch);
-    printf("match: ");
-    fwrite(match.data, match.length, 1, stdout);
-    printf("\n");
+    PRINTF("match: ");
+    FWRITE(match.data, match.length, 1, stdout);
+    PRINTF("\n");
+    if (0 != strncmp("ciao", match.data, match.length))
+      goto error;
   }
 
 /* ------------------------------------------------------------------ */
@@ -66,15 +76,21 @@ main (int argc, const char *const argv[])
     cre2_easy_match(pattern, strlen(pattern),
 		    text,    strlen(text),
 		    match, nmatch);
-    printf("full match: ");
-    fwrite(match[0].data, match[0].length, 1, stdout);
-    printf("\n");
-    printf("first group: ");
-    fwrite(match[1].data, match[1].length, 1, stdout);
-    printf("\n");
-    printf("second group: ");
-    fwrite(match[2].data, match[2].length, 1, stdout);
-    printf("\n");
+    PRINTF("full match: ");
+    FWRITE(match[0].data, match[0].length, 1, stdout);
+    PRINTF("\n");
+    PRINTF("first group: ");
+    FWRITE(match[1].data, match[1].length, 1, stdout);
+    PRINTF("\n");
+    PRINTF("second group: ");
+    FWRITE(match[2].data, match[2].length, 1, stdout);
+    PRINTF("\n");
+    if (0 != strncmp("ciao hello", match[0].data, match[0].length))
+      goto error;
+    if (0 != strncmp("ciao", match[1].data, match[1].length))
+      goto error;
+    if (0 != strncmp("hello", match[2].data, match[2].length))
+      goto error;
   }
 
 /* ------------------------------------------------------------------ */
