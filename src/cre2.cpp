@@ -132,7 +132,7 @@ cre2_opt_max_mem (cre2_options_t *opt)
 #define TO_RE2(re)       (reinterpret_cast<RE2 *>(re))
 #define TO_CONST_RE2(re) (reinterpret_cast<const RE2 *>(re))
 
-cre2_t *
+cre2_regexp_t *
 cre2_new (const char *pattern, int pattern_len, const cre2_options_t *opt)
 {
   re2::StringPiece pattern_re2(pattern, pattern_len);
@@ -142,39 +142,39 @@ cre2_new (const char *pattern, int pattern_len, const cre2_options_t *opt)
     (new (std::nothrow) RE2(pattern_re2, *reinterpret_cast<const RE2::Options *>(opt)));
 }
 void
-cre2_delete (cre2_t *re)
+cre2_delete (cre2_regexp_t *re)
 {
   delete TO_RE2(re);
 }
 const char *
-cre2_pattern (const cre2_t *re)
+cre2_pattern (const cre2_regexp_t *re)
 {
   return TO_CONST_RE2(re)->pattern().c_str();
 }
 int
-cre2_error_code (const cre2_t *re)
+cre2_error_code (const cre2_regexp_t *re)
 {
   return int(TO_CONST_RE2(re)->error_code());
 }
 const char *
-cre2_error_string (const cre2_t *re)
+cre2_error_string (const cre2_regexp_t *re)
 {
   return TO_CONST_RE2(re)->error().c_str();
 }
 void
-cre2_error_arg (const cre2_t *re, cre2_string_t *arg)
+cre2_error_arg (const cre2_regexp_t *re, cre2_string_t *arg)
 {
   const std::string &argstr = TO_CONST_RE2(re)->error_arg();
   arg->data   = argstr.data();
   arg->length = argstr.length();
 }
 int
-cre2_num_capturing_groups (const cre2_t *re)
+cre2_num_capturing_groups (const cre2_regexp_t *re)
 {
   return TO_CONST_RE2(re)->NumberOfCapturingGroups();
 }
 int
-cre2_program_size (const cre2_t *re)
+cre2_program_size (const cre2_regexp_t *re)
 {
   return TO_CONST_RE2(re)->ProgramSize();
 }
@@ -185,7 +185,7 @@ cre2_program_size (const cre2_t *re)
  ** ----------------------------------------------------------------- */
 
 int
-cre2_match (const cre2_t *re , const char *text,
+cre2_match (const cre2_regexp_t *re , const char *text,
 	    int textlen, int startpos, int endpos, cre2_anchor_t anchor,
 	    cre2_string_t *match, int nmatch)
 {
@@ -216,7 +216,7 @@ cre2_easy_match (const char * pattern, int pattern_len,
 		 const char *text, int text_len,
 		 cre2_string_t *match, int nmatch)
 {
-  cre2_t *		rex;
+  cre2_regexp_t *	rex;
   cre2_options_t *	opt;
   int			retval; // 0  for  no  match, 1  for  successful
 				// matching, 2 for wrong regexp

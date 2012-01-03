@@ -28,7 +28,7 @@
 int
 main (int argc, const char *const argv[])
 {
-  cre2_t *		rex;
+  cre2_regexp_t *	rex;
   cre2_options_t *	opt;
   opt = cre2_opt_new();
   cre2_opt_set_posix_syntax(opt, 1);
