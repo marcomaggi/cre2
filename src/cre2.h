@@ -1,4 +1,7 @@
 /*
+  Header  file  for  CRE2, a  C  language  wrapper  for RE2:  a  regular
+  expressions library by Google.
+
   Copyright (c) 2012 Marco Maggi <marco.maggi-ipsu@poste.it>
   Copyright (c) 2011 Keegan McAllister
   All rights reserved.
@@ -51,7 +54,7 @@ typedef struct cre2_range_t {
   long	past;	/* exclusive end index for bytevector */
 } cre2_range_t;
 
-typedef void cre2;
+typedef void	cre2;
 
 /* construction and destruction */
 cre2_decl cre2 *  cre2_new	(const char *pattern, int pattern_len,

@@ -1,4 +1,7 @@
 /*
+  Source  file  for  CRE2, a  C  language  wrapper  for RE2:  a  regular
+  expressions library by Google.
+
   Copyright (c) 2012 Marco Maggi <marco.maggi-ipsu@poste.it>
   Copyright (c) 2011 Keegan McAllister
   All rights reserved.
@@ -6,8 +9,37 @@
   For the license notice see the COPYING file.
 */
 
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 #include <re2/re2.h>
 #include "cre2.h"
+
+
+/** --------------------------------------------------------------------
+ ** Version functions.
+ ** ----------------------------------------------------------------- */
+
+const char *
+cre2_version_string (void)
+{
+  return cre2_VERSION_INTERFACE_STRING;
+}
+int
+cre2_version_interface_current (void)
+{
+  return cre2_VERSION_INTERFACE_CURRENT;
+}
+int
+cre2_version_interface_revision (void)
+{
+  return cre2_VERSION_INTERFACE_REVISION;
+}
+int
+cre2_version_interface_age (void)
+{
+  return cre2_VERSION_INTERFACE_AGE;
+}
 
 
 /** --------------------------------------------------------------------
