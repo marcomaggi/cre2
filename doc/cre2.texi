@@ -663,7 +663,7 @@ Set or unset
 Regular expression objects are built and finalised as follows:
 
 @example
-cre2 *            rex;
+cre2_t *          rex;
 cre2_options_t *  opt;
 
 opt = cre2_opt_new();
@@ -680,7 +680,7 @@ cre2_opt_delete(opt);
 @end example
 
 
-@deftp {Opaque Type} cre2
+@deftp {Opaque Type} cre2_t
 Opaque type for regular expression objects; it is meant to be used to
 declare pointers to objects.  Instances of this type can be used for any
 number of matching operations and are safe for concurrent use by
@@ -702,7 +702,7 @@ The number of bytes in the referenced substring.
 @end deftp
 
 
-@deftypefun {cre2 *} cre2_new (const char * @var{pattern}, int @var{pattern_len}, const cre2_options_t * @var{opt})
+@deftypefun {cre2_t *} cre2_new (const char * @var{pattern}, int @var{pattern_len}, const cre2_options_t * @var{opt})
 Build and return a new regular expression object representing the
 @var{pattern} of length @var{pattern_len}; the object is configured with
 the options in @var{opt}.  If memory allocation fails: the return value
@@ -710,13 +710,13 @@ is a @cnull{} pointer.
 @end deftypefun
 
 
-@deftypefun void cre2_delete (cre2 * @var{rex})
+@deftypefun void cre2_delete (cre2_t * @var{rex})
 Finalise a regular expression object releasing all the associated
 resources.
 @end deftypefun
 
 
-@deftypefun {const char *} cre2_pattern (const cre2 * @var{re})
+@deftypefun {const char *} cre2_pattern (const cre2_t * @var{re})
 Whether @var{rex} is a successfully built regular expression object or
 not: return a pointer to the pattern string.  The returned pointer is
 valid only while @var{rex} is alive: if @cfunc{cre2_delete} is applied
@@ -724,7 +724,7 @@ to @var{rex} the pointer becomes invalid.
 @end deftypefun
 
 
-@deftypefun int cre2_num_capturing_groups (const cre2 * @var{rex})
+@deftypefun int cre2_num_capturing_groups (const cre2_t * @var{rex})
 If @var{rex} is a successfully built regular expression object: return a
 non--negative integer representing the number of capturing groups in the
 pattern.  If an error occurred while building @var{rex}: return
@@ -732,7 +732,7 @@ pattern.  If an error occurred while building @var{rex}: return
 @end deftypefun
 
 
-@deftypefun int cre2_program_size (const cre2 * @var{rex})
+@deftypefun int cre2_program_size (const cre2_t * @var{rex})
 If @var{rex} is a successfully built regular expression object: return a
 non--negative integer representing the program size, a very approximate
 measure of a regexp's ``cost''; larger numbers are more expensive than
@@ -741,14 +741,14 @@ smaller numbers.  If an error occurred while building @var{rex}: return
 @end deftypefun
 
 
-@deftypefun int cre2_error_code (const cre2 * @var{rex})
+@deftypefun int cre2_error_code (const cre2_t * @var{rex})
 In case an error occurred while building @var{rex}: return an integer
 representing the associated error code.  Return zero if no error
 occurred.
 @end deftypefun
 
 
-@deftypefun {const char *} cre2_error_string (const cre2 * @var{rex})
+@deftypefun {const char *} cre2_error_string (const cre2_t * @var{rex})
 If an error occurred while building @var{rex}: return a pointer to an
 @asciiz{} string representing the associated error message.  The
 returned pointer is valid only while @var{rex} is alive: if
@@ -760,7 +760,7 @@ pointer to an empty string.
 The following code:
 
 @example
-cre2 *            rex;
+cre2_t *          rex;
 cre2_options_t *  opt;
 cre2_string_t     S;
 
@@ -784,7 +784,7 @@ error: code=6, msg="missing ): ci(ao"
 @end deftypefun
 
 
-@deftypefun void cre2_error_arg (const cre2 * @var{rex}, cre2_string_t * @var{arg})
+@deftypefun void cre2_error_arg (const cre2_t * @var{rex}, cre2_string_t * @var{arg})
 If an error occurred while building @var{rex}: fill the structure
 referenced by @var{arg} with the interval of bytes representing the
 offending portion of the pattern.
@@ -795,7 +795,7 @@ If @var{rex} is a successfully built regular expression object:
 The following code:
 
 @example
-cre2 *            rex;
+cre2_t *          rex;
 cre2_options_t *  opt;
 cre2_string_t     S;
 
@@ -824,7 +824,7 @@ arg: len=5 data="ci(ao"
 Basic pattern matching goes as follows:
 
 @example
-cre2 *            rex;
+cre2_t *          rex;
 cre2_options_t *  opt;
 const char *      pattern = "(ciao) (hello)";
 
@@ -890,7 +890,7 @@ Exclusive end index.
 @end deftp
 
 
-@deftypefun int cre2_match (const cre2 * @var{rex}, const char * @var{text}, int @var{text_len}, int @var{start_pos}, int @var{end_pos}, cre2_anchor_t @var{anchor}, cre2_string_t * @var{match}, int @var{nmatch})
+@deftypefun int cre2_match (const cre2_t * @var{rex}, const char * @var{text}, int @var{text_len}, int @var{start_pos}, int @var{end_pos}, cre2_anchor_t @var{anchor}, cre2_string_t * @var{match}, int @var{nmatch})
 Match a substring of the text referenced by @var{text} and holding
 @var{text_len} bytes against the regular expression object @var{rex}.
 Return true if the text matched, false otherwise.

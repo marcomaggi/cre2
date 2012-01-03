@@ -28,7 +28,7 @@
 int
 main (int argc, const char *const argv[])
 {
-  cre2 *		rex;
+  cre2_t *		rex;
   cre2_options_t *	opt;
   const char *		pattern;
 

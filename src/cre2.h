@@ -54,22 +54,22 @@ typedef struct cre2_range_t {
   long	past;	/* exclusive end index for bytevector */
 } cre2_range_t;
 
-typedef void	cre2;
+typedef void	cre2_t;
 
 /* construction and destruction */
-cre2_decl cre2 *  cre2_new	(const char *pattern, int pattern_len,
+cre2_decl cre2_t *  cre2_new	(const char *pattern, int pattern_len,
 				 const cre2_options_t *opt);
-cre2_decl void    cre2_delete	(cre2 *re);
+cre2_decl void    cre2_delete	(cre2_t *re);
 
 /* regular expression inspection */
-cre2_decl const char * cre2_pattern	(const cre2 *re);
-cre2_decl int cre2_error_code		(const cre2 *re);
-cre2_decl int cre2_num_capturing_groups	(const cre2 *re);
-cre2_decl int cre2_program_size		(const cre2 *re);
+cre2_decl const char * cre2_pattern	(const cre2_t *re);
+cre2_decl int cre2_error_code		(const cre2_t *re);
+cre2_decl int cre2_num_capturing_groups	(const cre2_t *re);
+cre2_decl int cre2_program_size		(const cre2_t *re);
 
 /* invalidated by further re use */
-cre2_decl const char *cre2_error_string(const cre2 *re);
-cre2_decl void cre2_error_arg(const cre2 *re, cre2_string_t * arg);
+cre2_decl const char *cre2_error_string(const cre2_t *re);
+cre2_decl void cre2_error_arg(const cre2_t *re, cre2_string_t * arg);
 
 /* matching with precompiled regular expressions objects */
 typedef enum cre2_anchor_t {
@@ -78,7 +78,7 @@ typedef enum cre2_anchor_t {
   CRE2_ANCHOR_BOTH  = 3
 } cre2_anchor_t;
 
-cre2_decl int cre2_match	(const cre2 * re,
+cre2_decl int cre2_match	(const cre2_t * re,
 				 const char * text, int textlen,
 				 int startpos, int endpos, cre2_anchor_t anchor,
 				 cre2_string_t * match, int nmatch);
