@@ -57,6 +57,16 @@ main (int argc, const char *const argv[])
   cre2_opt_delete(opt);
 
 /* ------------------------------------------------------------------ */
+/* no options object */
+
+  rex = cre2_new("ciao", 4, NULL);
+  {
+    if (cre2_error_code(rex))
+      goto error;
+  }
+  cre2_delete(rex);
+
+/* ------------------------------------------------------------------ */
 
   opt = cre2_opt_new();
   cre2_opt_set_posix_syntax(opt, 1);

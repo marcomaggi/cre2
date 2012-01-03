@@ -136,10 +136,15 @@ cre2_regexp_t *
 cre2_new (const char *pattern, int pattern_len, const cre2_options_t *opt)
 {
   re2::StringPiece pattern_re2(pattern, pattern_len);
-  // FIXME: is  this use of  "nothrow" good to avoid  raising exceptions
-  // when memory allocation fails and to return NULL instead?
-  return reinterpret_cast<void*>
-    (new (std::nothrow) RE2(pattern_re2, *reinterpret_cast<const RE2::Options *>(opt)));
+  if (opt) {
+    // FIXME:  is  this  use   of  "nothrow"  enough  to  avoid  raising
+    // exceptions  when  memory  allocation  fails and  to  return  NULL
+    // instead?
+    return reinterpret_cast<void*>
+      (new (std::nothrow) RE2(pattern_re2, *reinterpret_cast<const RE2::Options *>(opt)));
+  } else {
+    return reinterpret_cast<void*> (new (std::nothrow) RE2(pattern_re2));
+  }
 }
 void
 cre2_delete (cre2_regexp_t *re)
