@@ -62,7 +62,6 @@ cre2_decl cre2 *  cre2_new	(const char *pattern, int pattern_len,
 cre2_decl void    cre2_delete	(cre2 *re);
 
 /* regular expression inspection */
-cre2_decl int cre2_ok (cre2 *re);
 cre2_decl const char * cre2_pattern	(const cre2 *re);
 cre2_decl int cre2_error_code		(const cre2 *re);
 cre2_decl int cre2_num_capturing_groups	(const cre2 *re);

@@ -40,7 +40,7 @@ main (int argc, const char *const argv[])
   cre2_opt_posix_syntax(opt, 1);
   rex = cre2_new(pattern, strlen(pattern), opt);
   {
-    if (!cre2_ok(rex))
+    if (cre2_error_code(rex))
       goto error;
     cre2_string_t	match;
     int			nmatch = 1;
@@ -63,7 +63,7 @@ main (int argc, const char *const argv[])
   opt = cre2_opt_new();
   rex = cre2_new(pattern, strlen(pattern), opt);
   {
-    if (!cre2_ok(rex))
+    if (cre2_error_code(rex))
       goto error;
     int			nmatch = 3;
     cre2_string_t	strings[nmatch];

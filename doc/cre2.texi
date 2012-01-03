@@ -670,7 +670,7 @@ opt = cre2_opt_new();
 cre2_opt_posix_syntax(opt, 1);
 rex = cre2_new("ciao", 4, opt);
 @{
-  if (cre2_ok(rex))
+  if (!cre2_error_code(rex))
     /* successfully built */
   else
     /* an error occurred */
@@ -713,12 +713,6 @@ is a @cnull{} pointer.
 @deftypefun void cre2_delete (cre2 * @var{rex})
 Finalise a regular expression object releasing all the associated
 resources.
-@end deftypefun
-
-
-@deftypefun int cre2_ok (cre2 * @var{rex})
-Return true if @var{rex} is a successfully built regular expression
-object, else return false.
 @end deftypefun
 
 

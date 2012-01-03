@@ -123,11 +123,6 @@ cre2_delete(cre2 *re)
 {
   delete TO_RE2(re);
 }
-int
-cre2_ok (cre2 *re)
-{
-  return TO_RE2(re)->ok();
-}
 const char *
 cre2_pattern (const cre2 *re)
 {
@@ -206,7 +201,7 @@ cre2_easy_match (const char * pattern, int pattern_len,
   cre2_opt_log_errors(opt, 0);
   rex	= cre2_new(pattern, pattern_len, opt);
   {
-    if (cre2_ok(rex)) {
+    if (!cre2_error_code(rex)) {
       retval = cre2_match(rex, text, text_len, 0, text_len, CRE2_UNANCHORED, match, nmatch);
     } else {
       retval = 2;

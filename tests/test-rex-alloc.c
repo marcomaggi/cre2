@@ -46,7 +46,7 @@ main (int argc, const char *const argv[])
       goto error;
     if (cre2_num_capturing_groups(rex))
       goto error;
-    if (! cre2_ok(rex))
+    if (cre2_error_code(rex))
       goto error;
     if (0 != strlen(cre2_error_string(rex)))
       goto error;
