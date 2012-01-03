@@ -84,13 +84,13 @@ cre2_decl int cre2_program_size		(const cre2_regexp_t *re);
 cre2_decl const char *cre2_error_string(const cre2_regexp_t *re);
 cre2_decl void cre2_error_arg(const cre2_regexp_t *re, cre2_string_t * arg);
 
-/* matching with precompiled regular expressions objects */
 typedef enum cre2_anchor_t {
   CRE2_UNANCHORED   = 1,
   CRE2_ANCHOR_START = 2,
   CRE2_ANCHOR_BOTH  = 3
 } cre2_anchor_t;
 
+/* matching with precompiled regular expressions objects */
 cre2_decl int cre2_match	(const cre2_regexp_t * re,
 				 const char * text, int textlen,
 				 int startpos, int endpos, cre2_anchor_t anchor,
@@ -102,6 +102,18 @@ cre2_decl int cre2_easy_match	(const char * pattern, int pattern_len,
 
 cre2_decl void cre2_strings_to_ranges (const char * text, cre2_range_t * ranges,
 				       cre2_string_t * strings, int nmatch);
+
+/* matching without precompiled regular expressions objects */
+typedef int cre2_match_stringz_fun_t (const char * pattern, const cre2_string_t * text,
+				      cre2_string_t * match, int nmatch);
+
+typedef int cre2_match_stringz2_fun_t (const char * pattern, cre2_string_t * text,
+				       cre2_string_t * match, int nmatch);
+
+cre2_decl cre2_match_stringz_fun_t cre2_full_match;
+cre2_decl cre2_match_stringz_fun_t cre2_partial_match;
+cre2_decl cre2_match_stringz2_fun_t cre2_consume;
+cre2_decl cre2_match_stringz2_fun_t cre2_find_and_consume;
 
 #ifdef __cplusplus
 } // extern "C"

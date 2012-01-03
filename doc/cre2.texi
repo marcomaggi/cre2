@@ -508,6 +508,7 @@ entitled ``@gnu{} Free Documentation License''.
                                 construction.
 * options::                     Matching configuration.
 * matching::                    Matching regular expressions.
+* other::                       Other matching functions.
 
 Appendices
 
@@ -1014,11 +1015,11 @@ text): we can use @cnull{} as @var{match} argument and @math{0} as
 @var{nmatch} argument.
 
 The first element of @var{match} (index @math{0}) references the full
-portion of the substring of @var{text} which matched, the second element
-of @var{match} (index @math{1}) references the portion of text which
-matched the first parenthetical subexpression, the third element of
-@var{match} (index @math{2}) references the portion of text which
-matched the second parenthetical subexpression, and so on.
+portion of the substring of @var{text} matching the pattern; the second
+element of @var{match} (index @math{1}) references the portion of text
+matching the first parenthetical subexpression, the third element of
+@var{match} (index @math{2}) references the portion of text matching the
+second parenthetical subexpression; and so on.
 @end deftypefun
 
 
@@ -1053,6 +1054,118 @@ result of matching @var{text} against a regular expression: fill the
 array of @var{ranges} with the index intervals in the @var{text} buffer
 representing the same results.
 @end deftypefun
+
+@c page
+@node other
+@chapter Other matching functions
+
+
+The following functions match a buffer of text against a regular
+expression, allowing the extraction of portions of text matching
+parenthetical subexpressions.  All of them show the following behaviour:
+
+@itemize
+@item
+If the text matches the pattern: the return value is @math{1}; if the
+text does not match the pattern: the return value is @math{0}.
+
+If the pattern is invalid: the return value is @math{0}; there is no way
+to distinguish this case from the case of text not matching other than
+looking at what RE2 prints to @code{stderr} in this case.
+
+@item
+Data about the matching groups is stored in the array @var{match}, which
+must have at least @var{nmatch} entries; the referenced substrings are
+portions of the @var{text} buffer.
+
+The first element of @var{match} (index @math{0}) references the portion
+of text matching the first parenthetical subexpression; the second
+element of @var{match} (index @math{1}) references the portion of text
+matching the second parenthetical subexpression; and so on.
+@end itemize
+
+@noindent
+see the documentation of each function for the differences.
+
+
+@deftypefun int cre2_full_match (const char * @var{pattern}, const cre2_string_t * @var{text}, cre2_string_t * @var{match}, int @var{nmatch})
+Match the the zero--terminated string @var{pattern} against the full
+buffer @var{text}.
+
+The array @var{match} can have a number of elements between zero
+(included) and the number of parenthetical subexpressions in
+@var{pattern} (excluded); if @var{nmatch} is greater than the number of
+parenthetical subexpressions: the return value is @math{0}.
+
+If we are only interested in verifying if the text matches or not: we
+can use @cnull{} as @var{match} argument and @math{0} as @var{nmatch}
+argument.
+
+The following example is a successful match:
+
+@example
+const char *   pattern = "ci.*ut";
+const char *   text    = "ciao salut";
+cre2_string_t  input   = @{
+  .data   = text,
+  .length = strlen(text)
+@};
+int            result;
+result = cre2_full_match(pattern, &input, NULL, 0);
+
+result @result{} 1
+@end example
+
+@noindent
+the following example is a successful match in which parenthetical
+subexpression is ignored:
+
+@example
+const char *   pattern = "(ciao) salut";
+const char *   text    = "ciao salut";
+cre2_string_t  input   = @{
+  .data   = text,
+  .length = strlen(text)
+@};
+int            result;
+result = cre2_full_match(pattern, &input, NULL, 0);
+
+result @result{} 1
+@end example
+
+@noindent
+the following example is a successful match in which the portion of text
+matching the parenthetical subexpression is reported:
+
+@example
+const char *   pattern = "(ciao) salut";
+const char *   text    = "ciao salut";
+cre2_string_t  input   = @{
+  .data   = text,
+  .length = strlen(text)
+@};
+int            nmatch  = 1;
+cre2_string_t  match[nmatch];
+int            result;
+result = cre2_full_match(pattern, &input, match, nmatch);
+
+result @result{} 1
+strncmp(text, input.data, input.length)         @result{} 0
+strncmp("ciao", match[0].data, match[0].length) @result{} 0
+@end example
+@end deftypefun
+
+
+@deftypefun int cre2_partial_match (const char * @var{pattern}, const char * @var{text})
+Verify if the @asciiz{} string @var{pattern} matches a portion of the
+@asciiz{} string @var{text}.  Return true if success, false otherwise.
+
+
+@example
+cre2_full_match("ia", "ciao"); /* success */
+@end example
+@end deftypefun
+
 
 @c page
 @node Package License

@@ -15,6 +15,9 @@
 #include <re2/re2.h>
 #include "cre2.h"
 
+// For debugging purposes.
+// #include <cstdio>
+
 
 /** --------------------------------------------------------------------
  ** Version functions.
@@ -226,8 +229,13 @@ cre2_easy_match (const char * pattern, int pattern_len,
   int			retval; // 0  for  no  match, 1  for  successful
 				// matching, 2 for wrong regexp
   opt	= cre2_opt_new();
+  if (!opt) return 2;
   cre2_opt_set_log_errors(opt, 0);
   rex	= cre2_new(pattern, pattern_len, opt);
+  if (!rex) {
+    cre2_opt_delete(opt);
+    return 2;
+  }
   {
     if (!cre2_error_code(rex)) {
       retval = cre2_match(rex, text, text_len, 0, text_len, CRE2_UNANCHORED, match, nmatch);
@@ -247,5 +255,113 @@ cre2_strings_to_ranges (const char * text, cre2_range_t * ranges, cre2_string_t 
     ranges[i].past  = ranges[i].start + strings[i].length;
   }
 }
+
+
+/** --------------------------------------------------------------------
+ ** Matching without precompiled regular expressions objects.
+ ** ----------------------------------------------------------------- */
+
+#define DEFINE_MATCH_ZSTRING_FUN(NAME,FUN)			\
+  int								\
+  NAME (const char * pattern, const cre2_string_t * text,	\
+	cre2_string_t * match, int nmatch)			\
+  {								\
+    re2::StringPiece	input(text->data, text->length);	\
+    re2::StringPiece	strv[nmatch];				\
+    RE2::Arg		argv[nmatch];				\
+    RE2::Arg *		args[nmatch];				\
+    bool			retval;				\
+    for (int i=0; i<nmatch; ++i) {				\
+      argv[i] = &strv[i];					\
+      args[i] = &argv[i];					\
+    }								\
+    retval = RE2::FUN(input, pattern, args, nmatch);		\
+    if (retval) {						\
+      for (int i=0; i<nmatch; ++i) {				\
+	match[i].data   = strv[i].data();			\
+	match[i].length = strv[i].length();			\
+      }								\
+    }								\
+    return int(retval);						\
+  }
+
+DEFINE_MATCH_ZSTRING_FUN(cre2_full_match,FullMatchN)
+DEFINE_MATCH_ZSTRING_FUN(cre2_partial_match,PartialMatchN)
+
+/* This  is different from  the above  in that  the "input"  argument is
+   mutated to reference the text after the mathing portion. */
+#define DEFINE_MATCH_ZSTRING_FUN2(NAME,FUN)			\
+  int								\
+  NAME (const char * pattern, cre2_string_t * text,		\
+	cre2_string_t * match, int nmatch)			\
+  {								\
+    re2::StringPiece	input(text->data, text->length);	\
+    re2::StringPiece	strv[nmatch];				\
+    RE2::Arg		argv[nmatch];				\
+    RE2::Arg *		args[nmatch];				\
+    bool			retval;				\
+    for (int i=0; i<nmatch; ++i) {				\
+      argv[i] = &strv[i];					\
+      args[i] = &argv[i];					\
+    }								\
+    retval = RE2::FUN(&input, pattern, args, nmatch);		\
+    if (retval) {						\
+      text->data   = input.data();				\
+      text->length = input.length();				\
+      for (int i=0; i<nmatch; ++i) {				\
+	match[i].data   = strv[i].data();			\
+	match[i].length = strv[i].length();			\
+      }								\
+    }								\
+    return int(retval);						\
+  }
+
+DEFINE_MATCH_ZSTRING_FUN2(cre2_consume,ConsumeN)
+DEFINE_MATCH_ZSTRING_FUN2(cre2_find_and_consume,FindAndConsumeN)
+
+// int
+// cre2_consume (const char * pattern, cre2_string_t * text, cre2_string_t * match, int nmatch)
+// {
+//   re2::StringPiece	input(text->data, text->length);
+//   re2::StringPiece	strv[nmatch];
+//   RE2::Arg		argv[nmatch];
+//   RE2::Arg *		args[nmatch];
+//   bool			retval;
+//   for (int i=0; i<nmatch; ++i) {
+//     argv[i] = &strv[i];
+//     args[i] = &argv[i];
+//   }
+//   retval = RE2::ConsumeN(&input, pattern, args, nmatch);
+//   if (retval) {
+//     text->data   = input.data();
+//     text->length = input.length();
+//     for (int i=0; i<nmatch; ++i) {
+//       match[i].data   = strv[i].data();
+//       match[i].length = strv[i].length();
+//     }
+//   }
+//   return int(retval);
+// }
+// int
+// cre2_find_and_consume (const char * pattern, cre2_string_t * text, cre2_string_t * match, int nmatch)
+// {
+//   re2::StringPiece	input(text->data, text->length);
+//   re2::StringPiece	strv[nmatch];
+//   RE2::Arg		argv[nmatch];
+//   RE2::Arg *		args[nmatch];
+//   bool			retval;
+//   for (int i=0; i<nmatch; ++i) {
+//     argv[i] = &strv[i];
+//     args[i] = &argv[i];
+//   }
+//   retval = RE2::FindAndConsumeN(&input, pattern, args, nmatch);
+//   if (retval) {
+//     for (int i=0; i<nmatch; ++i) {
+//       match[i].data   = strv[i].data();
+//       match[i].length = strv[i].length();
+//     }
+//   }
+//   return int(retval);
+// }
 
 /* end of file */
