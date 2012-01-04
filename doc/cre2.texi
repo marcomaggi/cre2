@@ -660,6 +660,74 @@ The number of bytes in the referenced substring.
 @end deftp
 
 
+@deftp {Enumeration Typedef} cre2_error_code_t
+Enumeration type for error codes returned by @cfunc{cre2_error_code}.
+It contains the following symbols:
+
+@table @code
+@item CRE2_NO_ERROR
+@cindex @code{CRE2_NO_ERROR}
+Defined as @code{0}, represents a successful operation.
+
+@item CRE2_ERROR_INTERNAL
+@cindex @code{CRE2_ERROR_INTERNAL}
+Unexpected error.
+
+@item CRE2_ERROR_BAD_ESCAPE
+@cindex @code{CRE2_ERROR_BAD_ESCAPE}
+Bad escape sequence.
+
+@item CRE2_ERROR_BAD_CHAR_CLASS
+@cindex @code{CRE2_ERROR_BAD_CHAR_CLASS}
+Bad character class.
+
+@item CRE2_ERROR_BAD_CHAR_RANGE
+@cindex @code{CRE2_ERROR_BAD_CHAR_RANGE}
+Bad character class range.
+
+@item CRE2_ERROR_MISSING_BRACKET
+@cindex @code{CRE2_ERROR_MISSING_BRACKET}
+Missing closing @code{]}.
+
+@item CRE2_ERROR_MISSING_PAREN
+@cindex @code{CRE2_ERROR_MISSING_PAREN}
+Missing closing @code{)}.
+
+@item CRE2_ERROR_TRAILING_BACKSLASH
+@cindex @code{CRE2_ERROR_TRAILING_BACKSLASH}
+Trailing @code{\} at end of regexp.
+
+@item CRE2_ERROR_REPEAT_ARGUMENT
+@cindex @code{CRE2_ERROR_REPEAT_ARGUMENT}
+Repeat argument missing, e.g. @code{*}.
+
+@item CRE2_ERROR_REPEAT_SIZE
+@cindex @code{CRE2_ERROR_REPEAT_SIZE}
+Bad repetition argument.
+
+@item CRE2_ERROR_REPEA_TOP
+@cindex @code{CRE2_ERROR_REPEA_TOP}
+Bad repetition operator.
+
+@item CRE2_ERROR_BAD_PERL_OP
+@cindex @code{CRE2_ERROR_BAD_PERL_OP}
+Bad Perl operator.
+
+@item CRE2_ERROR_BAD_UTF8
+@cindex @code{CRE2_ERROR_BAD_UTF8}
+Invalid @utf{}-8 in regexp.
+
+@item CRE2_ERROR_BAD_NAMED_CAPTURE
+@cindex @code{CRE2_ERROR_BAD_NAMED_CAPTURE}
+Bad named capture group.
+
+@item CRE2_ERROR_PATTERN_TOO_LARGE
+@cindex @code{CRE2_ERROR_PATTERN_TOO_LARGE}
+Pattern too large (compile failed).
+@end table
+@end deftp
+
+
 @deftypefun {cre2_regexp_t *} cre2_new (const char * @var{pattern}, int @var{pattern_len}, const cre2_options_t * @var{opt})
 Build and return a new regular expression object representing the
 @var{pattern} of length @var{pattern_len} bytes; the object is

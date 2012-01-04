@@ -9,6 +9,11 @@
   For the license notice see the COPYING file.
 */
 
+
+/** --------------------------------------------------------------------
+ ** Headers.
+ ** ----------------------------------------------------------------- */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -17,10 +22,20 @@ extern "C" {
 #  define cre2_decl	extern
 #endif
 
+
+/** --------------------------------------------------------------------
+ ** Version functions.
+ ** ----------------------------------------------------------------- */
+
 cre2_decl const char *	cre2_version_string (void);
 cre2_decl int		cre2_version_interface_current	(void);
 cre2_decl int		cre2_version_interface_revision	(void);
 cre2_decl int		cre2_version_interface_age	(void);
+
+
+/** --------------------------------------------------------------------
+ ** Regular expressions configuration options.
+ ** ----------------------------------------------------------------- */
 
 typedef void cre2_options_t;
 
@@ -57,17 +72,38 @@ cre2_decl int cre2_opt_one_line			(cre2_options_t *opt);
 cre2_decl int cre2_opt_max_mem			(cre2_options_t *opt);
 cre2_decl cre2_encoding_t cre2_opt_encoding	(cre2_options_t *opt);
 
+
+/** --------------------------------------------------------------------
+ ** Precompiled regular expressions.
+ ** ----------------------------------------------------------------- */
+
 typedef struct cre2_string_t {
   const char *	data;
   int		length;
 } cre2_string_t;
 
-typedef struct cre2_range_t {
-  long	start;	/* inclusive start index for bytevector */
-  long	past;	/* exclusive end index for bytevector */
-} cre2_range_t;
-
 typedef void	cre2_regexp_t;
+
+/* This definition  must be  kept in sync  with the definition  of "enum
+   ErrorCode" in the file "re2.h" of the original RE2 distribution. */
+typedef enum cre2_error_code_t {
+  CRE2_NO_ERROR = 0,
+  CRE2_ERROR_INTERNAL,		/* unexpected error */
+  /* parse errors */
+  CRE2_ERROR_BAD_ESCAPE,	/* bad escape sequence */
+  CRE2_ERROR_BAD_CHAR_CLASS,	/* bad character class */
+  CRE2_ERROR_BAD_CHAR_RANGE,	/* bad character class range */
+  CRE2_ERROR_MISSING_BRACKET,	/* missing closing ] */
+  CRE2_ERROR_MISSING_PAREN,	/* missing closing ) */
+  CRE2_ERROR_TRAILING_BACKSLASH,/* trailing \ at end of regexp */
+  CRE2_ERROR_REPEAT_ARGUMENT,	/* repeat argument missing, e.g. "*" */
+  CRE2_ERROR_REPEAT_SIZE,	/* bad repetition argument */
+  CRE2_ERROR_REPEA_TOP,		/* bad repetition operator */
+  CRE2_ERROR_BAD_PERL_OP,	/* bad perl operator */
+  CRE2_ERROR_BAD_UTF8,		/* invalid UTF-8 in regexp */
+  CRE2_ERROR_BAD_NAMED_CAPTURE,	/* bad named capture group */
+  CRE2_ERROR_PATTERN_TOO_LARGE,	/* pattern too large (compile failed) */
+} cre2_error_code_t;
 
 /* construction and destruction */
 cre2_decl cre2_regexp_t *  cre2_new	(const char *pattern, int pattern_len,
@@ -84,13 +120,22 @@ cre2_decl int cre2_program_size		(const cre2_regexp_t *re);
 cre2_decl const char *cre2_error_string(const cre2_regexp_t *re);
 cre2_decl void cre2_error_arg(const cre2_regexp_t *re, cre2_string_t * arg);
 
+
+/** --------------------------------------------------------------------
+ ** Main matching functions.
+ ** ----------------------------------------------------------------- */
+
 typedef enum cre2_anchor_t {
   CRE2_UNANCHORED   = 1,
   CRE2_ANCHOR_START = 2,
   CRE2_ANCHOR_BOTH  = 3
 } cre2_anchor_t;
 
-/* matching with precompiled regular expressions objects */
+typedef struct cre2_range_t {
+  long	start;	/* inclusive start index for bytevector */
+  long	past;	/* exclusive end index for bytevector */
+} cre2_range_t;
+
 cre2_decl int cre2_match	(const cre2_regexp_t * re,
 				 const char * text, int textlen,
 				 int startpos, int endpos, cre2_anchor_t anchor,
@@ -103,7 +148,11 @@ cre2_decl int cre2_easy_match	(const char * pattern, int pattern_len,
 cre2_decl void cre2_strings_to_ranges (const char * text, cre2_range_t * ranges,
 				       cre2_string_t * strings, int nmatch);
 
-/* matching without precompiled regular expressions objects */
+
+/** --------------------------------------------------------------------
+ ** Other matching functions.
+ ** ----------------------------------------------------------------- */
+
 typedef int cre2_match_stringz_fun_t (const char * pattern, const cre2_string_t * text,
 				      cre2_string_t * match, int nmatch);
 
@@ -125,6 +174,11 @@ cre2_decl cre2_match_rex_fun_t		cre2_full_match_re;
 cre2_decl cre2_match_rex_fun_t		cre2_partial_match_re;
 cre2_decl cre2_match_rex2_fun_t		cre2_consume_re;
 cre2_decl cre2_match_rex2_fun_t		cre2_find_and_consume_re;
+
+
+/** --------------------------------------------------------------------
+ ** Done.
+ ** ----------------------------------------------------------------- */
 
 #ifdef __cplusplus
 } // extern "C"
