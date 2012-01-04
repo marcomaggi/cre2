@@ -835,6 +835,7 @@ cre2_string_t     S;
 
 rex = cre2_new("ci(ao", 5, NULL);
 @{
+  cre2_error_arg(rex, &S);
   printf("arg: len=%d, data=\"%s\"\n", S.length, S.data);
 @}
 cre2_delete(rex);
