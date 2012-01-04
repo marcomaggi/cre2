@@ -16,9 +16,7 @@
 #include "cre2.h"
 
 #include <cstdlib>
-
-// For debugging purposes.
-// #include <cstdio>
+#include <cstdio>
 
 
 /** --------------------------------------------------------------------
@@ -102,6 +100,9 @@ cre2_opt_set_encoding (cre2_options_t *opt, cre2_encoding_t enc)
   case CRE2_Latin1:
     TO_OPT(opt)->set_encoding(RE2::Options::EncodingLatin1);
     break;
+  default:
+    fprintf(stderr, "CRE2: internal error: unknown encoding %d\n", enc);
+    exit(EXIT_FAILURE);
   }
 }
 cre2_encoding_t
@@ -210,6 +211,8 @@ cre2_match (const cre2_regexp_t *re , const char *text,
     break;
   case CRE2_ANCHOR_BOTH:
     anchor_re2 = RE2::ANCHOR_BOTH;
+    break;
+  case CRE2_UNANCHORED:
     break;
   }
   retval = TO_CONST_RE2(re)->Match(text_re2, startpos, endpos, anchor_re2, match_re2, nmatch);
@@ -393,41 +396,121 @@ DEFINE_MATCH_REX_FUN2(cre2_find_and_consume_re,FindAndConsumeN)
    clear how they can be written to allow a correct API towards C.  */
 
 int
-cre2_replace (const char * pattern, cre2_string_t * target, cre2_string_t * rewrite)
+cre2_replace (const char * pattern, cre2_string_t * text_and_target, cre2_string_t * rewrite)
 {
-  std::string		S(target->data, target->length);
+  std::string		S(text_and_target->data, text_and_target->length);
   re2::StringPiece	R(rewrite->data, rewrite->length);
   char *		buffer; /* this exists to make GCC shut up about const */
   bool			retval;
   retval = RE2::Replace(&S, pattern, R);
-  target->length = S.length();
-  buffer         = (char *)malloc(1+target->length);
-  if (target->data) {
-    S.copy(buffer, target->length);
-    buffer[target->length] = '\0';
-    target->data = buffer;
-  } else {
-    return 2;
-  }
+  text_and_target->length = S.length();
+  buffer = (char *)malloc(1+text_and_target->length);
+  if (buffer) {
+    S.copy(buffer, text_and_target->length);
+    buffer[text_and_target->length] = '\0';
+    text_and_target->data = buffer;
+  } else
+    return -1;
   return int(retval);
 }
 int
-cre2_replace_re (cre2_regexp_t * rex, cre2_string_t * target, cre2_string_t * rewrite)
+cre2_replace_re (cre2_regexp_t * rex, cre2_string_t * text_and_target, cre2_string_t * rewrite)
 {
-  std::string		S(target->data, target->length);
+  std::string		S(text_and_target->data, text_and_target->length);
   re2::StringPiece	R(rewrite->data, rewrite->length);
   char *		buffer; /* this exists to make GCC shut up about const */
   bool			retval;
   retval = RE2::Replace(&S, *TO_RE2(rex), R);
-  target->length = S.length();
-  buffer         = (char *)malloc(1+target->length);
-  if (target->data) {
-    S.copy(buffer, target->length);
+  text_and_target->length = S.length();
+  buffer = (char *)malloc(1+text_and_target->length);
+  if (buffer) {
+    S.copy(buffer, text_and_target->length);
+    buffer[text_and_target->length] = '\0';
+    text_and_target->data = buffer;
+  } else
+    return -1;
+  return int(retval);
+}
+
+/* ------------------------------------------------------------------ */
+
+int
+cre2_global_replace (const char * pattern, cre2_string_t * text_and_target, cre2_string_t * rewrite)
+{
+  std::string		S(text_and_target->data, text_and_target->length);
+  re2::StringPiece	R(rewrite->data, rewrite->length);
+  char *		buffer; /* this exists to make GCC shut up about const */
+  int			retval;
+  retval = RE2::GlobalReplace(&S, pattern, R);
+  text_and_target->length = S.length();
+  buffer = (char *)malloc(1+text_and_target->length);
+  if (buffer) {
+    S.copy(buffer, text_and_target->length);
+    buffer[text_and_target->length] = '\0';
+    text_and_target->data = buffer;
+  } else
+    return -1;
+  return int(retval);
+}
+int
+cre2_global_replace_re (cre2_regexp_t * rex, cre2_string_t * text_and_target, cre2_string_t * rewrite)
+{
+  std::string		S(text_and_target->data, text_and_target->length);
+  re2::StringPiece	R(rewrite->data, rewrite->length);
+  char *		buffer; /* this exists to make GCC shut up about const */
+  int			retval;
+  retval = RE2::GlobalReplace(&S, *TO_RE2(rex), R);
+  text_and_target->length = S.length();
+  buffer = (char *)malloc(1+text_and_target->length);
+  if (buffer) {
+    S.copy(buffer, text_and_target->length);
+    buffer[text_and_target->length] = '\0';
+    text_and_target->data = buffer;
+  } else
+    return -1;
+  return retval;
+}
+
+/* ------------------------------------------------------------------ */
+
+int
+cre2_extract (const char * pattern, cre2_string_t * text,
+	      cre2_string_t * rewrite, cre2_string_t * target)
+{
+  re2::StringPiece	T(text->data, text->length);
+  re2::StringPiece	R(rewrite->data, rewrite->length);
+  std::string		O;
+  char *		buffer; /* this exists to make GCC shut up about const */
+  bool			retval;
+  retval = RE2::Extract(T, pattern, R, &O);
+  target->length = O.length();
+  buffer = (char *)malloc(1+target->length);
+  if (buffer) {
+    O.copy(buffer, target->length);
     buffer[target->length] = '\0';
     target->data = buffer;
-  } else {
-    return 2;
-  }
+  } else
+    return -1;
+  return int(retval);
+}
+int
+cre2_extract_re (cre2_regexp_t * rex, cre2_string_t * text,
+		 cre2_string_t * rewrite, cre2_string_t * target)
+{
+  re2::StringPiece	T(text->data, text->length);
+  re2::StringPiece	R(rewrite->data, rewrite->length);
+  std::string		O;
+  char *		buffer; /* this exists to make GCC shut up about const */
+  bool			retval;
+  retval = RE2::Extract(T, *TO_RE2(rex), R, &O);
+  target->length = O.length();
+  buffer = (char *)malloc(1+target->length);
+  if (buffer) {
+    O.copy(buffer, target->length);
+    buffer[target->length] = '\0';
+    target->data = buffer;
+  } else
+    return -1;
   return int(retval);
 }
 

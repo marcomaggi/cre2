@@ -180,11 +180,60 @@ cre2_decl cre2_match_rex2_fun_t		cre2_find_and_consume_re;
  ** Problematic functions.
  ** ----------------------------------------------------------------- */
 
-cre2_decl int cre2_replace	(const char * pattern, cre2_string_t * target,
+/* Match the  text in  the buffer "text_and_target"  against the  rex in
+   "pattern" or "rex".  Mutate "text_and_target" so that it references a
+   malloc'ed buffer  holding the original  text in which the  first, and
+   only  the first,  match is  substituted with  the text  in "rewrite".
+   Numeric backslash  sequences (\1 to \9) in  "rewrite" are substituted
+   with the  portions of  text matching the  corresponding parenthetical
+   subexpressions.
+
+   Return 0 if  no match, 1 if successful match,  -1 if error allocating
+   memory. */
+cre2_decl int cre2_replace	(const char * pattern,
+				 cre2_string_t * text_and_target,
 				 cre2_string_t * rewrite);
-cre2_decl int cre2_replace_re	(cre2_regexp_t * rex,  cre2_string_t * target,
+cre2_decl int cre2_replace_re	(cre2_regexp_t * rex,
+				 cre2_string_t * text_and_target,
 				 cre2_string_t * rewrite);
 
+/* Match the  text in  the buffer "text_and_target"  against the  rex in
+   "pattern" or "rex".  Mutate "text_and_target" so that it references a
+   malloc'ed  buffer holding  the original  text  in which  the all  the
+   matching  substrings  are substituted  with  the  text in  "rewrite".
+   Numeric backslash  sequences (\1 to \9) in  "rewrite" are substituted
+   with the  portions of  text matching the  corresponding parenthetical
+   subexpressions.
+
+   Return 0  if no  match, positive integer  representing the  number of
+   substitutions performed  if successful match, -1  if error allocating
+   memory. */
+cre2_decl int cre2_global_replace	(const char * pattern,
+					 cre2_string_t * text_and_target,
+					 cre2_string_t * rewrite);
+cre2_decl int cre2_global_replace_re	(cre2_regexp_t * rex,
+					 cre2_string_t * text_and_target,
+					 cre2_string_t * rewrite);
+
+/* Match the text  in the buffer "text" against the  rex in "pattern" or
+   "rex".   Mutate "target"  so that  it references  a  malloc'ed buffer
+   holding a copy of the  text in "rewrite"; numeric backslash sequences
+   (\1 to  \9) in  "rewrite" are substituted  with the portions  of text
+   matching the corresponding parenthetical subexpressions.
+
+   Non-matching text in "text" is ignored.
+
+   Return 0 if  no match, 1 if successful match,  -1 if error allocating
+   memory. */
+cre2_decl int cre2_extract		(const char * pattern,
+					 cre2_string_t * text,
+					 cre2_string_t * rewrite,
+					 cre2_string_t * target);
+
+cre2_decl int cre2_extract_re		(cre2_regexp_t * rex,
+					 cre2_string_t * text,
+					 cre2_string_t * rewrite,
+					 cre2_string_t * target);
 
 
 /** --------------------------------------------------------------------
