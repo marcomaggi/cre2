@@ -258,7 +258,7 @@ cre2_strings_to_ranges (const char * text, cre2_range_t * ranges, cre2_string_t 
 
 
 /** --------------------------------------------------------------------
- ** Matching without precompiled regular expressions objects.
+ ** Other matching functions: stringz pattern.
  ** ----------------------------------------------------------------- */
 
 #define DEFINE_MATCH_ZSTRING_FUN(NAME,FUN)			\
@@ -319,49 +319,68 @@ DEFINE_MATCH_ZSTRING_FUN(cre2_partial_match,PartialMatchN)
 DEFINE_MATCH_ZSTRING_FUN2(cre2_consume,ConsumeN)
 DEFINE_MATCH_ZSTRING_FUN2(cre2_find_and_consume,FindAndConsumeN)
 
-// int
-// cre2_consume (const char * pattern, cre2_string_t * text, cre2_string_t * match, int nmatch)
-// {
-//   re2::StringPiece	input(text->data, text->length);
-//   re2::StringPiece	strv[nmatch];
-//   RE2::Arg		argv[nmatch];
-//   RE2::Arg *		args[nmatch];
-//   bool			retval;
-//   for (int i=0; i<nmatch; ++i) {
-//     argv[i] = &strv[i];
-//     args[i] = &argv[i];
-//   }
-//   retval = RE2::ConsumeN(&input, pattern, args, nmatch);
-//   if (retval) {
-//     text->data   = input.data();
-//     text->length = input.length();
-//     for (int i=0; i<nmatch; ++i) {
-//       match[i].data   = strv[i].data();
-//       match[i].length = strv[i].length();
-//     }
-//   }
-//   return int(retval);
-// }
-// int
-// cre2_find_and_consume (const char * pattern, cre2_string_t * text, cre2_string_t * match, int nmatch)
-// {
-//   re2::StringPiece	input(text->data, text->length);
-//   re2::StringPiece	strv[nmatch];
-//   RE2::Arg		argv[nmatch];
-//   RE2::Arg *		args[nmatch];
-//   bool			retval;
-//   for (int i=0; i<nmatch; ++i) {
-//     argv[i] = &strv[i];
-//     args[i] = &argv[i];
-//   }
-//   retval = RE2::FindAndConsumeN(&input, pattern, args, nmatch);
-//   if (retval) {
-//     for (int i=0; i<nmatch; ++i) {
-//       match[i].data   = strv[i].data();
-//       match[i].length = strv[i].length();
-//     }
-//   }
-//   return int(retval);
-// }
+
+/** --------------------------------------------------------------------
+ ** Other matching functions: rex pattern.
+ ** ----------------------------------------------------------------- */
+
+#define DEFINE_MATCH_REX_FUN(NAME,FUN)				\
+  int								\
+  NAME (cre2_regexp_t * rex, const cre2_string_t * text,	\
+	cre2_string_t * match, int nmatch)			\
+  {								\
+    re2::StringPiece	input(text->data, text->length);	\
+    re2::StringPiece	strv[nmatch];				\
+    RE2::Arg		argv[nmatch];				\
+    RE2::Arg *		args[nmatch];				\
+    bool			retval;				\
+    for (int i=0; i<nmatch; ++i) {				\
+      argv[i] = &strv[i];					\
+      args[i] = &argv[i];					\
+    }								\
+    retval = RE2::FUN(input, *TO_RE2(rex), args, nmatch);	\
+    if (retval) {						\
+      for (int i=0; i<nmatch; ++i) {				\
+	match[i].data   = strv[i].data();			\
+	match[i].length = strv[i].length();			\
+      }								\
+    }								\
+    return int(retval);						\
+  }
+
+DEFINE_MATCH_REX_FUN(cre2_full_match_re,FullMatchN)
+DEFINE_MATCH_REX_FUN(cre2_partial_match_re,PartialMatchN)
+
+/* This  is different from  the above  in that  the "input"  argument is
+   mutated to reference the text after the mathing portion. */
+#define DEFINE_MATCH_REX_FUN2(NAME,FUN)			\
+  int								\
+  NAME (cre2_regexp_t * rex, cre2_string_t * text,		\
+	cre2_string_t * match, int nmatch)			\
+  {								\
+    re2::StringPiece	input(text->data, text->length);	\
+    re2::StringPiece	strv[nmatch];				\
+    RE2::Arg		argv[nmatch];				\
+    RE2::Arg *		args[nmatch];				\
+    bool			retval;				\
+    for (int i=0; i<nmatch; ++i) {				\
+      argv[i] = &strv[i];					\
+      args[i] = &argv[i];					\
+    }								\
+    retval = RE2::FUN(&input, *TO_RE2(rex), args, nmatch);	\
+    if (retval) {						\
+      text->data   = input.data();				\
+      text->length = input.length();				\
+      for (int i=0; i<nmatch; ++i) {				\
+	match[i].data   = strv[i].data();			\
+	match[i].length = strv[i].length();			\
+      }								\
+    }								\
+    return int(retval);						\
+  }
+
+DEFINE_MATCH_REX_FUN2(cre2_consume_re,ConsumeN)
+DEFINE_MATCH_REX_FUN2(cre2_find_and_consume_re,FindAndConsumeN)
+
 
 /* end of file */

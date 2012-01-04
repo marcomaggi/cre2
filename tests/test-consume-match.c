@@ -1,11 +1,11 @@
 /*
   Part of: CRE2
-  Contents: test for full match function
+  Contents: test for consume match function
   Date: Tue Jan  3, 2012
 
   Abstract
 
-	Test file for full match function.
+	Test file for consume match function.
 
   Copyright (C) 2012 Marco Maggi <marco.maggi-ipsu@poste.it>
 
@@ -28,28 +28,39 @@
 int
 main (int argc, const char *const argv[])
 {
-  { /* success, no parentheses */
+  { /* success, no parentheses, full consumed buffer */
     const char *	pattern = "ci.*ut";
     const char *	text	= "ciao salut";
     cre2_string_t	input   = { .data = text, .length = strlen(text) };
     int			result;
-    result = cre2_full_match(pattern, &input, NULL, 0);
+    result = cre2_consume(pattern, &input, NULL, 0);
     if (! result)
       goto error;
-    if (0 != strncmp(text, input.data, input.length))
+    if (0 != strncmp("", input.data, input.length))
+      goto error;
+  }
+  { /* success, no parentheses, partially consumed buffer */
+    const char *	pattern = "ci.*ut";
+    const char *	text	= "ciao salut hello";
+    cre2_string_t	input   = { .data = text, .length = strlen(text) };
+    int			result;
+    result = cre2_consume(pattern, &input, NULL, 0);
+    if (! result)
+      goto error;
+    if (0 != strncmp(" hello", input.data, input.length))
       goto error;
   }
   { /* success, one parenthetical subexpression, one match entry */
     const char *	pattern = "(ciao) salut";
-    const char *	text	= "ciao salut";
+    const char *	text	= "ciao salut hello";
     cre2_string_t	input   = { .data = text, .length = strlen(text) };
     int			nmatch  = 1;
     cre2_string_t	match[nmatch];
     int			result;
-    result = cre2_full_match(pattern, &input, match, nmatch);
+    result = cre2_consume(pattern, &input, match, nmatch);
     if (! result)
       goto error;
-    if (0 != strncmp(text, input.data, input.length))
+    if (0 != strncmp(" hello", input.data, input.length))
       goto error;
     if (0 != strncmp("ciao", match[0].data, match[0].length))
       goto error;
@@ -59,15 +70,15 @@ main (int argc, const char *const argv[])
   }
   { /* success, two parenthetical subexpressions, two match entries */
     const char *	pattern = "(ciao) (salut)";
-    const char *	text	= "ciao salut";
+    const char *	text	= "ciao salut hello";
     cre2_string_t	input   = { .data = text, .length = strlen(text) };
     int			nmatch  = 2;
     cre2_string_t	match[nmatch];
     int			result;
-    result = cre2_full_match(pattern, &input, match, nmatch);
+    result = cre2_consume(pattern, &input, match, nmatch);
     if (! result)
       goto error;
-    if (0 != strncmp(text, input.data, input.length))
+    if (0 != strncmp(" hello", input.data, input.length))
       goto error;
     if (0 != strncmp("ciao", match[0].data, match[0].length))
       goto error;
@@ -85,7 +96,7 @@ main (int argc, const char *const argv[])
     const char *	text	= "ciao hello";
     cre2_string_t	input   = { .data = text, .length = strlen(text) };
     int			result;
-    result = cre2_full_match(pattern, &input, NULL, 0);
+    result = cre2_consume(pattern, &input, NULL, 0);
     if (result)
       goto error;
   }
@@ -96,7 +107,7 @@ main (int argc, const char *const argv[])
     int			nmatch  = 1;
     cre2_string_t	match[nmatch];
     int			result;
-    result = cre2_full_match(pattern, &input, match, nmatch);
+    result = cre2_consume(pattern, &input, match, nmatch);
     if (result)
       goto error;
     if (0 != strncmp(text, input.data, input.length))
@@ -104,40 +115,40 @@ main (int argc, const char *const argv[])
   }
   { /* success, one parenthetical subexpression, no match entries */
     const char *	pattern = "(ciao) salut";
-    const char *	text	= "ciao salut";
+    const char *	text	= "ciao salut hello";
     cre2_string_t	input   = { .data = text, .length = strlen(text) };
     int			result;
-    result = cre2_full_match(pattern, &input, NULL, 0);
+    result = cre2_consume(pattern, &input, NULL, 0);
     if (! result)
       goto error;
-    if (0 != strncmp(text, input.data, input.length))
+    if (0 != strncmp(" hello", input.data, input.length))
       goto error;
   }
   { /* failure, one parenthetical subexpression, two match entries */
     const char *	pattern = "(ciao) salut";
-    const char *	text	= "ciao salut";
+    const char *	text	= "ciao salut hello";
     cre2_string_t	input   = { .data = text, .length = strlen(text) };
     int			nmatch  = 2;
     cre2_string_t	match[nmatch];
     int			result;
     memset(match, '\0', nmatch * sizeof(cre2_string_t));
-    result = cre2_full_match(pattern, &input, match, nmatch);
+    result = cre2_consume(pattern, &input, match, nmatch);
     if (0 != result)
       goto error;
   }
   { /* success, two parenthetical subexpressions, one match entry */
     const char *	pattern = "(ciao) (salut)";
-    const char *	text	= "ciao salut";
+    const char *	text	= "ciao salut hello";
     cre2_string_t	input   = { .data = text, .length = strlen(text) };
     int			nmatch  = 1;
     cre2_string_t	match[nmatch];
     int			result;
-    result = cre2_full_match(pattern, &input, match, nmatch);
+    result = cre2_consume(pattern, &input, match, nmatch);
     if (! result)
       goto error;
     if (0 != strncmp("ciao", match[0].data, match[0].length))
       goto error;
-    if (0 != strncmp(text, input.data, input.length))
+    if (0 != strncmp(" hello", input.data, input.length))
       goto error;
     PRINTF("match 0: ");
     FWRITE(match[0].data, match[0].length, 1, stdout);
@@ -150,7 +161,7 @@ main (int argc, const char *const argv[])
     int			nmatch  = 1;
     cre2_string_t	match[nmatch];
     int			result;
-    result = cre2_full_match(pattern, &input, match, nmatch);
+    result = cre2_consume(pattern, &input, match, nmatch);
     if (0 != result)
       goto error;
     if (0 != strncmp(text, input.data, input.length))
@@ -160,34 +171,48 @@ main (int argc, const char *const argv[])
 
 /* ------------------------------------------------------------------ */
 
-  { /* success, no parentheses */
+  { /* success, no parentheses, full buffer consumed */
     const char *	pattern = "ci.*ut";
     cre2_regexp_t *	rex;
     const char *	text	= "ciao salut";
     cre2_string_t	input   = { .data = text, .length = strlen(text) };
     int			result;
     rex    = cre2_new(pattern, strlen(pattern), NULL);
-    result = cre2_full_match_re(rex, &input, NULL, 0);
+    result = cre2_consume_re(rex, &input, NULL, 0);
     cre2_delete(rex);
     if (! result)
       goto error;
     if (0 != strncmp(text, input.data, input.length))
       goto error;
   }
+  { /* success, no parentheses, partial buffer consumed */
+    const char *	pattern = "ci.*ut";
+    cre2_regexp_t *	rex;
+    const char *	text	= "ciao salut hello";
+    cre2_string_t	input   = { .data = text, .length = strlen(text) };
+    int			result;
+    rex    = cre2_new(pattern, strlen(pattern), NULL);
+    result = cre2_consume_re(rex, &input, NULL, 0);
+    cre2_delete(rex);
+    if (! result)
+      goto error;
+    if (0 != strncmp(" hello", input.data, input.length))
+      goto error;
+  }
   { /* success, one parenthetical subexpression, one match entry */
     const char *	pattern = "(ciao) salut";
     cre2_regexp_t *	rex;
-    const char *	text	= "ciao salut";
+    const char *	text	= "ciao salut hello";
     cre2_string_t	input   = { .data = text, .length = strlen(text) };
     int			nmatch  = 1;
     cre2_string_t	match[nmatch];
     int			result;
     rex    = cre2_new(pattern, strlen(pattern), NULL);
-    result = cre2_full_match_re(rex, &input, match, nmatch);
+    result = cre2_consume_re(rex, &input, match, nmatch);
     cre2_delete(rex);
     if (! result)
       goto error;
-    if (0 != strncmp(text, input.data, input.length))
+    if (0 != strncmp(" hello", input.data, input.length))
       goto error;
     if (0 != strncmp("ciao", match[0].data, match[0].length))
       goto error;
@@ -198,17 +223,17 @@ main (int argc, const char *const argv[])
   { /* success, two parenthetical subexpressions, two match entries */
     const char *	pattern = "(ciao) (salut)";
     cre2_regexp_t *	rex;
-    const char *	text	= "ciao salut";
+    const char *	text	= "ciao salut hello";
     cre2_string_t	input   = { .data = text, .length = strlen(text) };
     int			nmatch  = 2;
     cre2_string_t	match[nmatch];
     int			result;
     rex    = cre2_new(pattern, strlen(pattern), NULL);
-    result = cre2_full_match_re(rex, &input, match, nmatch);
+    result = cre2_consume_re(rex, &input, match, nmatch);
     cre2_delete(rex);
     if (! result)
       goto error;
-    if (0 != strncmp(text, input.data, input.length))
+    if (0 != strncmp(" hello", input.data, input.length))
       goto error;
     if (0 != strncmp("ciao", match[0].data, match[0].length))
       goto error;
@@ -228,7 +253,7 @@ main (int argc, const char *const argv[])
     cre2_string_t	input   = { .data = text, .length = strlen(text) };
     int			result;
     rex    = cre2_new(pattern, strlen(pattern), NULL);
-    result = cre2_full_match_re(rex, &input, NULL, 0);
+    result = cre2_consume_re(rex, &input, NULL, 0);
     cre2_delete(rex);
     if (result)
       goto error;
@@ -242,7 +267,7 @@ main (int argc, const char *const argv[])
     cre2_string_t	match[nmatch];
     int			result;
     rex    = cre2_new(pattern, strlen(pattern), NULL);
-    result = cre2_full_match_re(rex, &input, match, nmatch);
+    result = cre2_consume_re(rex, &input, match, nmatch);
     cre2_delete(rex);
     if (result)
       goto error;
@@ -252,15 +277,15 @@ main (int argc, const char *const argv[])
   { /* success, one parenthetical subexpression, no match entries */
     const char *	pattern = "(ciao) salut";
     cre2_regexp_t *	rex;
-    const char *	text	= "ciao salut";
+    const char *	text	= "ciao salut hello";
     cre2_string_t	input   = { .data = text, .length = strlen(text) };
     int			result;
     rex    = cre2_new(pattern, strlen(pattern), NULL);
-    result = cre2_full_match_re(rex, &input, NULL, 0);
+    result = cre2_consume_re(rex, &input, NULL, 0);
     cre2_delete(rex);
     if (! result)
       goto error;
-    if (0 != strncmp(text, input.data, input.length))
+    if (0 != strncmp(" hello", input.data, input.length))
       goto error;
   }
   { /* failure, one parenthetical subexpression, two match entries */
@@ -273,27 +298,29 @@ main (int argc, const char *const argv[])
     int			result;
     memset(match, '\0', nmatch * sizeof(cre2_string_t));
     rex    = cre2_new(pattern, strlen(pattern), NULL);
-    result = cre2_full_match_re(rex, &input, match, nmatch);
+    result = cre2_consume_re(rex, &input, match, nmatch);
     cre2_delete(rex);
     if (0 != result)
+      goto error;
+    if (0 != strncmp(text, input.data, input.length))
       goto error;
   }
   { /* success, two parenthetical subexpressions, one match entry */
     const char *	pattern = "(ciao) (salut)";
     cre2_regexp_t *	rex;
-    const char *	text	= "ciao salut";
+    const char *	text	= "ciao salut hello";
     cre2_string_t	input   = { .data = text, .length = strlen(text) };
     int			nmatch  = 1;
     cre2_string_t	match[nmatch];
     int			result;
     rex    = cre2_new(pattern, strlen(pattern), NULL);
-    result = cre2_full_match_re(rex, &input, match, nmatch);
+    result = cre2_consume_re(rex, &input, match, nmatch);
     cre2_delete(rex);
     if (! result)
       goto error;
     if (0 != strncmp("ciao", match[0].data, match[0].length))
       goto error;
-    if (0 != strncmp(text, input.data, input.length))
+    if (0 != strncmp(" hello", input.data, input.length))
       goto error;
     PRINTF("match 0: ");
     FWRITE(match[0].data, match[0].length, 1, stdout);

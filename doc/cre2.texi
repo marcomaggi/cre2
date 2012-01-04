@@ -1078,6 +1078,18 @@ Data about the matching groups is stored in the array @var{match}, which
 must have at least @var{nmatch} entries; the referenced substrings are
 portions of the @var{text} buffer.
 
+@item
+The array @var{match} can have a number of elements between zero
+(included) and the number of parenthetical subexpressions in
+@var{pattern} (excluded); if @var{nmatch} is greater than the number of
+parenthetical subexpressions: the return value is @math{0}.
+
+@item
+If we are only interested in verifying if the text matches or not: we
+can use @cnull{} as @var{match} argument and @math{0} as @var{nmatch}
+argument.
+
+@item
 The first element of @var{match} (index @math{0}) references the portion
 of text matching the first parenthetical subexpression; the second
 element of @var{match} (index @math{1}) references the portion of text
@@ -1086,20 +1098,6 @@ matching the second parenthetical subexpression; and so on.
 
 @noindent
 see the documentation of each function for the differences.
-
-
-@deftypefun int cre2_full_match (const char * @var{pattern}, const cre2_string_t * @var{text}, cre2_string_t * @var{match}, int @var{nmatch})
-Match the the zero--terminated string @var{pattern} against the full
-buffer @var{text}.
-
-The array @var{match} can have a number of elements between zero
-(included) and the number of parenthetical subexpressions in
-@var{pattern} (excluded); if @var{nmatch} is greater than the number of
-parenthetical subexpressions: the return value is @math{0}.
-
-If we are only interested in verifying if the text matches or not: we
-can use @cnull{} as @var{match} argument and @math{0} as @var{nmatch}
-argument.
 
 The following example is a successful match:
 
@@ -1153,19 +1151,59 @@ result @result{} 1
 strncmp(text, input.data, input.length)         @result{} 0
 strncmp("ciao", match[0].data, match[0].length) @result{} 0
 @end example
+
+
+@deftypefun int cre2_full_match (const char * @var{pattern}, const cre2_string_t * @var{text}, cre2_string_t * @var{match}, int @var{nmatch})
+@deftypefunx int cre2_full_match_re (cre2_regexp_t * @var{rex}, const cre2_string_t * @var{text}, cre2_string_t * @var{match}, int @var{nmatch})
+Match the the zero--terminated string @var{pattern} or the precompiled
+regular expression @var{rex} against the full buffer @var{text}.
+
+For example: the text @code{abcdef} matches the pattern @code{abcdef}
+according to this function, but neither the pattern @code{abc} nor the
+pattern @code{def} will match.
 @end deftypefun
 
 
-@deftypefun int cre2_partial_match (const char * @var{pattern}, const char * @var{text})
-Verify if the @asciiz{} string @var{pattern} matches a portion of the
-@asciiz{} string @var{text}.  Return true if success, false otherwise.
+@deftypefun int cre2_partial_match (const char * @var{pattern}, const cre2_string_t * @var{text}, cre2_string_t * @var{match}, int @var{nmatch})
+@deftypefunx int cre2_partial_match_re (cre2_regexp_t * @var{rex}, const cre2_string_t * @var{text}, cre2_string_t * @var{match}, int @var{nmatch})
+Match the the zero--terminated string @var{pattern} or the precompiled
+regular expression @var{rex} against the buffer @var{text}, resulting in
+success if a substring of @var{text} matches; these functions behave
+like the full match ones, but the matching text does not need to be
+anchored to the beginning and end.
 
-
-@example
-cre2_full_match("ia", "ciao"); /* success */
-@end example
+For example: the text @code{abcDEFghi} matches the pattern @code{DEF}
+according to this function.
 @end deftypefun
 
+
+@deftypefun int cre2_consume (const char * @var{pattern}, cre2_string_t * @var{text}, cre2_string_t * @var{match}, int @var{nmatch})
+@deftypefunx int cre2_consume_re (cre2_regexp_t * @var{rex}, cre2_string_t * @var{text}, cre2_string_t * @var{match}, int @var{nmatch})
+Match the the zero--terminated string @var{pattern} or the precompiled
+regular expression @var{rex} against the buffer @var{text}, resulting in
+success if the prefix of @var{text} matches.  The data structure
+referenced by @var{text} is mutated to reference text right after the
+last byte that matched the pattern.
+
+For example: the text @code{abcDEF} matches the pattern @code{abc}
+according to this function; after the call @var{text} will reference the
+text @code{DEF}.
+@end deftypefun
+
+
+@deftypefun int cre2_find_and_consume (const char * @var{pattern}, cre2_string_t * @var{text}, cre2_string_t * @var{match}, int @var{nmatch})
+@deftypefunx int cre2_find_and_consume_re (cre2_regexp_t * @var{rex}, cre2_string_t * @var{text}, cre2_string_t * @var{match}, int @var{nmatch})
+Match the the zero--terminated string @var{pattern} or the precompiled
+regular expression @var{rex} against the buffer @var{text}, resulting in
+success if, after skipping a non--matching prefix in @var{text}, a
+substring of @var{text} matches.  The data structure referenced by
+@var{text} is mutated to reference text right after the last byte that
+matched the pattern.
+
+For example: the text @code{abcDEFghi} matches the pattern @code{DEF}
+according to this function; the prefix @code{abc} is skipped; after the
+call @var{text} will reference the text @code{ghi}.
+@end deftypefun
 
 @c page
 @node Package License
