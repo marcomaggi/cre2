@@ -514,4 +514,85 @@ cre2_extract_re (cre2_regexp_t * rex, cre2_string_t * text,
   return int(retval);
 }
 
+/* ------------------------------------------------------------------ */
+
+int
+cre2_quote_meta (cre2_string_t * quoted, cre2_string_t * original)
+{
+  re2::StringPiece	O(original->data, original->length);
+  std::string		Q;
+  char *		buffer; /* this exists to make GCC shut up about const */
+  Q = RE2::QuoteMeta(O);
+  quoted->length = Q.length();
+  buffer = (char *)malloc(1+quoted->length);
+  if (buffer) {
+    Q.copy(buffer, quoted->length);
+    buffer[quoted->length] = '\0';
+    quoted->data = buffer;
+    return 0;
+  } else
+    return -1;
+}
+int
+cre2_possible_match_range (cre2_regexp_t * rex,
+			   cre2_string_t * min_, cre2_string_t * max_, int maxlen)
+{
+  std::string	MIN, MAX;
+  cre2_string_t	min, max;
+  char *	buffer; /* this exists to make GCC shut up about const */
+  bool		retval;
+  retval = TO_RE2(rex)->PossibleMatchRange(&MIN, &MAX, maxlen);
+  if (retval) {
+    /* copy MIN */
+    min.length = MIN.length();
+    buffer = (char *)malloc(1+min.length);
+    if (buffer) {
+      MIN.copy(buffer, min.length);
+      buffer[min.length] = '\0';
+      min.data = buffer;
+    } else
+      return -1;
+    /* copy MAX */
+    max.length = MAX.length();
+    buffer = (char *)malloc(1+max.length);
+    if (buffer) {
+      MAX.copy(buffer, max.length);
+      buffer[max.length] = '\0';
+      max.data = buffer;
+    } else {
+      free((void *)min.data);
+      min.data = NULL;
+      return -1;
+    }
+    *min_ = min;
+    *max_ = max;
+    return 1;
+  } else
+    return 0;
+}
+int
+cre2_check_rewrite_string (cre2_regexp_t * rex, cre2_string_t * rewrite, cre2_string_t * errmsg)
+{
+  re2::StringPiece	R(rewrite->data, rewrite->length);
+  std::string		E;
+  char *		buffer; /* this exists to make GCC shut up about const */
+  bool			retval;
+  retval = TO_RE2(rex)->CheckRewriteString(R, &E);
+  if (retval) {
+    errmsg->data   = NULL;
+    errmsg->length = 0;
+    return 1;
+  } else {
+    errmsg->length = E.length();
+    buffer = (char *)malloc(1+errmsg->length);
+    if (buffer) {
+      E.copy(buffer, errmsg->length);
+      buffer[errmsg->length] = '\0';
+      errmsg->data = buffer;
+    } else
+      return -1;
+    return 0;
+  }
+}
+
 /* end of file */

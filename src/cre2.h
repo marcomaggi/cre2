@@ -235,6 +235,58 @@ cre2_decl int cre2_extract_re		(cre2_regexp_t * rex,
 					 cre2_string_t * rewrite,
 					 cre2_string_t * target);
 
+/* ------------------------------------------------------------------ */
+
+/* Allocate a zero-terminated malloc'ed buffer and fill it with the text
+   from  "original" having all  the regexp  meta characters  quoted with
+   single backslashes.   Return 0 if  successful, return -1 if  an error
+   allocating memory occurs.  */
+cre2_decl int cre2_quote_meta (cre2_string_t * quoted, cre2_string_t * original);
+
+/* Compute a "minimum" string and  a "maximum" string matching the given
+   regular expression.  The min and max can in some cases be arbitrarily
+   precise, so  the caller  gets to specify  "maxlen" begin  the maximum
+   desired length of string returned.
+
+   Assuming  the call  returns successfully,  any  string S  that is  an
+   anchored match for this regexp satisfies:
+
+     min <= S && S <= max.
+
+   Note  that this  function will  only consider  the first  copy  of an
+   infinitely repeated  element (i.e., any regexp element  followed by a
+   '*'  or  '+' operator).  Regexps  with  "{N}"  constructions are  not
+   affected, as those do not compile down to infinite repetitions.
+
+   "min_" and "max_" are  mutated to reference zero-terminated malloc'ed
+   buffers holding the min and max strings.
+
+   Return 0  if failure, return 1  if successful, return -1  if an error
+   allocating memory occurs. */
+cre2_decl int cre2_possible_match_range (cre2_regexp_t * rex,
+					 cre2_string_t * min_, cre2_string_t * max_,
+					 int maxlen);
+
+/* Check that  the given  rewrite string is  suitable for use  with this
+   regular expression.  It checks that:
+
+     * The regular expression has enough parenthesized subexpressions to
+       satisfy all of the \N tokens in rewrite
+
+     * The  rewrite string doesn't  have any  syntax errors.   E.g., '\'
+       followed by anything other than a digit or '\'.
+
+   A true return value guarantees that the replace and extract functions
+   won't fail because of a bad rewrite string.
+
+   In case of error: "errmsg"  is mutated to reference a zero-terminated
+   malloc'ed string describing the problem.
+
+   Return  1  if the  string  is  correct, return  0  if  the string  is
+   incorrect, return -1 if an error occurred allocating memory. */
+cre2_decl int cre2_check_rewrite_string (cre2_regexp_t * rex,
+					 cre2_string_t * rewrite, cre2_string_t * errmsg);
+
 
 /** --------------------------------------------------------------------
  ** Done.

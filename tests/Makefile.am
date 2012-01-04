@@ -10,7 +10,8 @@ check_PROGRAMS	= \
 	test-partial-match		\
 	test-consume-match		\
 	test-find-and-consume-match	\
-	test-replace
+	test-replace			\
+	test-misc
 
 AM_CPPFLAGS	= -I$(top_srcdir)/src
 LDADD		= ../src/libcre2.la
