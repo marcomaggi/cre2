@@ -15,6 +15,8 @@
 #include <re2/re2.h>
 #include "cre2.h"
 
+#include <cstdlib>
+
 // For debugging purposes.
 // #include <cstdio>
 
@@ -382,5 +384,51 @@ DEFINE_MATCH_REX_FUN(cre2_partial_match_re,PartialMatchN)
 DEFINE_MATCH_REX_FUN2(cre2_consume_re,ConsumeN)
 DEFINE_MATCH_REX_FUN2(cre2_find_and_consume_re,FindAndConsumeN)
 
+
+/** --------------------------------------------------------------------
+ ** Problematic functions.
+ ** ----------------------------------------------------------------- */
+
+/* The following  functions rely  on C++ memory  allocation.  It  is not
+   clear how they can be written to allow a correct API towards C.  */
+
+int
+cre2_replace (const char * pattern, cre2_string_t * target, cre2_string_t * rewrite)
+{
+  std::string		S(target->data, target->length);
+  re2::StringPiece	R(rewrite->data, rewrite->length);
+  char *		buffer; /* this exists to make GCC shut up about const */
+  bool			retval;
+  retval = RE2::Replace(&S, pattern, R);
+  target->length = S.length();
+  buffer         = (char *)malloc(1+target->length);
+  if (target->data) {
+    S.copy(buffer, target->length);
+    buffer[target->length] = '\0';
+    target->data = buffer;
+  } else {
+    return 2;
+  }
+  return int(retval);
+}
+int
+cre2_replace_re (cre2_regexp_t * rex, cre2_string_t * target, cre2_string_t * rewrite)
+{
+  std::string		S(target->data, target->length);
+  re2::StringPiece	R(rewrite->data, rewrite->length);
+  char *		buffer; /* this exists to make GCC shut up about const */
+  bool			retval;
+  retval = RE2::Replace(&S, *TO_RE2(rex), R);
+  target->length = S.length();
+  buffer         = (char *)malloc(1+target->length);
+  if (target->data) {
+    S.copy(buffer, target->length);
+    buffer[target->length] = '\0';
+    target->data = buffer;
+  } else {
+    return 2;
+  }
+  return int(retval);
+}
 
 /* end of file */

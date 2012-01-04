@@ -177,6 +177,17 @@ cre2_decl cre2_match_rex2_fun_t		cre2_find_and_consume_re;
 
 
 /** --------------------------------------------------------------------
+ ** Problematic functions.
+ ** ----------------------------------------------------------------- */
+
+cre2_decl int cre2_replace	(const char * pattern, cre2_string_t * target,
+				 cre2_string_t * rewrite);
+cre2_decl int cre2_replace_re	(cre2_regexp_t * rex,  cre2_string_t * target,
+				 cre2_string_t * rewrite);
+
+
+
+/** --------------------------------------------------------------------
  ** Done.
  ** ----------------------------------------------------------------- */
 
