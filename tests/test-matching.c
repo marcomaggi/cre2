@@ -49,6 +49,8 @@ main (int argc, const char *const argv[])
     int			text_len = strlen(text);
 
     e = cre2_match(rex, text, text_len, 0, text_len, CRE2_UNANCHORED, &match, nmatch);
+    if (1 != e)
+      goto error;
     PRINTF("match: retval=%d, ", e);
     FWRITE(match.data, match.length, 1, stdout);
     PRINTF("\n");
@@ -73,6 +75,8 @@ main (int argc, const char *const argv[])
     int			text_len = strlen(text);
 
     e = cre2_match(rex, text, text_len, 0, text_len, CRE2_UNANCHORED, strings, nmatch);
+    if (1 != e)
+      goto error;
     cre2_strings_to_ranges(text, ranges, strings, nmatch);
     PRINTF("full match: ");
     FWRITE(text+ranges[0].start, ranges[0].past-ranges[0].start, 1, stdout);

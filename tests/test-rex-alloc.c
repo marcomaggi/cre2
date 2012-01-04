@@ -93,6 +93,10 @@ main (int argc, const char *const argv[])
     const char *	msg  = cre2_error_string(rex);
     cre2_string_t	S;
     cre2_error_arg(rex, &S);
+    if (CRE2_ERROR_MISSING_PAREN != code)
+      goto error;
+    if (! msg)
+      goto error;
     PRINTF("pattern: %s\n", cre2_pattern(rex));
     PRINTF("error: code=%d, msg=\"%s\"\n", code, msg);
     PRINTF("error arg: len=%d, data=\"%s\"\n", S.length, S.data);
