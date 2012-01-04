@@ -13,7 +13,8 @@ prefix=/usr/local
     --cache-file=../config.cache                \
     --disable-static --enable-shared            \
     --prefix="${prefix}"                        \
-    CFLAGS='-O3 -march=i686 -mtune=i686'        \
+    CFLAGS='-Wall -O3 -march=i686 -mtune=i686'  \
+    CXXFLAGS='-Wall -O3 -march=i686 -mtune=i686'\
     "$@"
 
 #--enable-maintainer-mode
