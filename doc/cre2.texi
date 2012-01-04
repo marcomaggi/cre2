@@ -535,11 +535,17 @@ safe, thread--friendly alternative to backtracking regular expression
 engines like those used in PCRE, Perl, and Python.  @value{PACKAGE} is
 based on code by Keegan McAllister for the @code{haskell-re2} binding:
 
-@center @url{https://github.com/kmcallister/haskell-re2}
+@center @url{http://github.com/kmcallister/haskell-re2}
+
+For the supported regular expressions syntax we should refer to the
+original documentation:
+
+@center @url{http://code.google.com/p/re2/wiki/Syntax}
 
 The C wrapper is meant to make it easier to interface RE2 with other
 languages.  The exposed @api{} allows searching for substrings of text
-matching regular expressions and subexpressions.
+matching regular expressions and reporting portions of text matching
+parenthetical subexpressions.
 
 It is customary for regular expression engines to provide methods to
 replace backslash sequences like @code{\1}, @code{\2}, @dots{} in a
