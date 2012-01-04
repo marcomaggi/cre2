@@ -547,18 +547,10 @@ languages.  The exposed @api{} allows searching for substrings of text
 matching regular expressions and reporting portions of text matching
 parenthetical subexpressions.
 
-It is customary for regular expression engines to provide methods to
-replace backslash sequences like @code{\1}, @code{\2}, @dots{} in a
-given string with portions of text that matched the first, second,
-@dots{} parenthetical subexpression; @value{PACKAGE} does @strong{not}
-provide such methods because they require interacting with the storage
-mechanism in the client code.  However, it is not difficult to implement
-such substitutions given the results of a regular expression matching
-operation.
-
-All the function names in the @api{} are prefixed with @code{cre2_}; all
-the constant names are prefixed with @code{CRE2_}; all the type names
-are prefixed with @code{cre2_} and suffixed with @code{_t}.
+@value{PACKAGE} installs the single header file @file{cre2.h}.  All the
+function names in the @api{} are prefixed with @code{cre2_}; all the
+constant names are prefixed with @code{CRE2_}; all the type names are
+prefixed with @code{cre2_} and suffixed with @code{_t}.
 
 When searching for the installed libraries with the @gnu{} Autotools, we
 can use the following macros in @file{configure.ac}:
@@ -574,6 +566,22 @@ AC_CHECK_LIB([cre2],[cre2_version_string],,
 AC_CHECK_HEADERS([cre2.h],,
   [AC_MSG_ERROR([test for RE2 header failed])])
 @end example
+
+It is customary for regular expression engines to provide methods to
+replace backslash sequences like @code{\1}, @code{\2}, @dots{} in a
+given string with portions of text that matched the first, second,
+@dots{} parenthetical subexpression; @value{PACKAGE} does @strong{not}
+provide such methods in its public @api{}, because they require
+interacting with the storage mechanism in the client code.  However, it
+is not difficult to implement such substitutions given the results of a
+regular expression matching operation.
+
+Some functions and methods from RE2 requiring memory allocation handling
+are unofficially wrapped by @value{PACKAGE} with unsafe code (execution
+will succeed when no memory allocation errors happen).  These
+``problematic'' functions are documented in the header file
+@file{cre2.h} and, at present, are not considered part of the public
+@api{} of @value{PACKAGE}.
 
 @c page
 @node version
