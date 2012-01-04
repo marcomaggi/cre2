@@ -1069,31 +1069,36 @@ parenthetical subexpressions.  All of them show the following behaviour:
 If the text matches the pattern: the return value is @math{1}; if the
 text does not match the pattern: the return value is @math{0}.
 
+@item
 If the pattern is invalid: the return value is @math{0}; there is no way
 to distinguish this case from the case of text not matching other than
-looking at what RE2 prints to @code{stderr} in this case.
+looking at what RE2 prints to @code{stderr}.
+
+@item
+It is impossible to turn off logging of error messages to @code{stderr}
+when the specification of the regular expression is invalid.
 
 @item
 Data about the matching groups is stored in the array @var{match}, which
-must have at least @var{nmatch} entries; the referenced substrings are
+must have at least @var{nmatch} slots; the referenced substrings are
 portions of the @var{text} buffer.
 
 @item
-The array @var{match} can have a number of elements between zero
-(included) and the number of parenthetical subexpressions in
-@var{pattern} (excluded); if @var{nmatch} is greater than the number of
-parenthetical subexpressions: the return value is @math{0}.
+The array @var{match} can have a number of slots between zero (included)
+and the number of parenthetical subexpressions in @var{pattern}
+(excluded); if @var{nmatch} is greater than the number of parenthetical
+subexpressions: the return value is @math{0}.
 
 @item
-If we are only interested in verifying if the text matches or not: we
-can use @cnull{} as @var{match} argument and @math{0} as @var{nmatch}
-argument.
+If we are only interested in verifying if the text matches the pattern
+or not: we can use @cnull{} as @var{match} argument and @math{0} as
+@var{nmatch} argument.
 
 @item
-The first element of @var{match} (index @math{0}) references the portion
-of text matching the first parenthetical subexpression; the second
-element of @var{match} (index @math{1}) references the portion of text
-matching the second parenthetical subexpression; and so on.
+The first slot of @var{match} (index @math{0}) references the portion of
+text matching the first parenthetical subexpression; the second slot of
+@var{match} (index @math{1}) references the portion of text matching the
+second parenthetical subexpression; and so on.
 @end itemize
 
 @noindent
@@ -1115,7 +1120,7 @@ result @result{} 1
 @end example
 
 @noindent
-the following example is a successful match in which parenthetical
+the following example is a successful match in which the parenthetical
 subexpression is ignored:
 
 @example
@@ -1155,7 +1160,7 @@ strncmp("ciao", match[0].data, match[0].length) @result{} 0
 
 @deftypefun int cre2_full_match (const char * @var{pattern}, const cre2_string_t * @var{text}, cre2_string_t * @var{match}, int @var{nmatch})
 @deftypefunx int cre2_full_match_re (cre2_regexp_t * @var{rex}, const cre2_string_t * @var{text}, cre2_string_t * @var{match}, int @var{nmatch})
-Match the the zero--terminated string @var{pattern} or the precompiled
+Match the zero--terminated string @var{pattern} or the precompiled
 regular expression @var{rex} against the full buffer @var{text}.
 
 For example: the text @code{abcdef} matches the pattern @code{abcdef}
@@ -1166,7 +1171,7 @@ pattern @code{def} will match.
 
 @deftypefun int cre2_partial_match (const char * @var{pattern}, const cre2_string_t * @var{text}, cre2_string_t * @var{match}, int @var{nmatch})
 @deftypefunx int cre2_partial_match_re (cre2_regexp_t * @var{rex}, const cre2_string_t * @var{text}, cre2_string_t * @var{match}, int @var{nmatch})
-Match the the zero--terminated string @var{pattern} or the precompiled
+Match the zero--terminated string @var{pattern} or the precompiled
 regular expression @var{rex} against the buffer @var{text}, resulting in
 success if a substring of @var{text} matches; these functions behave
 like the full match ones, but the matching text does not need to be
@@ -1179,7 +1184,7 @@ according to this function.
 
 @deftypefun int cre2_consume (const char * @var{pattern}, cre2_string_t * @var{text}, cre2_string_t * @var{match}, int @var{nmatch})
 @deftypefunx int cre2_consume_re (cre2_regexp_t * @var{rex}, cre2_string_t * @var{text}, cre2_string_t * @var{match}, int @var{nmatch})
-Match the the zero--terminated string @var{pattern} or the precompiled
+Match the zero--terminated string @var{pattern} or the precompiled
 regular expression @var{rex} against the buffer @var{text}, resulting in
 success if the prefix of @var{text} matches.  The data structure
 referenced by @var{text} is mutated to reference text right after the
@@ -1193,7 +1198,7 @@ text @code{DEF}.
 
 @deftypefun int cre2_find_and_consume (const char * @var{pattern}, cre2_string_t * @var{text}, cre2_string_t * @var{match}, int @var{nmatch})
 @deftypefunx int cre2_find_and_consume_re (cre2_regexp_t * @var{rex}, cre2_string_t * @var{text}, cre2_string_t * @var{match}, int @var{nmatch})
-Match the the zero--terminated string @var{pattern} or the precompiled
+Match the zero--terminated string @var{pattern} or the precompiled
 regular expression @var{rex} against the buffer @var{text}, resulting in
 success if, after skipping a non--matching prefix in @var{text}, a
 substring of @var{text} matches.  The data structure referenced by
