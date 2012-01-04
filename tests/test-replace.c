@@ -17,7 +17,7 @@
 #include <string.h>
 #include <cre2.h>
 
-#if 1
+#if 0
 #  define PRINTF		printf
 #  define FWRITE		fwrite
 #else
