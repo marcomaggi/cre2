@@ -38,3 +38,4 @@ install-sh
 missing
 mkinstalldirs
 ltmain.sh
+m4/

@@ -2,12 +2,13 @@ dnl @configure_input@
 dnl
 
 AC_PREREQ([2.68])
-AC_INIT([cre2],[0.1b0],[marco.maggi-ipsu@poste.it])
+AC_INIT([cre2],[0.1b1],[marco.maggi-ipsu@poste.it])
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE
-LT_PREREQ([2.2])
+LT_PREREQ([2.4])
 LT_INIT
 AC_CONFIG_SRCDIR([src/])
+AC_CONFIG_MACRO_DIR([m4])
 dnl AM_MAINTAINER_MODE
 AC_CANONICAL_HOST
 
