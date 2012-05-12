@@ -509,6 +509,7 @@ entitled ``@gnu{} Free Documentation License''.
 * options::                     Matching configuration.
 * matching::                    Matching regular expressions.
 * other::                       Other matching functions.
+* tips::                        Tips for using the regexp syntax.
 
 Appendices
 
@@ -1342,6 +1343,52 @@ For example: the text @code{abcDEFghi} matches the pattern @code{DEF}
 according to this function; the prefix @code{abc} is skipped; after the
 call @var{text} will reference the text @code{ghi}.
 @end deftypefun
+
+@c page
+@node tips
+@chapter Tips for using the regexp syntax
+
+
+@menu
+* tips dot::                    Matching newlines with the
+                                @code{.} subpattern.
+@end menu
+
+@c page
+@node tips dot
+@section Matching newlines with the @code{.} subpattern
+
+
+By default the dot subpattern @code{.} matches any character but
+newlines; to enable newline matching we have to enable the @code{s} flag
+using the special subpattern @samp{(?<flags>)} or
+@samp{(?<flags>:<re>)}, where @code{<flags>} is a sequence of
+characters, one character for each flag, and @code{<re>} is a regexp
+subpattern.  Notice that the parentheses in @code{(?:)} are
+non--capturing.
+
+  So let's consider the text @code{ciao\nhello}:
+
+@itemize
+@item
+The regexp @code{ciao.hello} does @strong{not} match because @code{s} is
+disabled.
+
+@item
+The regexp @code{(?s)ciao.hello} matches because the subpattern
+@code{(?s)} has enabled flag @code{s} for the rest of the pattern,
+including the dot.
+
+@item
+The regexp @code{ciao(?s).hello} matches because the subpattern
+@code{(?s)} has enabled flag @code{s} for the rest of the pattern,
+including the dot.
+
+@item
+The regexp @code{ciao(?s:.)hello} matches because the subpattern
+@code{(?s:.)}  has enabled flag @code{s} for the subpattern @code{.}
+which is the dot.
+@end itemize
 
 @c page
 @node Package License
