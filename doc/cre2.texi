@@ -585,6 +585,39 @@ will succeed when no memory allocation errors happen).  These
 @file{cre2.h} and, at present, are not considered part of the public
 @api{} of @value{PACKAGE}.
 
+It is sometimes useful to try a program in the original C++ to verify if
+a problem is caused by @value{PACKAGE} or is in the original RE2 code;
+we may want to start by customising this program:
+
+@example
+/* compile and run with:
+
+   $ g++ -Wall -o proof proof.cpp -lre2 && ./proof
+*/
+
+#include <re2/re2.h>
+#include <assert.h>
+
+static void try_match (RE2::Options& opt, const char * text);
+
+int
+main (int argc, const char *const argv[])
+@{
+  RE2::Options opt;
+  opt.set_never_nl(true);
+  try_match(opt, "abcdef");
+  return 0;
+@}
+void
+try_match (RE2::Options& opt, const char * text)
+@{
+  RE2 re("abcdef", opt);
+  assert(re.ok());
+  assert(RE2::FullMatch(text, re));
+  //assert(RE2::PartialMatch(text, re));
+@}
+@end example
+
 @c page
 @node version
 @chapter Version functions
