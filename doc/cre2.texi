@@ -1036,7 +1036,7 @@ cre2_options_t *  opt;
 const char *      pattern = "(ciao) (hello)";
 
 opt = cre2_opt_new();
-cre2_opt_posix_syntax(opt, 1);
+cre2_opt_set_posix_syntax(opt, 1);
 
 rex = cre2_new(pattern, strlen(pattern), opt);
 @{
