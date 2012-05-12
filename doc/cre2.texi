@@ -1010,7 +1010,9 @@ cre2_opt_delete(opt);
 @deftypefun int cre2_opt_never_nl (cre2_options_t * @var{opt})
 @deftypefunx void cre2_opt_set_never_nl (cre2_options_t * @var{opt}, int @var{flag})
 Never match a newline character, even if it is in the regular expression
-pattern:
+pattern; default is disabled.  Turning on this option allows us to
+attempt a partial match, against the beginning of a multiline text,
+without using subpatterns to exclude the newline in the regexp pattern.
 
 @itemize
 @item
@@ -1024,8 +1026,6 @@ newlines.
 @item
 The option does @strong{not} cause newlines to be skipped.
 @end itemize
-
-Default is disabled.
 @end deftypefun
 
 
