@@ -4,6 +4,7 @@
 
 set -xe
 
+test -d m4 || mkdir m4
 autoreconf --force --install
 # --verbose
 
