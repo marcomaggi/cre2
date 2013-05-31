@@ -9,12 +9,10 @@ prefix=/usr/local
 ../configure \
     --config-cache                              \
     --cache-file=../config.cache                \
+    --enable-maintainer-mode                    \
     --disable-static --enable-shared            \
     --prefix="${prefix}"                        \
-    CFLAGS='-Wall -O3 -march=i686 -mtune=i686'  \
-    CXXFLAGS='-Wall -O3 -march=i686 -mtune=i686'\
+    CFLAGS='-O3' LDFLAGS='-L/usr/local/lib'	\
     "$@"
-
-#--enable-maintainer-mode
 
 ### end of file

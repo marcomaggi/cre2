@@ -30,7 +30,7 @@ Python.
 2. License
 ----------
 
-Copyright (c) 2012 Marco Maggi <marco.maggi-ipsu@poste.it>
+Copyright (c) 2012, 2013 Marco Maggi <marco.maggi-ipsu@poste.it>
 Copyright (c) 2011 Keegan McAllister
 All rights reserved.
 
@@ -96,7 +96,8 @@ the top source directory, to generate the needed files:
     $ sh autogen.sh
 
 for  this  we need  to  have  installed the  GNU  Autotools:
-Automake, Autoconf, Libtool.
+Automake, Autoconf,  Libtool.  We  may need to  manually run
+"libtoolize" the first time.
 
   The Makefile supports  the DESTDIR environment variable to
 install files in a  temporary location, example: to see what
