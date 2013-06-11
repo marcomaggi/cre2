@@ -2,7 +2,7 @@
 
 ACLOCAL_AMFLAGS		= -I autotools
 SUBDIRS			= src doc tests
-EXTRA_DIST		= README COPYING LICENSE.re2 INSTALL
+EXTRA_DIST		= INSTALL configure.sh prepare.sh
 dist_doc_DATA		= README COPYING LICENSE.re2
 
 ### end of file
