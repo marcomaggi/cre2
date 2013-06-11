@@ -90,14 +90,19 @@ then do it:
     $ make install
 
   From a repository checkout or  snapshot (the ones from the
-Github site): we must first run the script "autogen.sh" from
-the top source directory, to generate the needed files:
+Github site): we  may need to manually  run "libtoolize" the
+first time, then  we must first run  the script "autogen.sh"
+from the top source directory, to generate the needed files:
 
     $ sh autogen.sh
 
 for  this  we need  to  have  installed the  GNU  Autotools:
-Automake, Autoconf,  Libtool.  We  may need to  manually run
-"libtoolize" the first time.
+Automake, Autoconf, Libtool.  After this:
+
+    $ ../configure --enable-maintainer-mode [options]
+    $ make
+    $ make check
+    $ make install
 
   The Makefile supports  the DESTDIR environment variable to
 install files in a  temporary location, example: to see what
