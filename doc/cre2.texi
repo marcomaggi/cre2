@@ -447,7 +447,17 @@ in PCRE, Perl, and Python.
 The package is distributed under the terms of a @acronym{BSD}--like
 license and can be downloaded from:
 
+@center @url{http://sourceforge.net/projects/cre2/files/}
+
+@noindent
+development takes place at:
+
 @center @url{http://github.com/marcomaggi/@value{PACKAGE_NICKNAME}}
+
+@noindent
+and as a backup at:
+
+@center @url{http://sourceforge.net/projects/@value{PACKAGE_NICKNAME}}
 
 @noindent
 Copyright @copyright{} @value{COPYRIGHT_YEARS} by @value{AUTHOR} @value{AUTHOR_URL}@*
