@@ -10,7 +10,7 @@ AC_CONFIG_AUX_DIR([autotools])
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
-AM_INIT_AUTOMAKE([-Wall foreign dist-xz no-dist-gzip])
+AM_INIT_AUTOMAKE([1.14 foreign subdir-objects dist-xz no-dist-gzip -Wall])
 AM_MAINTAINER_MODE
 
 AM_PROG_AR
@@ -52,7 +52,7 @@ AC_SUBST([cre2_VERSION_INTERFACE_REVISION])
 AC_SUBST([cre2_VERSION_INTERFACE_AGE])
 
 AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_FILES([Makefile src/Makefile doc/Makefile tests/Makefile])
+AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
 
 dnl end of file
