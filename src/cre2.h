@@ -18,6 +18,8 @@
 extern "C" {
 #endif
 
+#pragma once
+
 #ifndef cre2_decl
 #  define cre2_decl	extern
 #endif
