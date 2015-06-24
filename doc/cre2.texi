@@ -433,6 +433,13 @@ the main purpose of this document is to provide an Info version.
 @c list of copyright years.
 @set COPYRIGHT_YEARS            2012
 
+@c ------------------------------------------------------------
+
+@set GITHUB_URL                 @url{http://github.com/marcomaggi/@value{PACKAGE_NICKNAME}}
+@set BITBUCKET_URL              @url{https://bitbucket.org/marcomaggi/@value{PACKAGE_NICKNAME}}
+@set DOWNLOAD_URL               @url{https://bitbucket.org/marcomaggi/@value{PACKAGE_NICKNAME}/downloads}
+@set DOCUMENTATION_URL          @url{http://marcomaggi.github.io/docs/@value{PACKAGE_NICKNAME}.html}
+
 @c page
 @c ------------------------------------------------------------
 @c Copyright notice.
@@ -444,20 +451,19 @@ language wrapper for the C++ library RE2: a fast, safe, thread--friendly
 alternative to backtracking regular expression engines like those used
 in PCRE, Perl, and Python.
 
-The package is distributed under the terms of a @acronym{BSD}--like
-license and can be downloaded from:
+The latest release can be downloaded from:
 
-@center @url{http://sourceforge.net/projects/cre2/files/}
+@center @value{DOWNLOAD_URL}
 
 @noindent
 development takes place at:
 
-@center @url{http://github.com/marcomaggi/@value{PACKAGE_NICKNAME}}
+@center @value{GITHUB_URL}
 
 @noindent
-and as a backup at:
+and as backup at:
 
-@center @url{http://sourceforge.net/projects/@value{PACKAGE_NICKNAME}}
+@center @value{BITBUCKET_URL}
 
 @noindent
 Copyright @copyright{} @value{COPYRIGHT_YEARS} by @value{AUTHOR} @value{AUTHOR_URL}@*
@@ -547,7 +553,7 @@ based on code by Keegan McAllister for the @code{haskell-re2} binding:
 For the supported regular expressions syntax we should refer to the
 original documentation:
 
-@center @url{http://code.google.com/p/re2/wiki/Syntax}
+@center @url{https://github.com/google/re2/wiki/Syntax}
 
 The C wrapper is meant to make it easier to interface RE2 with other
 languages.  The exposed @api{} allows searching for substrings of text
