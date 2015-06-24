@@ -2,11 +2,11 @@ dnl @configure_input@
 dnl
 
 AC_PREREQ([2.68])
-AC_INIT([CRE2],[0.1b5],[marco.maggi-ipsu@poste.it],
+AC_INIT([CRE2],[0.1b6],[marco.maggi-ipsu@poste.it],
   [cre2],[http://github.com/marcomaggi/cre2/])
 AC_CONFIG_SRCDIR([src/])
-AC_CONFIG_MACRO_DIR([autotools])
-AC_CONFIG_AUX_DIR([autotools])
+AC_CONFIG_MACRO_DIR([meta/autotools])
+AC_CONFIG_AUX_DIR([meta/autotools])
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET

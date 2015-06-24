@@ -1,6 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 
-ACLOCAL_AMFLAGS		= -I autotools
+ACLOCAL_AMFLAGS		= -I meta/autotools
+AUTOMAKE_OPTIONS	= foreign
 EXTRA_DIST		= INSTALL configure.sh prepare.sh
 dist_doc_DATA		= README COPYING LICENSE.re2
 
