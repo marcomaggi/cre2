@@ -2,12 +2,15 @@
   Header  file  for  CRE2, a  C  language  wrapper  for RE2:  a  regular
   expressions library by Google.
 
-  Copyright (c) 2012 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (c) 2012, 2015 Marco Maggi <marco.maggi-ipsu@poste.it>
   Copyright (c) 2011 Keegan McAllister
   All rights reserved.
 
   For the license notice see the COPYING file.
 */
+
+#ifndef CRE2_H
+#define CRE2_H 1
 
 
 /** --------------------------------------------------------------------
@@ -295,5 +298,7 @@ cre2_decl int cre2_check_rewrite_string (cre2_regexp_t * rex,
 #ifdef __cplusplus
 } // extern "C"
 #endif
+
+#endif /* CRE2_H */
 
 /* end of file */
