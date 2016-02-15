@@ -2,7 +2,7 @@
   Source  file  for  CRE2, a  C  language  wrapper  for RE2:  a  regular
   expressions library by Google.
 
-  Copyright (c) 2012 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (c) 2012, 2016 Marco Maggi <marco.maggi-ipsu@poste.it>
   Copyright (c) 2011 Keegan McAllister
   All rights reserved.
 
@@ -17,6 +17,7 @@
 
 #include <cstdlib>
 #include <cstdio>
+#include <vector>
 
 
 /** --------------------------------------------------------------------
@@ -201,7 +202,7 @@ cre2_match (const cre2_regexp_t *re , const char *text,
 	    cre2_string_t *match, int nmatch)
 {
   re2::StringPiece	text_re2(text, textlen);
-  re2::StringPiece*	match_re2 = new re2::StringPiece[nmatch];
+  std::vector<re2::StringPiece>	match_re2(nmatch);
   RE2::Anchor		anchor_re2 = RE2::UNANCHORED;
   bool			retval; // 0 for no match
                                 // 1 for successful matching
@@ -215,14 +216,13 @@ cre2_match (const cre2_regexp_t *re , const char *text,
   case CRE2_UNANCHORED:
     break;
   }
-  retval = TO_CONST_RE2(re)->Match(text_re2, startpos, endpos, anchor_re2, match_re2, nmatch);
+  retval = TO_CONST_RE2(re)->Match(text_re2, startpos, endpos, anchor_re2, match_re2.data(), nmatch);
   if (retval) {
     for (int i=0; i<nmatch; i++) {
       match[i].data   = match_re2[i].data();
       match[i].length = match_re2[i].length();
     }
   }
-  delete [] match_re2;
   return (retval)? 1 : 0;
 }
 int
@@ -272,11 +272,11 @@ cre2_strings_to_ranges (const char * text, cre2_range_t * ranges, cre2_string_t 
   NAME (const char * pattern, const cre2_string_t * text,	\
 	cre2_string_t * match, int nmatch)			\
   {								\
-    re2::StringPiece  input(text->data, text->length);	\
-    re2::StringPiece* strv = new re2::StringPiece[nmatch];        \
-    RE2::Arg*		argv = new RE2::Arg[nmatch];                         \
-    RE2::Arg**	args = new RE2::Arg*[nmatch];                            \
-    bool			retval;				\
+    re2::StringPiece	input(text->data, text->length);	\
+    re2::StringPiece*	strv = new re2::StringPiece[nmatch];	\
+    RE2::Arg*		argv = new RE2::Arg[nmatch];            \
+    RE2::Arg**		args = new RE2::Arg*[nmatch];           \
+    bool		retval;					\
     for (int i=0; i<nmatch; ++i) {				\
       argv[i] = &strv[i];					\
       args[i] = &argv[i];					\
@@ -288,9 +288,9 @@ cre2_strings_to_ranges (const char * text, cre2_range_t * ranges, cre2_string_t 
 	match[i].length = strv[i].length();			\
       }								\
     }								\
-    delete [] strv; \
-    delete [] argv;               \
-    delete [] args;               \
+    delete [] strv;						\
+    delete [] argv;						\
+    delete [] args;						\
     return int(retval);						\
   }
 
