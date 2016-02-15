@@ -2,7 +2,7 @@ dnl @configure_input@
 dnl
 
 AC_PREREQ([2.68])
-AC_INIT([CRE2],[0.1b6],[marco.maggi-ipsu@poste.it],
+AC_INIT([CRE2],[0.2.0],[marco.maggi-ipsu@poste.it],
   [cre2],[http://github.com/marcomaggi/cre2/])
 AC_CONFIG_SRCDIR([src/])
 AC_CONFIG_MACRO_DIR([meta/autotools])
