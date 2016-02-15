@@ -23,13 +23,15 @@ is implemented in C++.  RE2 is a fast, safe, thread-friendly alternative
 to  backtracking regular  expression engines  like those  used in  PCRE,
 Perl, and Python.
 
-  This distribution makes use of the GNU Autotools.
+  This distribution makes  use of the GNU Autotools.  The  last time the
+maintainer updated  this paragraph,  he had tested  this package  with a
+checkout of re2 on Mon Feb 15, 2016.
 
 
 2. License
 ----------
 
-Copyright (c) 2012, 2013, 2015 Marco Maggi <marco.maggi-ipsu@poste.it>
+Copyright (c) 2012, 2013, 2015, 2016 Marco Maggi <marco.maggi-ipsu@poste.it>
 Copyright (c) 2011 Keegan McAllister
 All rights reserved.
 
@@ -151,6 +153,13 @@ C. Resources
 RE2 is available at:
 
 		    <https://github.com/google/re2>
+
+and  there  exists  a  repackaging   under  the  GNU  Autotools  in  the
+repository:
+
+		  <http://github.com/marcomaggi/re2/>
+
+in the branch "autotools.marcomaggi-2016-02-15".
 
 The latest release of this package can be downloaded from:
 
