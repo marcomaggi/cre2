@@ -27,6 +27,19 @@ doc_cre2_TEXINFOS	= doc/fdl-1.3.texi
 
 ## --------------------------------------------------------------------
 
+CRE2_COMMON_TEST_SOURCES		= tests/cre2-test.h
+tests_test_version_SOURCES		= tests/test-version.c $(CRE2_COMMON_TEST_SOURCES)
+tests_test_options_SOURCES		= tests/test-options.c $(CRE2_COMMON_TEST_SOURCES)
+tests_test_rex_alloc_SOURCES		= tests/test-rex-alloc.c $(CRE2_COMMON_TEST_SOURCES)
+tests_test_matching_SOURCES		= tests/test-matching.c $(CRE2_COMMON_TEST_SOURCES)
+tests_test_easy_matching_SOURCES	= tests/test-easy-matching.c $(CRE2_COMMON_TEST_SOURCES)
+tests_test_full_match_SOURCES		= tests/test-full-match.c $(CRE2_COMMON_TEST_SOURCES)
+tests_test_partial_match_SOURCES	= tests/test-partial-match.c $(CRE2_COMMON_TEST_SOURCES)
+tests_test_consume_match_SOURCES	= tests/test-consume-match.c $(CRE2_COMMON_TEST_SOURCES)
+tests_test_find_and_consume_match_SOURCES = tests/test-find-and-consume-match.c $(CRE2_COMMON_TEST_SOURCES)
+tests_test_replace_SOURCES		= tests/test-replace.c $(CRE2_COMMON_TEST_SOURCES)
+tests_test_misc_SOURCES			= tests/test-misc.c $(CRE2_COMMON_TEST_SOURCES)
+
 check_PROGRAMS		= \
 	tests/test-version			\
 	tests/test-options			\
