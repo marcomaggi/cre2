@@ -7,7 +7,7 @@
 
 	Test file for regular expressions matching.
 
-  Copyright (C) 2012 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2012, 2016 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -16,14 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <cre2.h>
-
-#if 0
-#  define PRINTF		printf
-#  define FWRITE		fwrite
-#else
-#  define PRINTF(MSG, ...)	/* empty string */
-#  define FWRITE(BUF, ...)	/* empty string */
-#endif
+#include "cre2-test.h"
 
 int
 main (int argc, const char *const argv[])

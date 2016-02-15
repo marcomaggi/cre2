@@ -7,7 +7,7 @@
 
 	Test file for options objects.
 
-  Copyright (C) 2012 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2012, 2016 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cre2.h>
+#include "cre2-test.h"
 
 int
 main (int argc, const char *const argv[])

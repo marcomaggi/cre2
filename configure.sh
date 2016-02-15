@@ -17,7 +17,8 @@ fi
     --disable-static --enable-shared            \
     --prefix="${prefix}"                        \
     --libdir="${libdir}"			\
-    CFLAGS='-O3'				\
+    CFLAGS='-pedantic -O3'			\
+    CXXFLAGS='-pedantic -O3'			\
     LDFLAGS="-L${libdir}"			\
     "$@"
 

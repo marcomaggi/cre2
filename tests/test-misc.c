@@ -16,14 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <cre2.h>
-
-#if 0
-#  define PRINTF		printf
-#  define FWRITE		fwrite
-#else
-#  define PRINTF(MSG, ...)	/* empty string */
-#  define FWRITE(BUF, ...)	/* empty string */
-#endif
+#include "cre2-test.h"
 
 int
 main (int argc, const char *const argv[])
