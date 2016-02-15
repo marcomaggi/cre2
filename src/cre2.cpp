@@ -69,15 +69,15 @@ cre2_opt_delete (cre2_options_t *opt)
 }
 
 /* Set or unset option flags in an options object. */
-#define OPT_BOOL(name)  \
- void cre2_opt_set_##name (cre2_options_t *opt, int flag)	\
- {								\
-   TO_OPT(opt)->set_##name(bool(flag));				\
- }								\
- int cre2_opt_##name (cre2_options_t *opt)			\
- {								\
-   return TO_OPT(opt)->name();					\
- }
+#define OPT_BOOL(name)                                      \
+  void cre2_opt_set_##name (cre2_options_t *opt, int flag)	\
+  {                                                         \
+    TO_OPT(opt)->set_##name(bool(flag));                    \
+  }                                                         \
+  int cre2_opt_##name (cre2_options_t *opt)                 \
+  {                                                         \
+    return TO_OPT(opt)->name();                             \
+  }
 OPT_BOOL(posix_syntax)
 OPT_BOOL(longest_match)
 OPT_BOOL(log_errors)
@@ -197,14 +197,14 @@ cre2_program_size (const cre2_regexp_t *re)
 
 int
 cre2_match (const cre2_regexp_t *re , const char *text,
-	    int textlen, int startpos, int endpos, cre2_anchor_t anchor,
-	    cre2_string_t *match, int nmatch)
+            int textlen, int startpos, int endpos, cre2_anchor_t anchor,
+            cre2_string_t *match, int nmatch)
 {
   re2::StringPiece	text_re2(text, textlen);
   re2::StringPiece*	match_re2 = new re2::StringPiece[nmatch];
   RE2::Anchor		anchor_re2 = RE2::UNANCHORED;
   bool			retval; // 0 for no match
-                                // 1 for successful matching
+  // 1 for successful matching
   switch (anchor) {
   case CRE2_ANCHOR_START:
     anchor_re2 = RE2::ANCHOR_START;
@@ -227,13 +227,13 @@ cre2_match (const cre2_regexp_t *re , const char *text,
 }
 int
 cre2_easy_match (const char * pattern, int pattern_len,
-		 const char *text, int text_len,
-		 cre2_string_t *match, int nmatch)
+                 const char *text, int text_len,
+                 cre2_string_t *match, int nmatch)
 {
   cre2_regexp_t *	rex;
   cre2_options_t *	opt;
   int			retval; // 0  for  no  match, 1  for  successful
-				// matching, 2 for wrong regexp
+  // matching, 2 for wrong regexp
   opt	= cre2_opt_new();
   if (!opt) return 2;
   cre2_opt_set_log_errors(opt, 0);
@@ -267,31 +267,31 @@ cre2_strings_to_ranges (const char * text, cre2_range_t * ranges, cre2_string_t 
  ** Other matching functions: stringz pattern.
  ** ----------------------------------------------------------------- */
 
-#define DEFINE_MATCH_ZSTRING_FUN(NAME,FUN)			\
-  int								\
-  NAME (const char * pattern, const cre2_string_t * text,	\
-	cre2_string_t * match, int nmatch)			\
-  {								\
-    re2::StringPiece  input(text->data, text->length);	\
-    re2::StringPiece* strv = new re2::StringPiece[nmatch];        \
-    RE2::Arg*		argv = new RE2::Arg[nmatch];                         \
-    RE2::Arg**	args = new RE2::Arg*[nmatch];                            \
-    bool			retval;				\
-    for (int i=0; i<nmatch; ++i) {				\
-      argv[i] = &strv[i];					\
-      args[i] = &argv[i];					\
-    }								\
-    retval = RE2::FUN(input, pattern, args, nmatch);		\
-    if (retval) {						\
-      for (int i=0; i<nmatch; ++i) {				\
-	match[i].data   = strv[i].data();			\
-	match[i].length = strv[i].length();			\
-      }								\
-    }								\
-    delete [] strv; \
-    delete [] argv;               \
-    delete [] args;               \
-    return int(retval);						\
+#define DEFINE_MATCH_ZSTRING_FUN(NAME,FUN)                  \
+  int                                                       \
+  NAME (const char * pattern, const cre2_string_t * text,   \
+        cre2_string_t * match, int nmatch)                  \
+  {                                                         \
+    re2::StringPiece  input(text->data, text->length);      \
+    re2::StringPiece* strv = new re2::StringPiece[nmatch];  \
+    RE2::Arg*		argv = new RE2::Arg[nmatch];                \
+    RE2::Arg**	args = new RE2::Arg*[nmatch];               \
+    bool			retval;                                       \
+    for (int i=0; i<nmatch; ++i) {                          \
+      argv[i] = &strv[i];                                   \
+      args[i] = &argv[i];                                   \
+    }                                                       \
+    retval = RE2::FUN(input, pattern, args, nmatch);        \
+    if (retval) {                                           \
+      for (int i=0; i<nmatch; ++i) {                        \
+        match[i].data   = strv[i].data();                   \
+        match[i].length = strv[i].length();                 \
+      }                                                     \
+    }                                                       \
+    delete [] strv;                                         \
+    delete [] argv;                                         \
+    delete [] args;                                         \
+    return int(retval);                                     \
   }
 
 DEFINE_MATCH_ZSTRING_FUN(cre2_full_match,FullMatchN)
@@ -299,33 +299,33 @@ DEFINE_MATCH_ZSTRING_FUN(cre2_partial_match,PartialMatchN)
 
 /* This  is different from  the above  in that  the "input"  argument is
    mutated to reference the text after the mathing portion. */
-#define DEFINE_MATCH_ZSTRING_FUN2(NAME,FUN)			\
-  int								\
-  NAME (const char * pattern, cre2_string_t * text,		\
-	cre2_string_t * match, int nmatch)			\
-  {								\
-    re2::StringPiece	input(text->data, text->length);	\
-    re2::StringPiece*	strv = new re2::StringPiece[nmatch];         \
-    RE2::Arg*   argv = new RE2::Arg[nmatch];                          \
-    RE2::Arg**  args = new RE2::Arg*[nmatch];                             \
-    bool			retval;				\
-    for (int i=0; i<nmatch; ++i) {				\
-      argv[i] = &strv[i];					\
-      args[i] = &argv[i];					\
-    }								\
-    retval = RE2::FUN(&input, pattern, args, nmatch);		\
-    if (retval) {						\
-      text->data   = input.data();				\
-      text->length = input.length();				\
-      for (int i=0; i<nmatch; ++i) {				\
-	match[i].data   = strv[i].data();			\
-	match[i].length = strv[i].length();			\
-      }								\
-    }								\
-    delete [] strv;               \
-    delete [] argv;               \
-    delete [] args;               \
-    return int(retval);						\
+#define DEFINE_MATCH_ZSTRING_FUN2(NAME,FUN)                 \
+  int                                                       \
+  NAME (const char * pattern, cre2_string_t * text,         \
+        cre2_string_t * match, int nmatch)                  \
+  {                                                         \
+    re2::StringPiece	input(text->data, text->length);      \
+    re2::StringPiece*	strv = new re2::StringPiece[nmatch];  \
+    RE2::Arg*   argv = new RE2::Arg[nmatch];                \
+    RE2::Arg**  args = new RE2::Arg*[nmatch];               \
+    bool			retval;                                       \
+    for (int i=0; i<nmatch; ++i) {                          \
+      argv[i] = &strv[i];                                   \
+      args[i] = &argv[i];                                   \
+    }                                                       \
+    retval = RE2::FUN(&input, pattern, args, nmatch);       \
+    if (retval) {                                           \
+      text->data   = input.data();                          \
+      text->length = input.length();                        \
+      for (int i=0; i<nmatch; ++i) {                        \
+        match[i].data   = strv[i].data();                   \
+        match[i].length = strv[i].length();                 \
+      }                                                     \
+    }                                                       \
+    delete [] strv;                                         \
+    delete [] argv;                                         \
+    delete [] args;                                         \
+    return int(retval);                                     \
   }
 
 DEFINE_MATCH_ZSTRING_FUN2(cre2_consume,ConsumeN)
@@ -336,31 +336,31 @@ DEFINE_MATCH_ZSTRING_FUN2(cre2_find_and_consume,FindAndConsumeN)
  ** Other matching functions: rex pattern.
  ** ----------------------------------------------------------------- */
 
-#define DEFINE_MATCH_REX_FUN(NAME,FUN)				\
-  int								\
-  NAME (cre2_regexp_t * rex, const cre2_string_t * text,	\
-	cre2_string_t * match, int nmatch)			\
-  {								\
-    re2::StringPiece	input(text->data, text->length);	\
-    re2::StringPiece*	strv = new re2::StringPiece[nmatch];         \
-    RE2::Arg* argv = new RE2::Arg[nmatch];                            \
-    RE2::Arg** args = new RE2::Arg*[nmatch];                              \
-    bool			retval;				\
-    for (int i=0; i<nmatch; ++i) {				\
-      argv[i] = &strv[i];					\
-      args[i] = &argv[i];					\
-    }								\
-    retval = RE2::FUN(input, *TO_RE2(rex), args, nmatch);	\
-    if (retval) {						\
-      for (int i=0; i<nmatch; ++i) {				\
-	match[i].data   = strv[i].data();			\
-	match[i].length = strv[i].length();			\
-      }								\
-    }								\
-    delete [] strv;               \
-    delete [] args;               \
-    delete [] argv;               \
-    return int(retval);						\
+#define DEFINE_MATCH_REX_FUN(NAME,FUN)                      \
+  int                                                       \
+  NAME (cre2_regexp_t * rex, const cre2_string_t * text,    \
+        cre2_string_t * match, int nmatch)                  \
+  {                                                         \
+    re2::StringPiece	input(text->data, text->length);      \
+    re2::StringPiece*	strv = new re2::StringPiece[nmatch];  \
+    RE2::Arg* argv = new RE2::Arg[nmatch];                  \
+    RE2::Arg** args = new RE2::Arg*[nmatch];                \
+    bool			retval;                                       \
+    for (int i=0; i<nmatch; ++i) {                          \
+      argv[i] = &strv[i];                                   \
+      args[i] = &argv[i];                                   \
+    }                                                       \
+    retval = RE2::FUN(input, *TO_RE2(rex), args, nmatch);   \
+    if (retval) {                                           \
+      for (int i=0; i<nmatch; ++i) {                        \
+        match[i].data   = strv[i].data();                   \
+        match[i].length = strv[i].length();                 \
+      }                                                     \
+    }                                                       \
+    delete [] strv;                                         \
+    delete [] args;                                         \
+    delete [] argv;                                         \
+    return int(retval);                                     \
   }
 
 DEFINE_MATCH_REX_FUN(cre2_full_match_re,FullMatchN)
@@ -368,33 +368,33 @@ DEFINE_MATCH_REX_FUN(cre2_partial_match_re,PartialMatchN)
 
 /* This  is different from  the above  in that  the "input"  argument is
    mutated to reference the text after the mathing portion. */
-#define DEFINE_MATCH_REX_FUN2(NAME,FUN)			\
-  int								\
-  NAME (cre2_regexp_t * rex, cre2_string_t * text,		\
-	cre2_string_t * match, int nmatch)			\
-  {								\
-    re2::StringPiece	input(text->data, text->length);	\
-    re2::StringPiece* strv = new re2::StringPiece[nmatch];         \
-    RE2::Arg*	argv = new RE2::Arg[nmatch];                            \
-    RE2::Arg** args = new RE2::Arg*[nmatch];                              \
-    bool			retval;				\
-    for (int i=0; i<nmatch; ++i) {				\
-      argv[i] = &strv[i];					\
-      args[i] = &argv[i];					\
-    }								\
-    retval = RE2::FUN(&input, *TO_RE2(rex), args, nmatch);	\
-    if (retval) {						\
-      text->data   = input.data();				\
-      text->length = input.length();				\
-      for (int i=0; i<nmatch; ++i) {				\
-	match[i].data   = strv[i].data();			\
-	match[i].length = strv[i].length();			\
-      }								\
-    }								\
-    delete [] strv;               \
-    delete [] args;               \
-    delete [] argv;               \
-    return int(retval);						\
+#define DEFINE_MATCH_REX_FUN2(NAME,FUN)                     \
+  int                                                       \
+  NAME (cre2_regexp_t * rex, cre2_string_t * text,          \
+        cre2_string_t * match, int nmatch)                  \
+  {                                                         \
+    re2::StringPiece	input(text->data, text->length);      \
+    re2::StringPiece* strv = new re2::StringPiece[nmatch];  \
+    RE2::Arg*	argv = new RE2::Arg[nmatch];                  \
+    RE2::Arg** args = new RE2::Arg*[nmatch];                \
+    bool			retval;                                       \
+    for (int i=0; i<nmatch; ++i) {                          \
+      argv[i] = &strv[i];                                   \
+      args[i] = &argv[i];                                   \
+    }                                                       \
+    retval = RE2::FUN(&input, *TO_RE2(rex), args, nmatch);  \
+    if (retval) {                                           \
+      text->data   = input.data();                          \
+      text->length = input.length();                        \
+      for (int i=0; i<nmatch; ++i) {                        \
+        match[i].data   = strv[i].data();                   \
+        match[i].length = strv[i].length();                 \
+      }                                                     \
+    }                                                       \
+    delete [] strv;                                         \
+    delete [] args;                                         \
+    delete [] argv;                                         \
+    return int(retval);                                     \
   }
 
 DEFINE_MATCH_REX_FUN2(cre2_consume_re,ConsumeN)
@@ -495,7 +495,7 @@ cre2_global_replace_re (cre2_regexp_t * rex, cre2_string_t * text_and_target, cr
 
 int
 cre2_extract (const char * pattern, cre2_string_t * text,
-	      cre2_string_t * rewrite, cre2_string_t * target)
+              cre2_string_t * rewrite, cre2_string_t * target)
 {
   re2::StringPiece	T(text->data, text->length);
   re2::StringPiece	R(rewrite->data, rewrite->length);
@@ -515,7 +515,7 @@ cre2_extract (const char * pattern, cre2_string_t * text,
 }
 int
 cre2_extract_re (cre2_regexp_t * rex, cre2_string_t * text,
-		 cre2_string_t * rewrite, cre2_string_t * target)
+                 cre2_string_t * rewrite, cre2_string_t * target)
 {
   re2::StringPiece	T(text->data, text->length);
   re2::StringPiece	R(rewrite->data, rewrite->length);
@@ -555,7 +555,7 @@ cre2_quote_meta (cre2_string_t * quoted, cre2_string_t * original)
 }
 int
 cre2_possible_match_range (cre2_regexp_t * rex,
-			   cre2_string_t * min_, cre2_string_t * max_, int maxlen)
+                           cre2_string_t * min_, cre2_string_t * max_, int maxlen)
 {
   std::string	MIN, MAX;
   cre2_string_t	min, max;
