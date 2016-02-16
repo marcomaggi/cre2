@@ -431,7 +431,7 @@ the main purpose of this document is to provide an Info version.
 
 @c To be used as @value{COPYRIGHT_YEARS} whenever we need to include the
 @c list of copyright years.
-@set COPYRIGHT_YEARS            2012
+@set COPYRIGHT_YEARS            2012, 2016
 
 @c ------------------------------------------------------------
 
@@ -575,7 +575,7 @@ AC_CHECK_LIB([re2],[main],,
 AC_CHECK_LIB([cre2],[cre2_version_string],,
   [AC_MSG_FAILURE([test for CRE2 library failed])])
 AC_CHECK_HEADERS([cre2.h],,
-  [AC_MSG_ERROR([test for RE2 header failed])])
+  [AC_MSG_ERROR([test for CRE2 header failed])])
 @end example
 
 @noindent
@@ -1407,7 +1407,7 @@ which is the dot.
 @appendix Package license
 
 
-Copyright @copyright{} 2012 Marco Maggi @value{AUTHOR_URL}@*
+Copyright @copyright{} @value{COPYRIGHT_YEARS} Marco Maggi @value{AUTHOR_URL}@*
 Copyright @copyright{} 2011 Keegan McAllister @url{http://github.com/kmcallister/}@*
 All rights reserved.
 
