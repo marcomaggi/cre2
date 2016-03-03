@@ -51,6 +51,7 @@ check_PROGRAMS		= \
 	tests/test-consume-match		\
 	tests/test-find-and-consume-match	\
 	tests/test-replace			\
+	tests/test-set				\
 	tests/test-misc
 
 AM_CPPFLAGS		= -I$(top_srcdir)/src
