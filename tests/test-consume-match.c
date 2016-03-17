@@ -58,7 +58,7 @@ main (int argc, const char *const argv[])
     if (0 != strncmp("ciao", match[0].data, match[0].length))
       goto error;
     PRINTF("match 0: ");
-    FWRITE(match[0].data, match[0].length, 1, stdout);
+    FWRITE(match[0].data, match[0].length, 1);
     PRINTF("\n");
   }
   { /* success, two parenthetical subexpressions, two match entries */
@@ -78,10 +78,10 @@ main (int argc, const char *const argv[])
     if (0 != strncmp("salut", match[1].data, match[1].length))
       goto error;
     PRINTF("match 0: ");
-    FWRITE(match[0].data, match[0].length, 1, stdout);
+    FWRITE(match[0].data, match[0].length, 1);
     PRINTF("\n");
     PRINTF("match 1: ");
-    FWRITE(match[1].data, match[1].length, 1, stdout);
+    FWRITE(match[1].data, match[1].length, 1);
     PRINTF("\n");
   }
   { /* failure, no parentheses */
@@ -144,7 +144,7 @@ main (int argc, const char *const argv[])
     if (0 != strncmp(" hello", input.data, input.length))
       goto error;
     PRINTF("match 0: ");
-    FWRITE(match[0].data, match[0].length, 1, stdout);
+    FWRITE(match[0].data, match[0].length, 1);
     PRINTF("\n");
   }
   { /* wrong regexp specification */
@@ -210,7 +210,7 @@ main (int argc, const char *const argv[])
     if (0 != strncmp("ciao", match[0].data, match[0].length))
       goto error;
     PRINTF("match 0: ");
-    FWRITE(match[0].data, match[0].length, 1, stdout);
+    FWRITE(match[0].data, match[0].length, 1);
     PRINTF("\n");
   }
   { /* success, two parenthetical subexpressions, two match entries */
@@ -233,10 +233,10 @@ main (int argc, const char *const argv[])
     if (0 != strncmp("salut", match[1].data, match[1].length))
       goto error;
     PRINTF("match 0: ");
-    FWRITE(match[0].data, match[0].length, 1, stdout);
+    FWRITE(match[0].data, match[0].length, 1);
     PRINTF("\n");
     PRINTF("match 1: ");
-    FWRITE(match[1].data, match[1].length, 1, stdout);
+    FWRITE(match[1].data, match[1].length, 1);
     PRINTF("\n");
   }
   { /* failure, no parentheses */
@@ -316,7 +316,7 @@ main (int argc, const char *const argv[])
     if (0 != strncmp(" hello", input.data, input.length))
       goto error;
     PRINTF("match 0: ");
-    FWRITE(match[0].data, match[0].length, 1, stdout);
+    FWRITE(match[0].data, match[0].length, 1);
     PRINTF("\n");
   }
 

@@ -45,7 +45,7 @@ main (int argc, const char *const argv[])
     if (1 != e)
       goto error;
     PRINTF("match: retval=%d, ", e);
-    FWRITE(match.data, match.length, 1, stdout);
+    FWRITE(match.data, match.length, 1);
     PRINTF("\n");
   }
   cre2_delete(rex);
@@ -72,13 +72,13 @@ main (int argc, const char *const argv[])
       goto error;
     cre2_strings_to_ranges(text, ranges, strings, nmatch);
     PRINTF("full match: ");
-    FWRITE(text+ranges[0].start, ranges[0].past-ranges[0].start, 1, stdout);
+    FWRITE(text+ranges[0].start, ranges[0].past-ranges[0].start, 1);
     PRINTF("\n");
     PRINTF("first group: ");
-    FWRITE(text+ranges[1].start, ranges[1].past-ranges[1].start, 1, stdout);
+    FWRITE(text+ranges[1].start, ranges[1].past-ranges[1].start, 1);
     PRINTF("\n");
     PRINTF("second group: ");
-    FWRITE(text+ranges[2].start, ranges[2].past-ranges[2].start, 1, stdout);
+    FWRITE(text+ranges[2].start, ranges[2].past-ranges[2].start, 1);
     PRINTF("\n");
   }
   cre2_delete(rex);

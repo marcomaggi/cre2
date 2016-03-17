@@ -45,7 +45,7 @@ main (int argc, const char *const argv[])
       if ('\0' != target.data[target.length])
 	goto error;
       PRINTF("rewritten to: ");
-      FWRITE(target.data, target.length, 1, stdout);
+      FWRITE(target.data, target.length, 1);
       PRINTF("\n");
     }
     cre2_delete(rex);
@@ -75,7 +75,7 @@ main (int argc, const char *const argv[])
       if ('\0' != target.data[target.length])
 	goto error;
       PRINTF("rewritten to: ");
-      FWRITE(target.data, target.length, 1, stdout);
+      FWRITE(target.data, target.length, 1);
       PRINTF("\n");
     }
     cre2_delete(rex);
@@ -108,7 +108,7 @@ main (int argc, const char *const argv[])
       if ('\0' != target.data[target.length])
 	goto error;
       PRINTF("rewritten to: ");
-      FWRITE(target.data, target.length, 1, stdout);
+      FWRITE(target.data, target.length, 1);
       PRINTF("\n");
     }
     cre2_delete(rex);
@@ -138,7 +138,7 @@ main (int argc, const char *const argv[])
       if ('\0' != target.data[target.length])
 	goto error;
       PRINTF("rewritten to: ");
-      FWRITE(target.data, target.length, 1, stdout);
+      FWRITE(target.data, target.length, 1);
       PRINTF("\n");
     }
     cre2_delete(rex);
@@ -168,7 +168,7 @@ main (int argc, const char *const argv[])
       if ('\0' != target.data[target.length])
       	goto error;
       PRINTF("result %d, rewritten to: ", result);
-      FWRITE(target.data, target.length, 1, stdout);
+      FWRITE(target.data, target.length, 1);
       PRINTF("\n");
     }
     cre2_delete(rex);
@@ -202,7 +202,7 @@ main (int argc, const char *const argv[])
       if ('\0' != target.data[target.length])
 	goto error;
       PRINTF("rewritten to: ");
-      FWRITE(target.data, target.length, 1, stdout);
+      FWRITE(target.data, target.length, 1);
       PRINTF("\n");
     }
     cre2_delete(rex);
@@ -233,7 +233,7 @@ main (int argc, const char *const argv[])
       if ('\0' != target.data[target.length])
 	goto error;
       PRINTF("rewritten to: ");
-      FWRITE(target.data, target.length, 1, stdout);
+      FWRITE(target.data, target.length, 1);
       PRINTF("\n");
     }
     cre2_delete(rex);

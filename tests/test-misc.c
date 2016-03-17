@@ -95,7 +95,7 @@ main (int argc, const char *const argv[])
       if (0 != result)
       	goto error;
       PRINTF("error message: ");
-      FWRITE(errmsg.data, errmsg.length, 1, stdout);
+      FWRITE(errmsg.data, errmsg.length, 1);
       PRINTF("\n");
     }
     cre2_delete(rex);

@@ -10,13 +10,16 @@
   See the COPYING file.
 */
 
+#define CRE2_ENABLE_DEBUGGING	1
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <cre2.h>
+#include "cre2-test.h"
 
-#define FATAL(format, args...) \
-        fprintf(stderr, "\e[01;31m[ERR] \e[00m\e[00;31m" format "\e[00m\n", ##args);\
+#define FATAL(...) \
+        PRINTF(__VA_ARGS__);\
         goto error
 
 int
@@ -41,25 +44,33 @@ main (int argc, const char *const argv[])
 
   // Add patterns
   index = cre2_set_add_simple(set, pattern0);
-  if (index != 0) {
+  if (0 == index) {
+    PRINTF("Correctly added pattern0: %s\n", pattern0);
+  } else {
     FATAL("Failed adding pattern %i to set. cre2_set_add_simple returned %i", 0, index);
   }
   index = cre2_set_add_simple(set, pattern1);
-  if (index != 1) {
+  if (1 == index)  {
+    PRINTF("Correctly added pattern1: %s\n", pattern1);
+  } else {
     FATAL("Failed adding pattern %i to set. cre2_set_add_simple returned %i", 1, index);
   }
   index = cre2_set_add_simple(set, pattern2);
-  if (index != 2) {
+  if (2 == index)  {
+    PRINTF("Correctly added pattern2: %s\n", pattern2);
+  } else {
     FATAL("Failed adding pattern %i to set. cre2_set_add_simple returned %i", 2, index);
   }
 
   // Try to add invalid pattern
-  char error[100];
-  index = cre2_set_add(set, pattern3, strlen(pattern3), error, 100);
-  if (index != -1) {
+#define ERROR_LEN	100
+  char error[ERROR_LEN];
+  index = cre2_set_add(set, pattern3, strlen(pattern3), error, ERROR_LEN);
+  if (-1 == index)  {
+    PRINTF("Correct error message from cre2_set_add() for invalid pattern2: \"%s\"\n", error);
+  } else {
     FATAL("Error: successfully added an invalid pattern3 to set.");
   }
-  printf(error);
 
   // Compile regex set
   if (!cre2_set_compile(set)) {
@@ -74,6 +85,8 @@ main (int argc, const char *const argv[])
   count = cre2_set_match(set, text, strlen(text), match, 3);
   if (count != 2 || match[0] != 0 || match[1] != 1) {
     FATAL("Failed to match: %s", text);
+  } else {
+    PRINTF("Correctly matched: %s\n", text);
   }
 
   // Test second match
@@ -81,6 +94,8 @@ main (int argc, const char *const argv[])
   count = cre2_set_match(set, text, strlen(text), match, 3);
   if (count != 2 || match[0] != 0 || match[1] != 2) {
     FATAL("Failed to match: %s", text);
+  } else {
+    PRINTF("Correctly matched: %s\n", text);
   }
 
   // Test third match
@@ -88,10 +103,13 @@ main (int argc, const char *const argv[])
   count = cre2_set_match(set, text, strlen(text), match, 3);
   if (count != 0) {
     FATAL("Failed to match: %s", text);
+  } else {
+    PRINTF("Correctly not-matched: %s\n", text);
   }
 
 /* ------------------------------------------------------------------ */
 
+  cre2_opt_delete(opt);
   cre2_set_delete(set);
   exit(EXIT_SUCCESS);
  error:

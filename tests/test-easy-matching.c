@@ -36,7 +36,7 @@ main (int argc, const char *const argv[])
 		    text,    strlen(text),
 		    &match, nmatch);
     PRINTF("match: ");
-    FWRITE(match.data, match.length, 1, stdout);
+    FWRITE(match.data, match.length, 1);
     PRINTF("\n");
     if (0 != strncmp("ciao", match.data, match.length))
       goto error;
@@ -70,13 +70,13 @@ main (int argc, const char *const argv[])
 		    text,    strlen(text),
 		    match, nmatch);
     PRINTF("full match: ");
-    FWRITE(match[0].data, match[0].length, 1, stdout);
+    FWRITE(match[0].data, match[0].length, 1);
     PRINTF("\n");
     PRINTF("first group: ");
-    FWRITE(match[1].data, match[1].length, 1, stdout);
+    FWRITE(match[1].data, match[1].length, 1);
     PRINTF("\n");
     PRINTF("second group: ");
-    FWRITE(match[2].data, match[2].length, 1, stdout);
+    FWRITE(match[2].data, match[2].length, 1);
     PRINTF("\n");
     if (0 != strncmp("ciao hello", match[0].data, match[0].length))
       goto error;

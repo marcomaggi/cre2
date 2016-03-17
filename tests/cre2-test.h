@@ -16,11 +16,11 @@
 #define CRE2_TEST_H 1
 
 #if (defined CRE2_ENABLE_DEBUGGING)
-#  define PRINTF		printf
-#  define FWRITE		fwrite
+#  define PRINTF(...)		{ printf(__VA_ARGS__);         fflush(stdout); }
+#  define FWRITE(...)		{ fwrite(__VA_ARGS__, stdout); fflush(stdout); }
 #else
 #  define PRINTF(...)		if (0) { printf(__VA_ARGS__); }; /* do nothing */
-#  define FWRITE(...)		if (0) { fwrite(__VA_ARGS__); }; /* do nothing */
+#  define FWRITE(...)		if (0) { fwrite(__VA_ARGS__, stdout); }; /* do nothing */
 #endif
 
 #endif /* CRE2_TEST_H */
