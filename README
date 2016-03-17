@@ -138,6 +138,15 @@ A. Credits
 RE2 is  a Google project.  CRE2  is based on code  by Keegan McAllister.
 This distribution was assembled by Marco Maggi.
 
+  Matthew  Hall (https://github.com/megahall)  contributed miscellaneous
+fixes.
+
+  Maksym  Melnychok (https://github.com/keymone)  contributed a  fix for
+wrong usage of variable-length arrays.
+
+  afiaux    (https://github.com/afiaux)   contributed    the   RE2:Set()
+interface.
+
 
 B. Bugs
 -------
