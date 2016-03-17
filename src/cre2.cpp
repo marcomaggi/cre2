@@ -411,7 +411,7 @@ cre2_replace (const char * pattern, cre2_string_t * text_and_target, cre2_string
     std::string		S(text_and_target->data, text_and_target->length);
     re2::StringPiece	R(rewrite->data, rewrite->length);
     char *		buffer; /* this exists to make GCC shut up about const */
-    bool			retval;
+    bool		retval;
     retval = RE2::Replace(&S, pattern, R);
     text_and_target->length = S.length();
     buffer = (char *)malloc(1+text_and_target->length);
@@ -611,7 +611,7 @@ cre2_check_rewrite_string (cre2_regexp_t * rex, cre2_string_t * rewrite, cre2_st
   }
 }
 
-
+
 /** --------------------------------------------------------------------
  ** Set match.
  ** ----------------------------------------------------------------- */

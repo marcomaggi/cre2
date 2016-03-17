@@ -72,7 +72,7 @@ cre2_decl int cre2_opt_case_sensitive		(cre2_options_t *opt);
 cre2_decl int cre2_opt_perl_classes		(cre2_options_t *opt);
 cre2_decl int cre2_opt_word_boundary		(cre2_options_t *opt);
 cre2_decl int cre2_opt_one_line			(cre2_options_t *opt);
-cre2_decl int64_t cre2_opt_max_mem			(cre2_options_t *opt);
+cre2_decl int64_t cre2_opt_max_mem		(cre2_options_t *opt);
 cre2_decl cre2_encoding_t cre2_opt_encoding	(cre2_options_t *opt);
 
 
