@@ -13,6 +13,7 @@
 #  include <config.h>
 #endif
 #include <re2/re2.h>
+#include <re2/set.h>
 #include "cre2.h"
 
 #include <cstdlib>
@@ -120,12 +121,12 @@ cre2_opt_encoding (cre2_options_t *opt)
   }
 }
 void
-cre2_opt_set_max_mem (cre2_options_t *opt, int m)
+cre2_opt_set_max_mem (cre2_options_t *opt, int64_t m)
 /* Configure the maximum amount of memory in an options object. */
 {
   TO_OPT(opt)->set_max_mem(m);
 }
-int
+int64_t
 cre2_opt_max_mem (cre2_options_t *opt)
 {
   return TO_OPT(opt)->max_mem();
@@ -196,16 +197,10 @@ cre2_program_size (const cre2_regexp_t *re)
  ** Matching with precompiled regular expressions objects.
  ** ----------------------------------------------------------------- */
 
-int
-cre2_match (const cre2_regexp_t *re , const char *text,
-	    int textlen, int startpos, int endpos, cre2_anchor_t anchor,
-	    cre2_string_t *match, int nmatch)
+static RE2::Anchor
+to_cre2_anchor(cre2_anchor_t anchor)
 {
-  re2::StringPiece	text_re2(text, textlen);
-  std::vector<re2::StringPiece>	match_re2(nmatch);
-  RE2::Anchor		anchor_re2 = RE2::UNANCHORED;
-  bool			retval; // 0 for no match
-				// 1 for successful matching
+  RE2::Anchor anchor_re2 = RE2::UNANCHORED;
   switch (anchor) {
   case CRE2_ANCHOR_START:
     anchor_re2 = RE2::ANCHOR_START;
@@ -216,6 +211,19 @@ cre2_match (const cre2_regexp_t *re , const char *text,
   case CRE2_UNANCHORED:
     break;
   }
+  return anchor_re2;
+}
+
+int
+cre2_match (const cre2_regexp_t *re , const char *text,
+	    int textlen, int startpos, int endpos, cre2_anchor_t anchor,
+	    cre2_string_t *match, int nmatch)
+{
+  re2::StringPiece	text_re2(text, textlen);
+  std::vector<re2::StringPiece>	match_re2(nmatch);
+  RE2::Anchor		anchor_re2 = to_cre2_anchor(anchor);
+  bool			retval; // 0 for no match
+				// 1 for successful matching
   retval = TO_CONST_RE2(re)->Match(text_re2, startpos, endpos, anchor_re2, match_re2.data(), nmatch);
   if (retval) {
     for (int i=0; i<nmatch; i++) {
@@ -601,6 +609,81 @@ cre2_check_rewrite_string (cre2_regexp_t * rex, cre2_string_t * rewrite, cre2_st
       return -1;
     return 0;
   }
+}
+
+
+/** --------------------------------------------------------------------
+ ** Set match.
+ ** ----------------------------------------------------------------- */
+
+#define TO_RE2_SET(set)   (reinterpret_cast<RE2::Set *>(set))
+#define TO_CRE2_SET(set)  (reinterpret_cast<cre2_set *>(set))
+
+// RE2::Set constructor and destructor
+cre2_set*
+cre2_set_new(cre2_options_t *opt, cre2_anchor_t anchor)
+{
+  return TO_CRE2_SET(new (std::nothrow) RE2::Set(*TO_OPT(opt), to_cre2_anchor(anchor)));
+}
+
+void
+cre2_set_delete(cre2_set *set)
+{
+  delete TO_RE2_SET(set);
+}
+
+// Add a regex to the set. If invalid: store error message in error buffer.
+int
+cre2_set_add(cre2_set *set, const char *pattern, size_t pattern_len, char *error, size_t error_len)
+{
+  RE2::Set *s = TO_RE2_SET(set);
+  re2::StringPiece regex(pattern, static_cast<int>(pattern_len));
+  if (error == NULL || error_len <= 0) {
+    return s->Add(regex, NULL);
+  }
+  std::string err;
+  int regex_index = s->Add(regex, &err);
+  if (regex_index < 0) {
+    size_t len = err.size() < error_len - 1 ? err.size() : error_len - 1;
+    err.copy(error, len);
+    error[len] = '\0';
+  }
+  return regex_index;
+}
+
+// Add pattern without NULL byte. Don't store error message.
+int
+cre2_set_add_simple(cre2_set *set, const char *pattern)
+{
+  RE2::Set *s = TO_RE2_SET(set);
+  re2::StringPiece regex(pattern, static_cast<int>(strlen(pattern)));
+  return s->Add(regex, NULL);
+}
+
+
+// Compile the regex set into a DFA. Must be called after add and before match.
+int
+cre2_set_compile(cre2_set *set)
+{
+  RE2::Set *s = TO_RE2_SET(set);
+  return static_cast<int>(s->Compile());
+}
+
+// Match the set of regex against text and store indices of matching regexes in match array.
+// Returns the number of regexes which match.
+size_t
+cre2_set_match(cre2_set *set, const char *text, size_t text_len, int *match, size_t match_len)
+{
+  RE2::Set *s = TO_RE2_SET(set);
+  re2::StringPiece data(text, static_cast<int>(text_len));
+  std::vector<int> v;
+  bool does_match = s->Match(data, &v);
+  if (!does_match) {
+    return 0;
+  }
+  size_t min = v.size() < match_len ? v.size() : match_len;
+  std::copy(v.begin(), v.begin() + min, match);
+  return v.size();
 }
 
 /* end of file */

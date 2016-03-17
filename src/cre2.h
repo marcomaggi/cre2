@@ -60,7 +60,7 @@ cre2_decl void cre2_opt_set_case_sensitive	(cre2_options_t *opt, int flag);
 cre2_decl void cre2_opt_set_perl_classes	(cre2_options_t *opt, int flag);
 cre2_decl void cre2_opt_set_word_boundary	(cre2_options_t *opt, int flag);
 cre2_decl void cre2_opt_set_one_line		(cre2_options_t *opt, int flag);
-cre2_decl void cre2_opt_set_max_mem		(cre2_options_t *opt, int m);
+cre2_decl void cre2_opt_set_max_mem		(cre2_options_t *opt, int64_t m);
 cre2_decl void cre2_opt_set_encoding		(cre2_options_t *opt, cre2_encoding_t enc);
 
 cre2_decl int cre2_opt_posix_syntax		(cre2_options_t *opt);
@@ -72,7 +72,7 @@ cre2_decl int cre2_opt_case_sensitive		(cre2_options_t *opt);
 cre2_decl int cre2_opt_perl_classes		(cre2_options_t *opt);
 cre2_decl int cre2_opt_word_boundary		(cre2_options_t *opt);
 cre2_decl int cre2_opt_one_line			(cre2_options_t *opt);
-cre2_decl int cre2_opt_max_mem			(cre2_options_t *opt);
+cre2_decl int64_t cre2_opt_max_mem			(cre2_options_t *opt);
 cre2_decl cre2_encoding_t cre2_opt_encoding	(cre2_options_t *opt);
 
 
@@ -289,6 +289,38 @@ cre2_decl int cre2_possible_match_range (cre2_regexp_t * rex,
    incorrect, return -1 if an error occurred allocating memory. */
 cre2_decl int cre2_check_rewrite_string (cre2_regexp_t * rex,
 					 cre2_string_t * rewrite, cre2_string_t * errmsg);
+
+
+/** --------------------------------------------------------------------
+ ** Set match.
+ ** ----------------------------------------------------------------- */
+
+/* Struct used to represent an RE2::Set object. */
+struct cre2_set;
+typedef struct cre2_set cre2_set;
+
+/* RE2::Set constructor */
+cre2_decl cre2_set *cre2_set_new(cre2_options_t *opt, cre2_anchor_t anchor);
+/* RE2::Set destructor */
+cre2_decl void      cre2_set_delete(cre2_set *set);
+
+/* Add a regex to the set. If invalid: store error message in error buffer.
+ * Returns the index associated to this regex, -1 on error */
+cre2_decl int cre2_set_add(cre2_set *set, const char *pattern, size_t pattern_len,
+					 char *error, size_t error_len);
+
+/* Add pattern without NULL byte. Discard error message.
+ * Returns the index associated to this regex, -1 on error */
+cre2_decl int cre2_set_add_simple(cre2_set *set, const char *pattern);
+
+/* Compile the regex set into a DFA. Must be called after add and before match.
+ * Returns 1 on success, 0 on error */
+cre2_decl int cre2_set_compile(cre2_set *set);
+
+/* Match the set of regex against text and store indices of matching regexes in match array.
+ * Returns the number of regexes which match. */
+cre2_decl size_t cre2_set_match(cre2_set *set, const char *text, size_t text_len,
+					 int *match, size_t match_len);
 
 
 /** --------------------------------------------------------------------
