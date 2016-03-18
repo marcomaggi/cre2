@@ -1042,6 +1042,18 @@ The option does @strong{not} cause newlines to be skipped.
 @end deftypefun
 
 
+@deftypefun int cre2_opt_dot_nl (cre2_options_t * @var{opt})
+@deftypefunx void cre2_opt_set_dot_nl (cre2_options_t * @var{opt}, int @var{flag})
+The dot matches everything, including the new line; default is disabled.
+@end deftypefun
+
+
+@deftypefun int cre2_opt_never_capture (cre2_options_t * @var{opt})
+@deftypefunx void cre2_opt_set_never_capture (cre2_options_t * @var{opt}, int @var{flag})
+Parse all the parentheses as non--capturing; default is disabled.
+@end deftypefun
+
+
 @deftypefun int cre2_opt_case_sensitive (cre2_options_t * @var{opt})
 @deftypefunx void cre2_opt_set_case_sensitive (cre2_options_t * @var{opt}, int @var{flag})
 Match is case--sensitive; the regular expression pattern can override
