@@ -29,6 +29,8 @@ main (int argc, const char *const argv[])
     cre2_opt_set_log_errors(opt, 1);
     cre2_opt_set_literal(opt, 1);
     cre2_opt_set_never_nl(opt, 1);
+    cre2_opt_set_dot_nl(opt, 1);
+    cre2_opt_set_never_capture(opt, 1);
     cre2_opt_set_case_sensitive(opt, 1);
     cre2_opt_set_perl_classes(opt, 1);
     cre2_opt_set_word_boundary(opt, 1);
