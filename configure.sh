@@ -10,7 +10,7 @@ then libdir=${prefix}/lib64
 else libdir=${prefix}/lib
 fi
 
-../configure \
+../configure.sh \
     --config-cache                              \
     --cache-file=../config.cache                \
     --enable-maintainer-mode                    \
