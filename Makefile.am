@@ -5,6 +5,9 @@ AUTOMAKE_OPTIONS	= foreign
 EXTRA_DIST		= INSTALL configure.sh prepare.sh
 dist_doc_DATA		= README COPYING LICENSE.re2
 AM_CXXFLAGS		= -std=c++11
+AM_CPPFLAGS		= -std=c++11
+
+AM_DISTCHECK_CONFIGURE_FLAGS	= CXXFLAGS='-std=c++11' CPPFLAGS='-std=c++11'
 
 ## --------------------------------------------------------------------
 

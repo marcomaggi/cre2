@@ -18,7 +18,8 @@ fi
     --prefix="${prefix}"                        \
     --libdir="${libdir}"			\
     CFLAGS='-pedantic -O3'			\
-    CXXFLAGS='-pedantic -O3'			\
+    CXXFLAGS='-pedantic -O3 -std=c++11'		\
+    CPPFLAGS='-std=c++11'			\
     LDFLAGS="-L${libdir}"			\
     "$@"
 

@@ -81,6 +81,11 @@ to inspect the available configuration options:
 
     $ ../configure --help
 
+with  recent revisions  of the  upstream  RE2, we  may need  to use  the
+following settings:
+
+    $ ../configure CXXFLAGS='-std=c++11' CPPFLAGS='-std=c++11'
+
   The Makefile is designed to allow parallel builds, so we can do:
 
    $ make -j4 all && make -j4 check
