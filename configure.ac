@@ -2,7 +2,7 @@ dnl @configure_input@
 dnl
 
 AC_PREREQ([2.68])
-AC_INIT([CRE2],[0.3.2],[marco.maggi-ipsu@poste.it],
+AC_INIT([CRE2],[0.3.3],[marco.maggi-ipsu@poste.it],
   [cre2],[http://github.com/marcomaggi/cre2/])
 AC_CONFIG_SRCDIR([src/])
 AC_CONFIG_MACRO_DIR([meta/autotools])
@@ -28,6 +28,8 @@ AC_PROG_CC_C_O
 AC_LANG([C++])
 AC_PROG_CXX
 AC_PROG_CXX_C_O
+
+AX_CXX_COMPILE_STDCXX_11(noext,mandatory)
 
 AC_CHECK_LIB([re2],[main],,[AC_MSG_FAILURE([test for RE2 library failed])])
 AC_CHECK_HEADERS([re2/re2.h],,[AC_MSG_ERROR([test for RE2 header failed])])
