@@ -106,6 +106,39 @@ main (int argc, const char *const argv[])
   cre2_opt_delete(opt);
 
 /* ------------------------------------------------------------------ */
+/* test named groups */
+
+  pattern = "from (?P<S>.*) to (?P<D>.*)";
+  opt = cre2_opt_new();
+  rex = cre2_new(pattern, strlen(pattern), opt);
+  {
+    if (cre2_error_code(rex))
+      goto error;
+
+    int nmatch = cre2_num_capturing_groups(rex) + 1;
+    cre2_string_t* matches = (cre2_string_t*)malloc(sizeof(cre2_string_t) * nmatch)
+
+    int      e;
+    const char *  text = "from Montreal, Canada to Lausanne, Switzerland";
+    int      text_len = strlen(text);
+    e = cre2_match(rex, text, text_len, 0, text_len, CRE2_UNANCHORED, matches, nmatch);
+    if (0 == e)
+      goto error;
+
+    int SIndex = cre2_find_named_capturing_groups(rex, "S")
+    if(0 != strncmp("Montreal, Canada", match[SIndex].data, match[SIndex].length))
+      goto error;
+
+    int DIndex = cre2_find_named_capturing_groups(rex, "D")
+    if(0 != strncmp("Lausanne, Switzerland", match[DIndex].data, match[DIndex].length))
+      goto error;
+  }
+  cre2_delete(rex);
+  cre2_opt_delete(opt);
+
+/* ------------------------------------------------------------------ */
+
+
 
   exit(EXIT_SUCCESS);
  error:

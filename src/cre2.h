@@ -121,6 +121,7 @@ cre2_decl void    cre2_delete	(cre2_regexp_t *re);
 cre2_decl const char * cre2_pattern	(const cre2_regexp_t *re);
 cre2_decl int cre2_error_code		(const cre2_regexp_t *re);
 cre2_decl int cre2_num_capturing_groups	(const cre2_regexp_t *re);
+cre2_decl int cre2_find_named_capturing_groups  (const cre2_regexp_t *re, const char *name);
 cre2_decl int cre2_program_size		(const cre2_regexp_t *re);
 
 /* invalidated by further re use */
