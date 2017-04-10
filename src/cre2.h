@@ -105,7 +105,7 @@ typedef enum cre2_error_code_t {
   CRE2_ERROR_TRAILING_BACKSLASH,/* trailing \ at end of regexp */
   CRE2_ERROR_REPEAT_ARGUMENT,	/* repeat argument missing, e.g. "*" */
   CRE2_ERROR_REPEAT_SIZE,	/* bad repetition argument */
-  CRE2_ERROR_REPEA_TOP,		/* bad repetition operator */
+  CRE2_ERROR_REPEAT_OP,		/* bad repetition operator */
   CRE2_ERROR_BAD_PERL_OP,	/* bad perl operator */
   CRE2_ERROR_BAD_UTF8,		/* invalid UTF-8 in regexp */
   CRE2_ERROR_BAD_NAMED_CAPTURE,	/* bad named capture group */
