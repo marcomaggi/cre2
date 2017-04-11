@@ -761,8 +761,8 @@ Repeat argument missing, e.g. @code{*}.
 @cindex @code{CRE2_ERROR_REPEAT_SIZE}
 Bad repetition argument.
 
-@item CRE2_ERROR_REPEA_TOP
-@cindex @code{CRE2_ERROR_REPEA_TOP}
+@item CRE2_ERROR_REPEAT_OP
+@cindex @code{CRE2_ERROR_REPEAT_OP}
 Bad repetition operator.
 
 @item CRE2_ERROR_BAD_PERL_OP
@@ -816,6 +816,48 @@ If @var{rex} is a successfully built regular expression object: return a
 non--negative integer representing the number of capturing groups
 (parenthetical subexpressions) in the pattern.  If an error occurred
 while building @var{rex}: return @code{-1}.
+@end deftypefun
+
+
+@deftypefun int cre2_find_named_capturing_groups (const cre2_regexp_t * @var{rex}, const char * @var{name})
+If @var{rex} is a successfully built regular expression object: return a non--negative integer
+representing the index of the named capturing group whose name is @var{name}.  If an error occurred
+while building @var{rex} or the name is invalid: return @code{-1}.
+
+@example
+const char *      pattern = "from (?P<S>.*) to (?P<D>.*)";
+cre2_options_t *  opt     = cre2_opt_new();
+cre2_regexp_t *   rex     = cre2_new(pattern, strlen(pattern),
+                                     opt);
+@{
+  if (cre2_error_code(rex))
+    @{ /* handle the error */ @}
+  int nmatch = cre2_num_capturing_groups(rex) + 1;
+  cre2_string_t strings[nmatch];
+  int e, SIndex, DIndex;
+
+  const char * text = \
+     "from Montreal, Canada to Lausanne, Switzerland";
+  int text_len = strlen(text);
+
+  e = cre2_match(rex, text, text_len, 0, text_len,
+                 CRE2_UNANCHORED, strings, nmatch);
+  if (0 == e)
+    @{ /* handle the error */ @}
+
+  SIndex = cre2_find_named_capturing_groups(rex, "S");
+  if (0 != strncmp("Montreal, Canada",
+                   strings[SIndex].data, strings[SIndex].length))
+    @{ /* handle the error */ @}
+
+  DIndex = cre2_find_named_capturing_groups(rex, "D");
+  if (0 != strncmp("Lausanne, Switzerland",
+                   strings[DIndex].data, strings[DIndex].length))
+    @{ /* handle the error */ @}
+@}
+cre2_delete(rex);
+cre2_opt_delete(opt);
+@end example
 @end deftypefun
 
 

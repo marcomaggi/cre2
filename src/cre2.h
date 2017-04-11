@@ -105,7 +105,7 @@ typedef enum cre2_error_code_t {
   CRE2_ERROR_TRAILING_BACKSLASH,/* trailing \ at end of regexp */
   CRE2_ERROR_REPEAT_ARGUMENT,	/* repeat argument missing, e.g. "*" */
   CRE2_ERROR_REPEAT_SIZE,	/* bad repetition argument */
-  CRE2_ERROR_REPEA_TOP,		/* bad repetition operator */
+  CRE2_ERROR_REPEAT_OP,		/* bad repetition operator */
   CRE2_ERROR_BAD_PERL_OP,	/* bad perl operator */
   CRE2_ERROR_BAD_UTF8,		/* invalid UTF-8 in regexp */
   CRE2_ERROR_BAD_NAMED_CAPTURE,	/* bad named capture group */
@@ -121,6 +121,7 @@ cre2_decl void    cre2_delete	(cre2_regexp_t *re);
 cre2_decl const char * cre2_pattern	(const cre2_regexp_t *re);
 cre2_decl int cre2_error_code		(const cre2_regexp_t *re);
 cre2_decl int cre2_num_capturing_groups	(const cre2_regexp_t *re);
+cre2_decl int cre2_find_named_capturing_groups  (const cre2_regexp_t *re, const char *name);
 cre2_decl int cre2_program_size		(const cre2_regexp_t *re);
 
 /* invalidated by further re use */

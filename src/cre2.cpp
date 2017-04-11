@@ -189,6 +189,20 @@ cre2_num_capturing_groups (const cre2_regexp_t *re)
   return TO_CONST_RE2(re)->NumberOfCapturingGroups();
 }
 int
+cre2_find_named_capturing_groups (const cre2_regexp_t *re, const char* group_name)
+{
+  const std::map<std::string, int>& m = TO_CONST_RE2(re)->NamedCapturingGroups();
+  std::map<std::string, int>::const_iterator it = m.find(group_name);
+  
+  if(it != m.end()) {
+    return it->second;
+  }
+  else {
+    return -1;
+  }
+}
+
+int
 cre2_program_size (const cre2_regexp_t *re)
 {
   return TO_CONST_RE2(re)->ProgramSize();
