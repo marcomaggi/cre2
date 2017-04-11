@@ -31,7 +31,7 @@ checkout of re2 on Mon Feb 15, 2016.
 2. License
 ----------
 
-Copyright (c) 2012, 2013, 2015, 2016 Marco Maggi <marco.maggi-ipsu@poste.it>
+Copyright (c) 2012, 2013, 2015, 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
 Copyright (c) 2011 Keegan McAllister
 All rights reserved.
 
@@ -146,6 +146,9 @@ wrong usage of variable-length arrays.
 
   afiaux    (https://github.com/afiaux)   contributed    the   RE2:Set()
 interface.
+
+  Guillaume Massé  (https://github.com/MasseGuillaume) contributed fixes
+and the implementation of "cre2_find_named_capturing_groups()".
 
 
 B. Bugs
