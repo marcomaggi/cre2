@@ -761,8 +761,8 @@ Repeat argument missing, e.g. @code{*}.
 @cindex @code{CRE2_ERROR_REPEAT_SIZE}
 Bad repetition argument.
 
-@item CRE2_ERROR_REPEA_TOP
-@cindex @code{CRE2_ERROR_REPEA_TOP}
+@item CRE2_ERROR_REPEAT_OP
+@cindex @code{CRE2_ERROR_REPEAT_OP}
 Bad repetition operator.
 
 @item CRE2_ERROR_BAD_PERL_OP
