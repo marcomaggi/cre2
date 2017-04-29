@@ -29,13 +29,13 @@ before_script:
   - wget http://ftp.gnu.org/gnu/texinfo/texinfo-6.3.tar.gz -O /tmp/texinfo-6.3.tar.gz
   - pushd /tmp && tar -xvzf texinfo-6.3.tar.gz && cd texinfo-6.3 && ./configure --prefix=/tmp/mine && make && make install && popd
   - wget https://bitbucket.org/marcomaggi/re2/downloads/re2-0.3.2.tar.xz -O /tmp/re2-0.3.2.tar.gz
-  - pushd /tmp && tar -xvJf re2-0.3.2.tar.gz && cd re2-0.3.2 && ./configure --prefix=/tmp/mine && make && make install && popd
+  - pushd /tmp && tar -xvJf re2-0.3.2.tar.gz && cd re2-0.3.2 && ./configure --prefix=/tmp/mine CXX=/usr/bin/g++-5 && make && make install && popd
 
 script:
   - export PATH=/tmp/mine/bin:$PATH
   - export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH
   - sh ./autogen.sh
-  - ./configure --enable-maintainer-mode
+  - ./configure --enable-maintainer-mode CXX=/usr/bin/g++-5
   - make -j4 all && make -j4 check
 
 notifications:
