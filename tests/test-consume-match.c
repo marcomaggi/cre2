@@ -7,7 +7,7 @@
 
 	Test file for consume match function.
 
-  Copyright (C) 2012, 2016 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2012, 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -19,7 +19,7 @@
 #include "cre2-test.h"
 
 int
-main (int argc, const char *const argv[])
+main (void)
 {
   { /* success, no parentheses, full consumed buffer */
     const char *	pattern = "ci.*ut";

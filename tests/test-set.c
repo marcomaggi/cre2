@@ -23,7 +23,7 @@
         goto error
 
 int
-main (int argc, const char *const argv[])
+main (void)
 {
 /* ------------------------------------------------------------------ */
 /* definition of patterns match */

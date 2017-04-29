@@ -4,6 +4,7 @@ ACLOCAL_AMFLAGS		= -I meta/autotools
 AUTOMAKE_OPTIONS	= foreign
 EXTRA_DIST		= INSTALL configure.sh prepare.sh
 dist_doc_DATA		= README COPYING LICENSE.re2
+AM_CFLAGS		= -I$(srcdir)/src -Wall
 
 ## --------------------------------------------------------------------
 

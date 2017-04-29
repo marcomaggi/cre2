@@ -7,7 +7,7 @@
 
 	Test file for miscellaneous functions.
 
-  Copyright (C) 2012 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2012, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -19,7 +19,7 @@
 #include "cre2-test.h"
 
 int
-main (int argc, const char *const argv[])
+main (void)
 {
   { /* quote meta characters */
     const char *	pattern	 = "1.5-2.0?";

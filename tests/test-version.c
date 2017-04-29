@@ -7,7 +7,7 @@
 
 	Test file for version functions.
 
-  Copyright (C) 2012 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2012, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -17,7 +17,7 @@
 #include <cre2.h>
 
 int
-main (int argc, const char *const argv[])
+main (void)
 {
   printf("version number string: %s\n", cre2_version_string());
   printf("libtool version number: %d:%d:%d\n",
