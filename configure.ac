@@ -53,8 +53,12 @@ AC_SUBST([cre2_VERSION_INTERFACE_CURRENT])
 AC_SUBST([cre2_VERSION_INTERFACE_REVISION])
 AC_SUBST([cre2_VERSION_INTERFACE_AGE])
 
+dnl This is the version stored in the pkg-config data file.
+AC_SUBST([CRE2_PKG_CONFIG_VERSION],[0.3.4])
+
 AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile]
+   [meta/scripts/cre2.pc])
 AC_OUTPUT
 
 dnl end of file

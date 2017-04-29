@@ -8,6 +8,12 @@ AM_CFLAGS		= -I$(srcdir)/src -Wall
 
 ## --------------------------------------------------------------------
 
+EXTRA_DIST		+= meta/scripts/cre2.pc.in
+pkgconfigdir		= $(libdir)/pkgconfig
+nodist_pkgconfig_DATA	= meta/scripts/cre2.pc
+
+## --------------------------------------------------------------------
+
 cre2_CURRENT		= @cre2_VERSION_INTERFACE_CURRENT@
 cre2_REVISION		= @cre2_VERSION_INTERFACE_REVISION@
 cre2_AGE		= @cre2_VERSION_INTERFACE_AGE@
