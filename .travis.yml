@@ -32,6 +32,7 @@ before_script:
 
 script:
   - export PATH=/tmp/mine/bin:$PATH
+  - export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH
   - sh ./autogen.sh
   - ./configure --enable-maintainer-mode
   - make -j4 all && make -j4 check
