@@ -565,23 +565,6 @@ function names in the @api{} are prefixed with @code{cre2_}; all the
 constant names are prefixed with @code{CRE2_}; all the type names are
 prefixed with @code{cre2_} and suffixed with @code{_t}.
 
-When searching for the installed libraries with the @gnu{} Autotools, we
-can use the following macros in @file{configure.ac}:
-
-@example
-AC_CHECK_LIB([re2],[main],,
-  [AC_MSG_FAILURE([test for RE2 library failed])])
-
-AC_CHECK_LIB([cre2],[cre2_version_string],,
-  [AC_MSG_FAILURE([test for CRE2 library failed])])
-AC_CHECK_HEADERS([cre2.h],,
-  [AC_MSG_ERROR([test for CRE2 header failed])])
-@end example
-
-@noindent
-notice that there is no need to check for the header file
-@file{re2/re2.h}.
-
 It is customary for regular expression engines to provide methods to
 replace backslash sequences like @code{\1}, @code{\2}, @dots{} in a
 given string with portions of text that matched the first, second,
@@ -630,6 +613,42 @@ try_match (RE2::Options& opt, const char * text)
   //assert(RE2::PartialMatch(text, re));
 @}
 @end example
+
+@menu
+* overview linking::            Linking code with the library.
+@end menu
+
+@c page
+@node overview linking
+@section Linking code with the library
+
+
+This package installs a data file for @command{pkg-config}, so when searching for the installed
+library with the @gnu{} Autotools, we can add the following macro use to @file{configure.ac}:
+
+@example
+PKG_CHECK_MODULES([CRE2],[cre2 >= 0.3])
+@end example
+
+@noindent
+which will set the variables @code{CRE2_LIBS} and @code{CRE2_CFLAGS}.
+
+Alternatvely, when searching for the installed libraries with the @gnu{} Autotools, we can use the
+following macros in @file{configure.ac}:
+
+@example
+AC_CHECK_LIB([re2],[main],,
+  [AC_MSG_FAILURE([test for RE2 library failed])])
+
+AC_CHECK_LIB([cre2],[cre2_version_string],,
+  [AC_MSG_FAILURE([test for CRE2 library failed])])
+AC_CHECK_HEADERS([cre2.h],,
+  [AC_MSG_ERROR([test for CRE2 header failed])])
+@end example
+
+@noindent
+notice that there is no need to check for the header file
+@file{re2/re2.h}.
 
 @c page
 @node version
