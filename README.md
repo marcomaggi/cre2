@@ -1,22 +1,10 @@
+# cre2
 
-			   C wrapper for re2
-			   =================
-
-
-Topics
-------
-
-  1. Introduction
-  2. License
-  3. Install
-  4. Usage
-  A. Credits
-  B. Bugs
-  C. Resources
+[![Build Status](https://travis-ci.org/marcomaggi/cre2.svg?branch=master)](https://travis-ci.org/marcomaggi/cre2)
+[![Coverity passed](https://scan.coverity.com/projects/12270/badge.svg)](https://scan.coverity.com/projects/marcomaggi-cre2)
 
 
-1. Introduction
----------------
+## Introduction
 
 The CRE2 distribution is a C language wrapper for the RE2 library, which
 is implemented in C++.  RE2 is a fast, safe, thread-friendly alternative
@@ -28,8 +16,7 @@ maintainer updated  this paragraph,  he had tested  this package  with a
 checkout of re2 on Apr 11, 2017.
 
 
-2. License
-----------
+## License
 
 Copyright (c) 2012, 2013, 2015, 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
 Copyright (c) 2011 Keegan McAllister
@@ -63,77 +50,91 @@ NEGLIGENCE  OR OTHERWISE)  ARISING IN  ANY WAY  OUT OF  THE USE  OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-3. Install
-----------
+## Install
 
-To install RE2 follow the instructions  in the README file in RE2's.  To
-install from a proper release tarball, do this:
+To install from a proper release tarball, do this:
 
-    $ cd cre2-0.1.0
-    $ mkdir build
-    $ cd build
-    $ ../configure
-    $ make
-    $ make check
-    $ make install
+```
+$ cd cre2-0.1.0
+$ mkdir build
+$ cd build
+$ ../configure
+$ make
+$ make check
+$ make install
+```
 
 to inspect the available configuration options:
 
-    $ ../configure --help
+```
+$ ../configure --help
+```
 
-  The Makefile is designed to allow parallel builds, so we can do:
+The Makefile is designed to allow parallel builds, so we can do:
 
-   $ make -j4 all && make -j4 check
+```
+$ make -j4 all && make -j4 check
+```
 
 which,  on  a  4-core  CPU,   should  speed  up  building  and  checking
 significantly.
 
-  The  Makefile supports  the  DESTDIR environment  variable to  install
-files in a temporary location, example: to see what will happen:
+The Makefile supports the DESTDIR  environment variable to install files
+in a temporary location, example: to see what will happen:
 
-    $ make -n install DESTDIR=/tmp/cre2
+```
+$ make -n install DESTDIR=/tmp/cre2
+```
 
 to really do it:
 
-    $ make install DESTDIR=/tmp/cre2
+```
+$ make install DESTDIR=/tmp/cre2
+```
 
-  After the installation it is  possible to verify the installed library
+After the  installation it is  possible to verify the  installed library
 against the test suite with:
 
-    $ make installcheck
+```
+$ make installcheck
+```
 
-  From  a repository  checkout or  snapshot  (the ones  from the  Github
-site): we  must install the  GNU Autotools (GNU Automake,  GNU Autoconf,
-GNU Libtool),  then we must first  run the script "autogen.sh"  from the
-top source directory, to generate the needed files:
+From a repository checkout or snapshot  (the ones from the Github site):
+we  must install  the GNU  Autotools  (GNU Automake,  GNU Autoconf,  GNU
+Libtool), then  we must first run  the script "autogen.sh" from  the top
+source directory, to generate the needed files:
 
-    $ cd cre2
-    $ sh autogen.sh
+```
+$ cd cre2
+$ sh autogen.sh
 
-notice  that  "autogen.sh"  will   run  the  programs  "autoreconf"  and
-"libtoolize"; the  latter is  selected through the  environment variable
-"LIBTOOLIZE",  whose  value  can  be  customised;  for  example  to  run
-"glibtoolize" rather than "libtoolize" we do:
+```
 
-   $ LIBTOOLIZE=glibtoolize sh autogen.sh
+notice  that  `autogen.sh`  will   run  the  programs  `autoreconf`  and
+`libtoolize`; the  latter is  selected through the  environment variable
+`LIBTOOLIZE`,  whose  value  can  be  customised;  for  example  to  run
+`glibtoolize` rather than `libtoolize` we do:
 
-  After this the  procedure is the same  as the one for  building from a
+```
+$ LIBTOOLIZE=glibtoolize sh autogen.sh
+```
+
+After this  the procedure  is the same  as the one  for building  from a
 proper release tarball, but we have to enable maintainer mode:
 
-    $ ../configure --enable-maintainer-mode [options]
-    $ make
-    $ make check
-    $ make install
+```
+$ ../configure --enable-maintainer-mode [options]
+$ make
+$ make check
+$ make install
+```
 
-
-4. Usage
---------
+## Usage
 
 Read the documentation.
 
 
-A. Credits
-----------
+## Credits
 
 RE2 is  a Google project.  CRE2  is based on code  by Keegan McAllister.
 This distribution was assembled by Marco Maggi.
@@ -147,57 +148,35 @@ wrong usage of variable-length arrays.
   afiaux    (https://github.com/afiaux)   contributed    the   RE2:Set()
 interface.
 
-  Guillaume MassÃ©  (https://github.com/MasseGuillaume) contributed fixes
-and the implementation of "cre2_find_named_capturing_groups()".
+  Guillaume Massé  (https://github.com/MasseGuillaume) contributed fixes
+and the implementation of `cre2_find_named_capturing_groups()í.
 
 
-B. Bugs
--------
+## Bugs
 
-Bug reports are appreciated.  Register issues at the CRE2 issue tracker:
-
-	       <http://github.com/marcomaggi/cre2/issues>
+Bug reports are  appreciated, register them at the Issue  Tracker at the
+project's Github site.
 
 
-C. Resources
-------------
-
-RE2 is available at:
-
-		    <https://github.com/google/re2>
-
-and  there  exists  a  repackaging   under  the  GNU  Autotools  in  the
-repository:
-
-		  <http://github.com/marcomaggi/re2/>
-
-in the branch "autotools.marcomaggi-2016-02-15".
+## Resources
 
 The latest release of this package can be downloaded from:
 
-	   <https://bitbucket.org/marcomaggi/cre2/downloads>
+[https://bitbucket.org/marcomaggi/cre2/downloads](https://bitbucket.org/marcomaggi/cre2/downloads)
 
 development takes place at:
 
-		  <http://github.com/marcomaggi/cre2/>
+[http://github.com/marcomaggi/cre2/](http://github.com/marcomaggi/cre2/)
 
 and as backup at:
 
-		<https://bitbucket.org/marcomaggi/cre2/>
+[https://bitbucket.org/marcomaggi/cre2/](https://bitbucket.org/marcomaggi/cre2/)
 
 the documentation is available online:
 
-	      <http://marcomaggi.github.io/docs/cre2.html>
+[http://marcomaggi.github.io/docs/cre2.html](http://marcomaggi.github.io/docs/cre2.html)
 
 the GNU Project software can be found here:
 
-			 <http://www.gnu.org/>
+[http://www.gnu.org/](http://www.gnu.org/)
 
-
-### end of file
-# Local Variables:
-# mode: text
-# coding: utf-8-unix
-# fill-column: 72
-# paragraph-start: "*"
-# End:
