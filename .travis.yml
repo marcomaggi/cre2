@@ -19,6 +19,7 @@ addons:
     - ubuntu-toolchain-r-test
     packages:
     - gcc-5
+    - g++-5
 
 before_script:
   - wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz -O /tmp/autoconf-2.69.tar.gz
