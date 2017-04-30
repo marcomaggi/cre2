@@ -16,7 +16,7 @@ TOP_SRCDIR="/tmp/${STEM}"
 test -d /tmp/mine || mkdir --mode=0755 /tmp/mine
 
 # Download the release archive under "/tmp"
-if ! wget "$SOURCE_URI" -O "$LOCAL_ARCHIVE"
+if ! wget --no-check-certificate "$SOURCE_URI" -O "$LOCAL_ARCHIVE"
 then
     printf '%s: error downloading %s\n' "$PROGNAME" "${ARCHIVE}" >&2
     exit 1
