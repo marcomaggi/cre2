@@ -9,7 +9,7 @@
 PROGNAME=install-pkg-config.sh
 STEM=pkg-config-0.29.2
 ARCHIVE="${STEM}.tar.gz"
-SOURCE_URI="https://pkg-config.freedesktop.org/releases/${ARCHIVE}"
+SOURCE_URI="http://pkg-config.freedesktop.org/releases/${ARCHIVE}"
 LOCAL_ARCHIVE="/tmp/${ARCHIVE}"
 TOP_SRCDIR="/tmp/${STEM}"
 
