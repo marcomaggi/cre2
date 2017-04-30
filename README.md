@@ -149,7 +149,7 @@ wrong usage of variable-length arrays.
 interface.
 
   Guillaume Massé  (https://github.com/MasseGuillaume) contributed fixes
-and the implementation of `cre2_find_named_capturing_groups()í.
+and the implementation of `cre2_find_named_capturing_groups()`.
 
 
 ## Bugs
