@@ -6,7 +6,7 @@ branches:
 os:
   - linux
 
-sudo: true
+sudo: false
 
 language: c
 
@@ -21,24 +21,20 @@ addons:
     - gcc-5
     - g++-5
 
-before_script:
-  - export CXX=/usr/bin/g++-5
-  - /usr/bin/g++-5 --version
-  - wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz -O /tmp/autoconf-2.69.tar.gz
-  - pushd /tmp && tar -xzf autoconf-2.69.tar.gz && cd autoconf-2.69 && ./configure --prefix=/tmp/mine && make && make install && popd
-  - wget http://ftp.gnu.org/gnu/automake/automake-1.15.tar.gz -O /tmp/automake-1.15.tar.gz
-  - pushd /tmp && tar -xzf automake-1.15.tar.gz && cd automake-1.15 && ./configure --prefix=/tmp/mine && make && make install && popd
-  - wget http://ftp.gnu.org/gnu/texinfo/texinfo-6.3.tar.gz -O /tmp/texinfo-6.3.tar.gz
-  - pushd /tmp && tar -xzf texinfo-6.3.tar.gz && cd texinfo-6.3 && ./configure --prefix=/tmp/mine && make && make install && popd
-  - wget https://bitbucket.org/marcomaggi/re2/downloads/re2-0.3.2.tar.xz -O /tmp/re2-0.3.2.tar.gz
-  - pushd /tmp && tar -xJf re2-0.3.2.tar.gz && cd re2-0.3.2 && ./configure --prefix=/tmp/mine && make && make install && popd
+install:
+  - ./meta/travis-ci/install-autoconf.sh
+  - ./meta/travis-ci/install-automake.sh
+  - ./meta/travis-ci/install-texinfo.sh
+  - ./meta/travis-ci/install-re2.sh
 
-script:
-  - export PATH=/tmp/mine/bin:$PATH
-  - export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH
-  - sh ./autogen.sh
-  - ./configure --enable-maintainer-mode
-  - make -j4 all && make -j4 check
+script: |
+  export PATH=/tmp/mine/bin:$PATH
+  export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH
+  export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH
+  sh ./autogen.sh
+  ./configure --enable-maintainer-mode CXX=/usr/bin/g++-5
+  make all
+  make check
 
 notifications:
 email: true
