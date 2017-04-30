@@ -21,7 +21,9 @@ cre2_AGE		= @cre2_VERSION_INTERFACE_AGE@
 include_HEADERS		= src/cre2.h
 
 lib_LTLIBRARIES		= libcre2.la
-libcre2_la_LDFLAGS	= -version-info $(cre2_CURRENT):$(cre2_REVISION):$(cre2_AGE)
+libcre2_la_CFLAGS	= $(RE2_CFLAGS)
+libcre2_la_CXXFLAGS	= $(RE2_CFLAGS)
+libcre2_la_LDFLAGS	= -version-info $(cre2_CURRENT):$(cre2_REVISION):$(cre2_AGE) $(RE2_LIBS)
 libcre2_la_SOURCES	= src/cre2.cpp
 
 ## --------------------------------------------------------------------

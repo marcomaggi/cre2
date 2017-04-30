@@ -3,11 +3,11 @@
 # Installation script to run from the Travis config file before
 # attempting a build.
 #
-# Install re2 0.3.2 under the  directory "/tmp/mine".  We assume the
+# Install re2 0.3.3 under the  directory "/tmp/mine".  We assume the
 # script is run from the top directory of the build tree.
 
 PROGNAME=install-re2.sh
-STEM=re2-0.3.2
+STEM=re2-0.3.3
 ARCHIVE="${STEM}.tar.xz"
 SOURCE_URI="https://bitbucket.org/marcomaggi/re2/downloads/${ARCHIVE}"
 LOCAL_ARCHIVE="/tmp/${ARCHIVE}"
@@ -43,7 +43,7 @@ then
     exit 1
 fi
 
-if ! make
+if ! make -j2 all
 then
     printf '%s: error configuring %s\n' "$PROGNAME" "${STEM}" >&2
     exit 1

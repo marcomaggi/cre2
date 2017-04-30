@@ -31,8 +31,14 @@ AC_PROG_CXX_C_O
 
 AX_CXX_COMPILE_STDCXX_11(noext,mandatory)
 
-AC_CHECK_LIB([re2],[main],,[AC_MSG_FAILURE([test for RE2 library failed])])
-AC_CHECK_HEADERS([re2/re2.h],,[AC_MSG_ERROR([test for RE2 header failed])])
+# This  defines RE2_LIBS  and  RE2_CFLAGS.  We  do  not specify  version
+# requirements  for the  "re2"  pkg-config module  because the  original
+# "re2.pc" file from Google does not specify any version number.  (Marco
+# Maggi; Apr 30, 2017)
+PKG_CHECK_MODULES([RE2],[re2])
+
+dnl AC_CHECK_LIB([re2],[main],,[AC_MSG_FAILURE([test for RE2 library failed])])
+dnl AC_CHECK_HEADERS([re2/re2.h],,[AC_MSG_ERROR([test for RE2 header failed])])
 
 cre2_VERSION_INTERFACE_CURRENT=0
 cre2_VERSION_INTERFACE_REVISION=0

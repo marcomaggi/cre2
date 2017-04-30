@@ -28,13 +28,13 @@ install:
   - ./meta/travis-ci/install-re2.sh
 
 script: |
-  export PATH=/tmp/mine/bin:$PATH
-  export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH
-  export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH
-  sh ./autogen.sh
-  ./configure --enable-maintainer-mode CXX=/usr/bin/g++-5
-  make all
-  make check
+  export PATH=/tmp/mine/bin:$PATH;
+  export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
+  export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
+  sh ./autogen.sh;
+  ./configure --enable-maintainer-mode CXX=/usr/bin/g++-5;
+  make -j2 all;
+  make -j2 check;
 
 notifications:
 email: true

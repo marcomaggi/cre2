@@ -37,7 +37,7 @@ then
     exit 1
 fi
 
-if ! make
+if ! make -j2 all
 then
     printf '%s: error configuring %s\n' "$PROGNAME" "${STEM}" >&2
     exit 1
