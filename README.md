@@ -1,7 +1,7 @@
 # cre2
 
 [![Build Status](https://travis-ci.org/marcomaggi/cre2.svg?branch=master)](https://travis-ci.org/marcomaggi/cre2)
-[![Coverage Status](https://coveralls.io/repos/github/marcomaggi/cre2/badge.svg?branch=master)](https://coveralls.io/github/marcomaggi/cre2?branch=master)
+[![Coverity passed](https://scan.coverity.com/projects/12593/badge.svg)](https://scan.coverity.com/projects/marcomaggi-cre2)
 
 
 ## Introduction

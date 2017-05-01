@@ -72,6 +72,10 @@ installcheck-local: $(check_PROGRAMS)
 #page
 #### Coverity support
 #
+# We can visit the project site at:
+#
+#    <https://scan.coverity.com/projects/marcomaggi-cre2>
+#
 # First run  "make clean",  then run "make  coverity" to  generate the
 # report.  Remember  to put  in the  PATH the  directory in  which the
 # Coverity tools are installed.
