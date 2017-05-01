@@ -69,4 +69,50 @@ TESTS			= $(check_PROGRAMS)
 installcheck-local: $(check_PROGRAMS)
 	for f in $(check_PROGRAMS); do $$f; done
 
+#page
+#### Coverity support
+#
+# First run  "make clean",  then run "make  coverity" to  generate the
+# report.  Remember  to put  in the  PATH the  directory in  which the
+# Coverity tools are installed.
+#
+# The tool  will use  a temporary directory  "$(builddir)/cov-int"; we
+# must *not* change this pathname.
+#
+# To generate and submit a report we must do:
+#
+#    $ make clean
+#    $ make coverity-scan
+#    $ make coverity-archive
+#    $ make coverity-upload
+#
+# after "make  coverity-scan" we should  check that the last  lines of
+# the file "cov-int/build-log.txt" report a successful build.
+#
+# Notice that if your Linux kernel is  at version 4.8 or above we have
+# to first issue the command:
+#
+#    $ sudo /sbin/sysctl vsyscall=emulate
+#
+# to make the Coverity tools work.
+#
+
+CRE2_COVERITY_TOKEN_FILE = /home/unsafe-users/marco-devel/.coverity-cre2-token
+
+.PHONY: coverity-scan coverity-archive coverity-upload
+
+coverity-scan:
+	cov-build --dir cov-int make -j 4
+
+coverity-archive:
+	tar caf cre2.xz cov-int
+
+coverity-upload:
+	curl --form token=$$(<$(CRE2_COVERITY_TOKEN_FILE)) \
+	     --form email='marco.maggi-ipsu@poste.it' \
+	     --form file='@cre2.xz' \
+	     --form version="$(VERSION)" \
+	     --form description="A build description" \
+	     'https://scan.coverity.com/builds?project=marcomaggi%2Fcre2'
+
 ### end of file
