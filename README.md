@@ -153,10 +153,12 @@ interface.
 and the implementation of `cre2_find_named_capturing_groups()`.
 
 
-## Bugs
+## Bugs, vulnerabilities and contributions
 
-Bug reports are  appreciated, register them at the Issue  Tracker at the
-project's Github site.
+Bug  and vulnerability  reports are  appreciated, all  the vulnerability
+reports are public; register them at  the Issue Tracker at the project's
+Github site.  For contributions and patches please use the Pull Requests
+feature at the project's Github site.
 
 
 ## Resources

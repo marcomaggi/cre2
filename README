@@ -11,7 +11,7 @@ Topics
   3. Install
   4. Usage
   A. Credits
-  B. Bugs
+  B. Bugs, vulnerabilities and contributions
   C. Resources
 
 
@@ -153,16 +153,13 @@ interface.
 and the implementation of "cre2_find_named_capturing_groups()".
 
 
-B. Bugs and contributions
--------------------------
+B. Bugs, vulnerabilities and contributions
+------------------------------------------
 
-Bug  and vulnerability  reports are  appreciated; all  the vulnerability
-reports are public.  Register issues at the CRE2 issue tracker:
-
-	       <http://github.com/marcomaggi/cre2/issues>
-
-  For contributions and patches please  use the Pull Requests feature at
-the Github site.
+Bug  and vulnerability  reports are  appreciated, all  the vulnerability
+reports are public; register them at  the Issue Tracker at the project's
+Github site.  For contributions and patches please use the Pull Requests
+feature at the project's Github site.
 
 
 C. Resources
