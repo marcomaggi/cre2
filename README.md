@@ -18,8 +18,8 @@ checkout of re2 on Apr 11, 2017.
 
 ## License
 
-Copyright (c) 2012, 2013, 2015, 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
-Copyright (c) 2011 Keegan McAllister
+Copyright (c) 2012, 2013, 2015-2017 Marco Maggi <marco.maggi-ipsu@poste.it><br/>
+Copyright (c) 2011 Keegan McAllister<br/>
 All rights reserved.
 
 Redistribution  and use  in source  and  binary forms,  with or  without
