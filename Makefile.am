@@ -76,9 +76,10 @@ installcheck-local: $(check_PROGRAMS)
 #
 #    <https://scan.coverity.com/projects/marcomaggi-cre2>
 #
-# First run  "make clean",  then run "make  coverity" to  generate the
-# report.  Remember  to put  in the  PATH the  directory in  which the
-# Coverity tools are installed.
+# Remember to  put in  the PATH  the directory  in which  the Coverity
+# tools are installed; for example:
+#
+#    $ export PATH=/opt/coverity/8.7.0/cov-analysis-linux64-8.7.0/bin:$PATH
 #
 # The tool  will use  a temporary directory  "$(builddir)/cov-int"; we
 # must *not* change this pathname.
@@ -91,10 +92,12 @@ installcheck-local: $(check_PROGRAMS)
 #    $ make coverity-upload
 #
 # after "make  coverity-scan" we should  check that the last  lines of
-# the file "cov-int/build-log.txt" report a successful build.
+# the file "cov-int/build-log.txt" report a successful build:
 #
-# Notice that if your Linux kernel is  at version 4.8 or above we have
-# to first issue the command:
+#    $ tail cov-int/build-log.txt
+#
+# NOTE If  your Linux kernel  is at version 4.8  or above you  have to
+# first issue the command:
 #
 #    $ sudo /sbin/sysctl vsyscall=emulate
 #
