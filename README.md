@@ -1,5 +1,6 @@
 # cre2
 
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/939/badge)](https://bestpractices.coreinfrastructure.org/projects/939)
 [![Build Status](https://travis-ci.org/marcomaggi/cre2.svg?branch=master)](https://travis-ci.org/marcomaggi/cre2)
 [![Coverity passed](https://scan.coverity.com/projects/12593/badge.svg)](https://scan.coverity.com/projects/marcomaggi-cre2)
 
