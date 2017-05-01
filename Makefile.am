@@ -122,4 +122,29 @@ coverity-upload:
 	     --form description="A build description" \
 	     'https://scan.coverity.com/builds?project=marcomaggi%2Fcre2'
 
+#page
+#### Static analysis with Clang's Static Analyzer
+#
+# See the documentation for the command line tool at:
+#
+#    <http://clang-analyzer.llvm.org/scan-build.html>
+#
+# To run the tool we must do:
+#
+#    $ make clean
+#    $ make clang-static-analysis
+#
+# The  program  "scan-build"  works  by  overriding  the  CC  and  CXX
+# environment variables.  Automake defines CXX as:
+#
+#    CXX = g++ -std=c++11
+#
+# so we override CXXFLAGS to include the language specification.
+#
+
+.PHONY: clang-static-analysis
+
+clang-static-analysis:
+	scan-build make CXXFLAGS='-std=c++11'
+
 ### end of file
