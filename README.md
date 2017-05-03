@@ -183,3 +183,51 @@ the GNU Project software can be found here:
 
 [http://www.gnu.org/](http://www.gnu.org/)
 
+
+## Badges and static analysis
+
+### CII Best Practices
+
+The  Linux  Foundation's  Core   Infrastructure  Initiative  (CII)  Best
+Practices badge is a way for Free/Libre and Open Source Software (FLOSS)
+projects to show that they follow  best practices.  We can find the self
+certification at:
+
+[https://bestpractices.coreinfrastructure.org/projects/939/](https://bestpractices.coreinfrastructure.org/projects/939/)
+
+
+### Travis CI
+
+Travis CI is  a hosted, distributed continuous  integration service used
+to build and test software projects  hosted at GitHub.  We can find this
+project's dashboard at:
+
+[https://travis-ci.org/marcomaggi/cre2](https://travis-ci.org/marcomaggi/cre2)
+
+Usage of this  service is configured through the  file `.travis.yml` and
+the scripts under the directory `meta/travis-ci`.
+
+
+### Coverity Scan
+
+Coverity Scan is  a service providing the results of  static analysis on
+open source coding projects.  We can find this project's dashboard at:
+
+[https://scan.coverity.com/projects/marcomaggi-cre2](https://scan.coverity.com/projects/marcomaggi-cre2)
+
+Usage of this  service is implemented with make rules;  see the relevant
+section in the file `Makefile.am`.  To access the service a unique token
+is needed: this token is private and is owned by the current maintainer.
+
+
+### Clang's Static Analyzer
+
+The Clang Static Analyzer is a source code analysis tool that finds bugs
+in C, C++, and Objective-C programs.  It is distributed along with Clang
+and we can find it at:
+
+[http://clang-analyzer.llvm.org/](http://clang-analyzer.llvm.org/)
+
+Usage of this  service is implemented with make rules;  see the relevant
+section in the file `Makefile.am`.
+

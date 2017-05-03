@@ -1,0 +1,16 @@
+-*- utf-8-unix -*-
+
+Notes for revision 0.3.4
+------------------------
+
+* Some   typo   fixes   and   implementation   of   the   new   function
+  "cre2_find_named_capturing_groups()".
+
+
+### end of file
+# Local Variables:
+# mode: text
+# fill-column: 72
+# paragraph-start: "*"
+# ispell-local-dictionary: "en_GB"
+# End:
