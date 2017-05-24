@@ -13,8 +13,12 @@ SOURCE_URI="https://bitbucket.org/marcomaggi/re2/downloads/${ARCHIVE}"
 LOCAL_ARCHIVE="/tmp/${ARCHIVE}"
 TOP_SRCDIR="/tmp/${STEM}"
 
-SELECTED_CXX=
-if   test -x /usr/bin/g++-7; then SELECTED_CXX=/usr/bin/g++-7
+# We  expect  CRE2_REQUESTED_CXX to  be  set  in  the environment  if  a
+# specific compiler is requested.
+SELECTED_CXX="$CRE2_REQUESTED_CXX"
+if   test -n "$CRE2_REQUESTED_CXX" -a -x "$CRE2_REQUESTED_CXX"
+then SELECTED_CXX="$CRE2_REQUESTED_CXX"
+elif test -x /usr/bin/g++-7; then SELECTED_CXX=/usr/bin/g++-7
 elif test -x /usr/bin/g++-6; then SELECTED_CXX=/usr/bin/g++-6
 elif test -x /usr/bin/g++-5; then SELECTED_CXX=/usr/bin/g++-5
 else
