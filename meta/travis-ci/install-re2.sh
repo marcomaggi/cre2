@@ -15,20 +15,28 @@ TOP_SRCDIR="/tmp/${STEM}"
 
 SELECTED_CXX=
 if test -x /usr/bin/g++-5
-then SELECTED_CXX=/usr/bin/gcc++-5
+then SELECTED_CXX=/usr/bin/g++-5
 elif test -x /usr/bin/g++-6
-then SELECTED_CXX=/usr/bin/gcc++-6
+then SELECTED_CXX=/usr/bin/g++-6
 elif test -x /usr/bin/g++-7
-then SELECTED_CXX=/usr/bin/gcc++-7
+then SELECTED_CXX=/usr/bin/g++-7
 else
     printf '%s: required g++ compiler not present\n' "$PROGNAME" >&2
     exit 1
 fi
 
 printf '%s: selected CXX=%s\n' "$PROGNAME" "$SELECTED_CXX" >&2
-"$SELECTED_CXX" --version
+if ! "$SELECTED_CXX" --version
+then
+    printf '%s: error showing CXX compiler version %s\n' "$PROGNAME" "${ARCHIVE}" >&2
+    exit 1
+fi
 
-test -d /tmp/mine || mkdir --mode=0755 /tmp/mine
+if ! test -d /tmp/mine || mkdir --mode=0755 /tmp/mine
+then
+    printf '%s: error creating directory for dependency package building and installation\n' "$PROGNAME" >&2
+    exit 1
+fi
 
 if ! wget "$SOURCE_URI" -O "$LOCAL_ARCHIVE"
 then
