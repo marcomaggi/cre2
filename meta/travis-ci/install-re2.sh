@@ -32,11 +32,13 @@ then
     exit 1
 fi
 
-if ! test -d /tmp/mine || mkdir --mode=0755 /tmp/mine
-then
-    printf '%s: error creating directory for dependency package building and installation\n' "$PROGNAME" >&2
-    exit 1
-fi
+test -d /tmp/mine || {
+    if ! mkdir --mode=0755 /tmp/mine
+    then
+	printf '%s: error creating directory for dependency package building and installation\n' "$PROGNAME" >&2
+	exit 1
+    fi
+}
 
 if ! wget "$SOURCE_URI" -O "$LOCAL_ARCHIVE"
 then

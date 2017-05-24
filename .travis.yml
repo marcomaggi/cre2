@@ -30,7 +30,7 @@ matrix:
         export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
         export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
         sh ./autogen.sh;
-        ./configure --enable-maintainer-mode CC=/usr/bin/gcc-5 CXX=/usr/bin/gcc++5;
+        ./configure --enable-maintainer-mode CC=/usr/bin/gcc-5 CXX=/usr/bin/g++-5;
         make -j2 all;
         make -j2 check;
 
@@ -51,7 +51,7 @@ matrix:
         export PATH=/tmp/mine/bin:$PATH;
         export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
         sh ./autogen.sh;
-        ./configure --enable-maintainer-mode CC=/usr/bin/gcc-5 CXX=/usr/bin/gcc++5;
+        ./configure --enable-maintainer-mode CC=/usr/bin/gcc-5 CXX=/usr/bin/g++-5;
         make -j2 all;
         make -j2 check;
 
@@ -72,7 +72,7 @@ matrix:
         export PATH=/tmp/mine/bin:$PATH;
         export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
         sh ./autogen.sh;
-        ./configure --enable-maintainer-mode CC=/usr/bin/gcc-6 CXX=/usr/bin/gcc++6;
+        ./configure --enable-maintainer-mode CC=/usr/bin/gcc-6 CXX=/usr/bin/g++-6;
         make -j2 all;
         make -j2 check;
 
@@ -93,7 +93,7 @@ matrix:
         export PATH=/tmp/mine/bin:$PATH;
         export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
         sh ./autogen.sh;
-        ./configure --enable-maintainer-mode CC=/usr/bin/gcc-7 CXX=/usr/bin/gcc++7;
+        ./configure --enable-maintainer-mode CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7;
         make -j2 all;
         make -j2 check;
 
@@ -142,7 +142,7 @@ matrix:
         export PATH=/tmp/mine/bin:$PATH;
         export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
         sh ./autogen.sh;
-        ./configure --enable-maintainer-mode CC=/usr/bin/gcc-6 CXX=/usr/bin/gcc++6 CFLAGS='-O0 --coverage' CXXFLAGS='-O0 --coverage';
+        ./configure --enable-maintainer-mode CC=/usr/bin/gcc-6 CXX=/usr/bin/g++-6 CFLAGS='-O0 --coverage' CXXFLAGS='-O0 --coverage';
         make all;
         make check;
       after_success:
