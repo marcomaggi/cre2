@@ -241,5 +241,6 @@ project's dashboard at:
 [https://codecov.io/gh/marcomaggi/cre2](https://codecov.io/gh/marcomaggi/cre2)
 
 Usage of  this service is  implemented through direct  interface between
-GitHub and Codecov sites; it configured through the file `codecov.yml`.
+GitHub and Codecov  sites; it configured through  the file `codecov.yml`
+and appropriate entries in Travis CI's matrix of builds.
 
