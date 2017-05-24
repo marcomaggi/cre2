@@ -63,6 +63,7 @@ matrix:
             - gcc-5
             - g++-5
       install:
+        - ./meta/travis-ci/install-texinfo.sh
         - ./meta/travis-ci/install-re2.sh
       script: |
         export PATH=/tmp/mine/bin:$PATH;
@@ -85,6 +86,7 @@ matrix:
             - gcc-6
             - g++-6
       install:
+        - ./meta/travis-ci/install-texinfo.sh
         - ./meta/travis-ci/install-re2.sh
       script: |
         export PATH=/tmp/mine/bin:$PATH;
@@ -107,6 +109,7 @@ matrix:
             - gcc-7
             - g++-7
       install:
+        - ./meta/travis-ci/install-texinfo.sh
         - ./meta/travis-ci/install-re2.sh
       script: |
         export PATH=/tmp/mine/bin:$PATH;
@@ -129,6 +132,7 @@ matrix:
           packages:
             - clang-4.0
       install:
+        - ./meta/travis-ci/install-texinfo.sh
         - ./meta/travis-ci/install-re2.sh
       script: |
         export PATH=/tmp/mine/bin:$PATH;
@@ -144,6 +148,7 @@ matrix:
       osx_image: xcode6.4
       compiler: clang
       install:
+        - ./meta/travis-ci/install-texinfo.sh
         - ./meta/travis-ci/install-re2.sh
       script: |
         export PATH=/tmp/mine/bin:$PATH;
@@ -159,6 +164,7 @@ matrix:
       dist: trusty
       compiler: gcc-6
       install:
+        - ./meta/travis-ci/install-texinfo.sh
         - ./meta/travis-ci/install-re2.sh
       script: |
         export PATH=/tmp/mine/bin:$PATH;
