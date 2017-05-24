@@ -3,30 +3,22 @@ branches:
   only:
   - master
 
-os:
-  - linux
-
 sudo: false
 
 language: c
 
-compiler:
-  - gcc-5
-
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - gcc-5
-    - g++-5
-
 matrix:
   include:
-    # Plain build under the default distribution.
+    # Plain build under the default Linux distribution, GCC 5.
     - os: linux
-      dist: trusty
       compiler: gcc-5
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - gcc-5
+            - g++-5
       install:
         - ./meta/travis-ci/install-autoconf.sh
         - ./meta/travis-ci/install-automake.sh
@@ -38,41 +30,123 @@ matrix:
         export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
         export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
         sh ./autogen.sh;
-        ./configure --enable-maintainer-mode CXX=/usr/bin/g++-5;
+        ./configure --enable-maintainer-mode;
         make -j2 all;
         make -j2 check;
 
-    # Plain build under "trusty".
+    # Plain build under Linux "trusty", GCC 5.
     - os: linux
       dist: trusty
       compiler: gcc-5
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - gcc-5
+            - g++-5
       install:
         - ./meta/travis-ci/install-re2.sh
       script: |
         export PATH=/tmp/mine/bin:$PATH;
         export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
-        export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
         sh ./autogen.sh;
-        ./configure --enable-maintainer-mode CXX=/usr/bin/g++-5;
+        ./configure --enable-maintainer-mode;
         make -j2 all;
         make -j2 check;
 
-     # Codecov support.
+    # Plain build under Linux "trusty", GCC 6.
     - os: linux
       dist: trusty
-      compiler: gcc-5
+      compiler: gcc-6
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - gcc-6
+            - g++-6
       install:
         - ./meta/travis-ci/install-re2.sh
       script: |
         export PATH=/tmp/mine/bin:$PATH;
         export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
-        export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
         sh ./autogen.sh;
-        ./configure --enable-maintainer-mode CXX=/usr/bin/g++-5 CFLAGS='-O0 --coverage' CXXFLAGS='-O0 --coverage';
+        ./configure --enable-maintainer-mode;
+        make -j2 all;
+        make -j2 check;
+
+    # Plain build under Linux "trusty", GCC 7.
+    - os: linux
+      dist: trusty
+      compiler: gcc-7
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - gcc-7
+            - g++-7
+      install:
+        - ./meta/travis-ci/install-re2.sh
+      script: |
+        export PATH=/tmp/mine/bin:$PATH;
+        export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
+        sh ./autogen.sh;
+        ./configure --enable-maintainer-mode;
+        make -j2 all;
+        make -j2 check;
+
+    # Plain build under Linux "trusty", CLang 4.
+    - os: linux
+      dist: trusty
+      compiler: clang-4.0
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-trusty-4.0
+          packages:
+            - clang-4.0
+      install:
+        - ./meta/travis-ci/install-re2.sh
+      script: |
+        export PATH=/tmp/mine/bin:$PATH;
+        export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
+        sh ./autogen.sh;
+        ./configure --enable-maintainer-mode;
+        make -j2 all;
+        make -j2 check;
+
+    # Plain build under OS X, CLang.
+    - os: osx
+      osx_image: xcode6.4
+      compiler: clang
+      install:
+        - ./meta/travis-ci/install-re2.sh
+      script: |
+        export PATH=/tmp/mine/bin:$PATH;
+        export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
+        sh ./autogen.sh;
+        ./configure --enable-maintainer-mode;
+        make -j2 all;
+        make -j2 check;
+
+    # Codecov support under Linux "trusty", GCC 6.
+    - os: linux
+      dist: trusty
+      compiler: gcc-6
+      install:
+        - ./meta/travis-ci/install-re2.sh
+      script: |
+        export PATH=/tmp/mine/bin:$PATH;
+        export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
+        sh ./autogen.sh;
+        ./configure --enable-maintainer-mode CFLAGS='-O0 --coverage' CXXFLAGS='-O0 --coverage';
         make all;
         make check;
       after_success:
-        bash <(curl -s https://codecov.io/bash) -xgcov-5
+        bash <(curl -s https://codecov.io/bash) -xgcov-6
 
 notifications:
 email: true
