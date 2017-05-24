@@ -37,6 +37,9 @@ script: |
   make -j2 all;
   make -j2 check;
 
+after_success:
+  bash <(curl -s https://codecov.io/bash) -xgcov-5
+
 notifications:
 email: true
 
