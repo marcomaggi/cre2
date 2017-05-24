@@ -13,11 +13,19 @@ SOURCE_URI="https://bitbucket.org/marcomaggi/re2/downloads/${ARCHIVE}"
 LOCAL_ARCHIVE="/tmp/${ARCHIVE}"
 TOP_SRCDIR="/tmp/${STEM}"
 
-if ! test -x /usr/bin/g++-5
-then
+SELECTED_CXX=
+if test -x /usr/bin/g++-5
+then SELECTED_CXX=/usr/bin/gcc++5
+elif test -x /usr/bin/g++-6
+then SELECTED_CXX=/usr/bin/gcc++6
+elif test -x /usr/bin/g++-7
+then SELECTED_CXX=/usr/bin/gcc++7
+else
     printf '%s: required g++ compiler not present\n' "$PROGNAME" >&2
     exit 1
 fi
+
+printf '%s: selected CXX=%s\n' "$PROGNAME" "$SELECTED_CXX" >&2
 
 test -d /tmp/mine || mkdir --mode=0755 /tmp/mine
 
@@ -37,7 +45,7 @@ fi
 
 cd "$TOP_SRCDIR"
 
-if ! ./configure --prefix=/tmp/mine CXX=/usr/bin/g++-5
+if ! ./configure --prefix=/tmp/mine CXX="$SELECTED_CXX"
 then
     printf '%s: error configuring %s\n' "$PROGNAME" "${STEM}" >&2
     exit 1
