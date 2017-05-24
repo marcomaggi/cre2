@@ -21,24 +21,58 @@ addons:
     - gcc-5
     - g++-5
 
-install:
-  - ./meta/travis-ci/install-autoconf.sh
-  - ./meta/travis-ci/install-automake.sh
-  - ./meta/travis-ci/install-texinfo.sh
-  - ./meta/travis-ci/install-pkg-config.sh
-  - ./meta/travis-ci/install-re2.sh
+matrix:
+  include:
+    # Plain build under the default distribution.
+    - os: linux
+      dist: trusty
+      compiler: gcc-5
+      install:
+        - ./meta/travis-ci/install-autoconf.sh
+        - ./meta/travis-ci/install-automake.sh
+        - ./meta/travis-ci/install-texinfo.sh
+        - ./meta/travis-ci/install-pkg-config.sh
+        - ./meta/travis-ci/install-re2.sh
+      script: |
+        export PATH=/tmp/mine/bin:$PATH;
+        export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
+        export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
+        sh ./autogen.sh;
+        ./configure --enable-maintainer-mode CXX=/usr/bin/g++-5;
+        make -j2 all;
+        make -j2 check;
 
-script: |
-  export PATH=/tmp/mine/bin:$PATH;
-  export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
-  export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
-  sh ./autogen.sh;
-  ./configure --enable-maintainer-mode CXX=/usr/bin/g++-5;
-  make -j2 all;
-  make -j2 check;
+    # Plain build under "trusty".
+    - os: linux
+      dist: trusty
+      compiler: gcc-5
+      install:
+        - ./meta/travis-ci/install-re2.sh
+      script: |
+        export PATH=/tmp/mine/bin:$PATH;
+        export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
+        export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
+        sh ./autogen.sh;
+        ./configure --enable-maintainer-mode CXX=/usr/bin/g++-5;
+        make -j2 all;
+        make -j2 check;
 
-after_success:
-  bash <(curl -s https://codecov.io/bash) -xgcov-5
+     # Codecov support.
+    - os: linux
+      dist: trusty
+      compiler: gcc-5
+      install:
+        - ./meta/travis-ci/install-re2.sh
+      script: |
+        export PATH=/tmp/mine/bin:$PATH;
+        export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
+        export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
+        sh ./autogen.sh;
+        ./configure --enable-maintainer-mode CXX=/usr/bin/g++-5 CFLAGS='-O0 --coverage' CXXFLAGS='-O0 --coverage';
+        make all;
+        make check;
+      after_success:
+        bash <(curl -s https://codecov.io/bash) -xgcov-5
 
 notifications:
 email: true
