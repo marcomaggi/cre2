@@ -149,13 +149,13 @@ matrix:
       compiler: clang
       install:
         - ./meta/travis-ci/install-texinfo.sh
-        - ./meta/travis-ci/install-re2.sh
+        - export CRE2_REQUESTED_CXX=clang; ./meta/travis-ci/install-re2.sh
       script: |
         export PATH=/tmp/mine/bin:$PATH;
         export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
         export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
         sh ./autogen.sh;
-        ./configure --enable-maintainer-mode CC=/usr/bin/clang-4.0 CXX=/usr/bin/clang-4.0;
+        ./configure --enable-maintainer-mode CC=clang CXX=clang;
         make -j2 all;
         make -j2 check;
 
