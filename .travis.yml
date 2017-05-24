@@ -1,3 +1,20 @@
+# Notes for CRE2
+# ==============
+#
+# Dependency packages
+# -------------------
+#
+# We install dependency packages under "/tmp/mine".  So we need the
+# following in every script:
+#
+#   export PATH=/tmp/mine/bin:$PATH;
+#   export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
+#   export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
+#
+# otherwise the installed packages will not be found and used
+# correctly.
+#
+
 # safelist
 branches:
   only:
@@ -50,6 +67,7 @@ matrix:
       script: |
         export PATH=/tmp/mine/bin:$PATH;
         export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
+        export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
         sh ./autogen.sh;
         ./configure --enable-maintainer-mode CC=/usr/bin/gcc-5 CXX=/usr/bin/g++-5;
         make -j2 all;
@@ -71,6 +89,7 @@ matrix:
       script: |
         export PATH=/tmp/mine/bin:$PATH;
         export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
+        export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
         sh ./autogen.sh;
         ./configure --enable-maintainer-mode CC=/usr/bin/gcc-6 CXX=/usr/bin/g++-6;
         make -j2 all;
@@ -92,6 +111,7 @@ matrix:
       script: |
         export PATH=/tmp/mine/bin:$PATH;
         export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
+        export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
         sh ./autogen.sh;
         ./configure --enable-maintainer-mode CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7;
         make -j2 all;
@@ -113,6 +133,7 @@ matrix:
       script: |
         export PATH=/tmp/mine/bin:$PATH;
         export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
+        export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
         sh ./autogen.sh;
         ./configure --enable-maintainer-mode;
         make -j2 all;
@@ -127,6 +148,7 @@ matrix:
       script: |
         export PATH=/tmp/mine/bin:$PATH;
         export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
+        export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
         sh ./autogen.sh;
         ./configure --enable-maintainer-mode;
         make -j2 all;
@@ -141,6 +163,7 @@ matrix:
       script: |
         export PATH=/tmp/mine/bin:$PATH;
         export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
+        export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
         sh ./autogen.sh;
         ./configure --enable-maintainer-mode CC=/usr/bin/gcc-6 CXX=/usr/bin/g++-6 CFLAGS='-O0 --coverage' CXXFLAGS='-O0 --coverage';
         make all;
