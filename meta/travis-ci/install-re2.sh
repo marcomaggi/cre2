@@ -26,6 +26,7 @@ else
 fi
 
 printf '%s: selected CXX=%s\n' "$PROGNAME" "$SELECTED_CXX" >&2
+"$SELECTED_CXX" --version
 
 test -d /tmp/mine || mkdir --mode=0755 /tmp/mine
 
@@ -45,18 +46,21 @@ fi
 
 cd "$TOP_SRCDIR"
 
+echo "./configure --prefix=/tmp/mine CXX=\"$SELECTED_CXX\"" >&2
 if ! ./configure --prefix=/tmp/mine CXX="$SELECTED_CXX"
 then
     printf '%s: error configuring %s\n' "$PROGNAME" "${STEM}" >&2
     exit 1
 fi
 
+echo "make -j2 all" >&2
 if ! make -j2 all
 then
     printf '%s: error configuring %s\n' "$PROGNAME" "${STEM}" >&2
     exit 1
 fi
 
+echo "make install" >&2
 if ! make install
 then
     printf '%s: error configuring %s\n' "$PROGNAME" "${STEM}" >&2
