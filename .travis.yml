@@ -135,7 +135,7 @@ matrix:
             - ubuntu-toolchain-r-test
       compiler: clang
       install:
-        - export CRE2_REQUESTED_CXX=clang++; ./meta/travis-ci/install-re2.sh
+        - export CRE2_REQUESTED_CXX=/usr/bin/clang++; ./meta/travis-ci/install-re2.sh
       script: |
         echo CC=$CC; $CC --version;
         echo CXX=$CXX; $CXX --version;
@@ -151,9 +151,9 @@ matrix:
     # Travis CI.
     - os: osx
       osx_image: xcode7.3
-      compiler: clang++
+      compiler: clang
       install:
-        - export CRE2_REQUESTED_CXX=clang++; ./meta/travis-ci/install-re2.sh
+        - export CRE2_REQUESTED_CXX=/usr/bin/clang++; ./meta/travis-ci/install-re2.sh
       script: |
         echo CC=$CC; $CC --version;
         echo CXX=$CXX; $CXX --version;
@@ -169,9 +169,9 @@ matrix:
     # Travis CI.
     - os: osx
       osx_image: xcode8.3
-      compiler: clang++
+      compiler: clang
       install:
-        - export CRE2_REQUESTED_CXX=clang++; ./meta/travis-ci/install-re2.sh
+        - export CRE2_REQUESTED_CXX=/usr/bin/clang++; ./meta/travis-ci/install-re2.sh
       script: |
         echo CC=$CC; $CC --version;
         echo CXX=$CXX; $CXX --version;
