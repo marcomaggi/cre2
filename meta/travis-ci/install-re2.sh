@@ -35,7 +35,7 @@ then
 fi
 
 test -d /tmp/mine || {
-    if ! mkdir --mode=0755 /tmp/mine
+    if ! mkdir /tmp/mine
     then
 	printf '%s: error creating directory for dependency package building and installation\n' "$PROGNAME" >&2
 	exit 1

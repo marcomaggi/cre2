@@ -135,7 +135,7 @@ matrix:
             - ubuntu-toolchain-r-test
       compiler: clang
       install:
-        - export CRE2_REQUESTED_CXX=/usr/bin/clang++; ./meta/travis-ci/install-re2.sh
+        - export CRE2_REQUESTED_CXX=$(which clang++); ./meta/travis-ci/install-re2.sh
       script: |
         echo CC=$CC; $CC --version;
         echo CXX=$CXX; $CXX --version;
