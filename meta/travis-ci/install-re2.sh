@@ -8,10 +8,11 @@
 
 PROGNAME=install-re2.sh
 VERSION=0.3.4
-ARCHIVE="re2-${VERSION}.tar.xz"
+STEM="re2-${VERSION}"
+ARCHIVE="${STEM}.tar.xz"
 SOURCE_URI="https://github.com/marcomaggi/re2/archive/v${VERSION}.tar.gz"
 LOCAL_ARCHIVE="/tmp/${ARCHIVE}"
-TOP_SRCDIR="/tmp/re2-${VERSION}"
+TOP_SRCDIR="/tmp/${STEM}"
 
 # We  expect  CRE2_REQUESTED_CXX to  be  set  in  the environment  if  a
 # specific compiler is requested.
@@ -41,6 +42,7 @@ test -d /tmp/mine || {
     fi
 }
 
+echo "wget \"$SOURCE_URI\" -O \"$LOCAL_ARCHIVE\"" >&2
 if ! wget "$SOURCE_URI" -O "$LOCAL_ARCHIVE"
 then
     printf '%s: error downloading %s\n' "$PROGNAME" "${ARCHIVE}" >&2
@@ -49,13 +51,18 @@ fi
 
 cd /tmp
 
+echo "tar -xzf \"$LOCAL_ARCHIVE\"" >&2
 if ! tar -xzf "$LOCAL_ARCHIVE"
 then
     printf '%s: error unpacking %s\n' "$PROGNAME" "$LOCAL_ARCHIVE" >&2
     exit 1
 fi
 
-cd "$TOP_SRCDIR"
+if ! cd "$TOP_SRCDIR"
+then
+    printf '%s: error changing directory to %s\n' "$PROGNAME" "${TOP_SRCDIR}" >&2
+    exit 1
+fi
 
 echo "./configure --prefix=/tmp/mine CXX=\"$SELECTED_CXX\"" >&2
 if ! ./configure --prefix=/tmp/mine CXX="$SELECTED_CXX"
