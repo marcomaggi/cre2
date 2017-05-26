@@ -38,13 +38,8 @@ notifications:
 git:
   depth: 1
 
-# We want  to build only for  the branch implementing the  GNU Autotools
-# support, that is "autotools.marcomaggi-2016-02-15".
-#
 branches:
   only:
-    - autotools.marcomaggi-2016-02-15
-  except:
     - master
 
 env:
