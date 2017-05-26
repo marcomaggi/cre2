@@ -133,6 +133,8 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
+          packages:
+            - texinfo
       compiler: clang
       install:
         - export CRE2_REQUESTED_CXX=$(which clang++); ./meta/travis-ci/install-re2.sh
