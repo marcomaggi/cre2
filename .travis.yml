@@ -59,13 +59,14 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
+            - texinfo
             - gcc-5
             - g++-5
       install:
         - ./meta/travis-ci/install-re2.sh
       script: |
-        $echo CC=$CC; $CC --version;
-        $echo CXX=$CXX; $CXX --version;
+        echo CC=$CC; $CC --version;
+        echo CXX=$CXX; $CXX --version;
         export PATH=/tmp/mine/bin:$PATH;
         export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
         export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
@@ -83,13 +84,14 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
+            - texinfo
             - gcc-6
             - g++-6
       install:
         - ./meta/travis-ci/install-re2.sh
       script: |
-        $echo CC=$CC; $CC --version;
-        $echo CXX=$CXX; $CXX --version;
+        echo CC=$CC; $CC --version;
+        echo CXX=$CXX; $CXX --version;
         export PATH=/tmp/mine/bin:$PATH;
         export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
         export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
@@ -107,13 +109,14 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
+            - texinfo
             - gcc-7
             - g++-7
       install:
         - ./meta/travis-ci/install-re2.sh
       script: |
-        $echo CC=$CC; $CC --version;
-        $echo CXX=$CXX; $CXX --version;
+        echo CC=$CC; $CC --version;
+        echo CXX=$CXX; $CXX --version;
         export PATH=/tmp/mine/bin:$PATH;
         export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
         export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
@@ -134,8 +137,8 @@ matrix:
       install:
         - ./meta/travis-ci/install-re2.sh
       script: |
-        $echo CC=$CC; $CC --version;
-        $echo CXX=$CXX; $CXX --version;
+        echo CC=$CC; $CC --version;
+        echo CXX=$CXX; $CXX --version;
         export PATH=/tmp/mine/bin:$PATH;
         export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
         export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
@@ -152,8 +155,8 @@ matrix:
       install:
         - ./meta/travis-ci/install-re2.sh
       script: |
-        $echo CC=$CC; $CC --version;
-        $echo CXX=$CXX; $CXX --version;
+        echo CC=$CC; $CC --version;
+        echo CXX=$CXX; $CXX --version;
         export PATH=/tmp/mine/bin:$PATH;
         export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
         export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
@@ -170,8 +173,8 @@ matrix:
       install:
         - ./meta/travis-ci/install-re2.sh
       script: |
-        $echo CC=$CC; $CC --version;
-        $echo CXX=$CXX; $CXX --version;
+        echo CC=$CC; $CC --version;
+        echo CXX=$CXX; $CXX --version;
         export PATH=/tmp/mine/bin:$PATH;
         export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
         export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
@@ -189,13 +192,14 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
+            - texinfo
             - gcc-7
             - g++-7
       install:
         - ./meta/travis-ci/install-re2.sh
       script: |
-        $echo CC=$CC; $CC --version;
-        $echo CXX=$CXX; $CXX --version;
+        echo CC=$CC; $CC --version;
+        echo CXX=$CXX; $CXX --version;
         export PATH=/tmp/mine/bin:$PATH;
         export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
         export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
