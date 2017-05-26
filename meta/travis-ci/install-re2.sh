@@ -11,7 +11,7 @@ VERSION=0.3.4
 ARCHIVE="re2-${VERSION}.tar.xz"
 SOURCE_URI="https://github.com/marcomaggi/re2/archive/v${VERSION}.tar.gz"
 LOCAL_ARCHIVE="/tmp/${ARCHIVE}"
-TOP_SRCDIR="/tmp/${STEM}"
+TOP_SRCDIR="/tmp/re2-${VERSION}"
 
 # We  expect  CRE2_REQUESTED_CXX to  be  set  in  the environment  if  a
 # specific compiler is requested.
