@@ -1,19 +1,29 @@
-# Notes for CRE2
-# ==============
+# .travis.yml --
 #
-# Dependency packages
-# -------------------
-#
-# We install dependency packages under "/tmp/mine".  So we need the
-# following in every script:
+# Travis CI configuration for CRE2.
+
+# About compiler  packages.  We  select build by  build the  packages to
+# install; it should speed up preparation.  By putting a single "addons"
+# key the  top level: we would  cause all the compilers  to be installed
+# for all the builds in the matrix; we do not want this.
+
+# About compiler  selection.  We  select the compiler  we want  with the
+# "compiler" key.  This  should set the environment variable  CXX to the
+# associated compiler  executable; I am  not sure that it  actually does
+# it.  Example:  selecting "g++-7" as compiler  causes CXX to be  set to
+# "g++",  but is  it the  correct executable?   I think  not!  For  this
+# reason I explicitly select the compiler  by setting CXX on the command
+# line of "configure".  (Marco Maggi; Wed May 24, 2017)
+
+# About  dependency  packages.   We install  dependency  packages  under
+# "/tmp/mine".  So we need the following in every script:
 #
 #   export PATH=/tmp/mine/bin:$PATH;
 #   export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
 #   export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
 #
-# otherwise the installed packages will not be found and used
-# correctly.
-#
+# otherwise the installed packages will not be found and used correctly.
+
 
 sudo: false
 language: c
@@ -131,6 +141,9 @@ matrix:
       script: |
         $echo CC=$CC; $CC --version;
         $echo CXX=$CXX; $CXX --version;
+        export PATH=/tmp/mine/bin:$PATH;
+        export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
+        export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
         sh ./autogen.sh;
         ./configure --enable-maintainer-mode;
         make all;
@@ -146,6 +159,9 @@ matrix:
       script: |
         $echo CC=$CC; $CC --version;
         $echo CXX=$CXX; $CXX --version;
+        export PATH=/tmp/mine/bin:$PATH;
+        export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
+        export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
         LIBTOOLIZE=glibtoolize sh ./autogen.sh;
         ./configure --enable-maintainer-mode;
         make all;
@@ -161,6 +177,9 @@ matrix:
       script: |
         $echo CC=$CC; $CC --version;
         $echo CXX=$CXX; $CXX --version;
+        export PATH=/tmp/mine/bin:$PATH;
+        export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
+        export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
         LIBTOOLIZE=glibtoolize sh ./autogen.sh;
         ./configure --enable-maintainer-mode;
         make all;
@@ -182,6 +201,9 @@ matrix:
       script: |
         $echo CC=$CC; $CC --version;
         $echo CXX=$CXX; $CXX --version;
+        export PATH=/tmp/mine/bin:$PATH;
+        export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
+        export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
         sh ./autogen.sh;
         ./configure --enable-maintainer-mode CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7 CFLAGS='-O0 --coverage' CXXFLAGS='-O0 --coverage';
         make all;
