@@ -9,7 +9,7 @@
 PROGNAME=install-re2.sh
 VERSION=0.3.4
 STEM="re2-${VERSION}"
-ARCHIVE="${STEM}.tar.xz"
+ARCHIVE="${STEM}.tar.gz"
 SOURCE_URI="https://github.com/marcomaggi/re2/archive/v${VERSION}.tar.gz"
 LOCAL_ARCHIVE="/tmp/${ARCHIVE}"
 TOP_SRCDIR="/tmp/${STEM}"
@@ -62,6 +62,22 @@ if ! cd "$TOP_SRCDIR"
 then
     printf '%s: error changing directory to %s\n' "$PROGNAME" "${TOP_SRCDIR}" >&2
     exit 1
+fi
+
+echo "sh autogen.sh" >&2
+if [[ "$TRAVIS_OS_NAME" == "osx" ]]
+then
+    if ! LIBTOOLIZE=glibtoolize sh autogen.sh
+    then
+	printf '%s: error configuring %s\n' "$PROGNAME" "${STEM}" >&2
+	exit 1
+    fi
+else
+    if ! sh autogen.sh
+    then
+	printf '%s: error configuring %s\n' "$PROGNAME" "${STEM}" >&2
+	exit 1
+    fi
 fi
 
 echo "./configure --prefix=/tmp/mine CXX=\"$SELECTED_CXX\"" >&2
