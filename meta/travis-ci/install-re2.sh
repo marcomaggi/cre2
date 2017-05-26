@@ -1,15 +1,15 @@
 #!/bin/bash
 #
-# Installation script to run from the Travis config file before
+# Installation script to run from the Travis CI config file before
 # attempting a build.
 #
-# Install re2 0.3.3 under the  directory "/tmp/mine".  We assume the
+# Install re2 0.3.4 under the  directory "/tmp/mine".  We assume the
 # script is run from the top directory of the build tree.
 
 PROGNAME=install-re2.sh
-STEM=re2-0.3.3
-ARCHIVE="${STEM}.tar.xz"
-SOURCE_URI="https://bitbucket.org/marcomaggi/re2/downloads/${ARCHIVE}"
+VERSION=0.3.4
+ARCHIVE="re2-${VERSION}.tar.xz"
+SOURCE_URI="https://github.com/marcomaggi/re2/archive/v${VERSION}.tar.gz"
 LOCAL_ARCHIVE="/tmp/${ARCHIVE}"
 TOP_SRCDIR="/tmp/${STEM}"
 
@@ -49,7 +49,7 @@ fi
 
 cd /tmp
 
-if ! tar -xJf "$LOCAL_ARCHIVE"
+if ! tar -xzf "$LOCAL_ARCHIVE"
 then
     printf '%s: error unpacking %s\n' "$PROGNAME" "$LOCAL_ARCHIVE" >&2
     exit 1
