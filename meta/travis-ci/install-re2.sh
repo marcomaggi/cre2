@@ -7,7 +7,7 @@
 # script is run from the top directory of the build tree.
 
 PROGNAME=install-re2.sh
-VERSION=0.3.4
+VERSION=2018.1.1
 STEM="re2-${VERSION}"
 ARCHIVE="${STEM}.tar.gz"
 SOURCE_URI="https://github.com/marcomaggi/re2/archive/v${VERSION}.tar.gz"
