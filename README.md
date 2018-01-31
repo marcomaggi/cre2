@@ -1,6 +1,5 @@
 # cre2
 
-[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/939/badge)](https://bestpractices.coreinfrastructure.org/projects/939)
 [![Build Status](https://travis-ci.org/marcomaggi/cre2.svg?branch=master)](https://travis-ci.org/marcomaggi/cre2)
 [![Coverity passed](https://scan.coverity.com/projects/12593/badge.svg)](https://scan.coverity.com/projects/marcomaggi-cre2)
 [![codecov](https://codecov.io/gh/marcomaggi/cre2/branch/master/graph/badge.svg)](https://codecov.io/gh/marcomaggi/cre2)
@@ -186,16 +185,6 @@ the GNU Project software can be found here:
 
 
 ## Badges and static analysis
-
-### CII Best Practices
-
-The  Linux  Foundation's  Core   Infrastructure  Initiative  (CII)  Best
-Practices badge is a way for Free/Libre and Open Source Software (FLOSS)
-projects to show that they follow  best practices.  We can find the self
-certification at:
-
-[https://bestpractices.coreinfrastructure.org/projects/939/](https://bestpractices.coreinfrastructure.org/projects/939/)
-
 
 ### Travis CI
 

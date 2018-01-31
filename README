@@ -202,18 +202,7 @@ the GNU Project software can be found here:
 D. Badges and static analysis
 -----------------------------
 
-D.1 CII Best Practices
-----------------------
-
-The  Linux  Foundation's  Core   Infrastructure  Initiative  (CII)  Best
-Practices badge is a way for Free/Libre and Open Source Software (FLOSS)
-projects to show that they follow  best practices.  We can find the self
-certification at:
-
-      <https://bestpractices.coreinfrastructure.org/projects/939/>
-
-
-D.2 Travis CI
+D.1 Travis CI
 -------------
 
 Travis CI is  a hosted, distributed continuous  integration service used
@@ -226,7 +215,7 @@ project's dashboard at:
 the scripts under the directory "meta/travis-ci".
 
 
-D.3 Coverity Scan
+D.2 Coverity Scan
 -----------------
 
 Coverity Scan is  a service providing the results of  static analysis on
@@ -239,7 +228,7 @@ section in the file "Makefile.am".  To access the service a unique token
 is needed: this token is private and is owned by the current maintainer.
 
 
-D.4 Clang's Static Analyzer
+D.3 Clang's Static Analyzer
 ---------------------------
 
 The Clang Static Analyzer is a source code analysis tool that finds bugs
@@ -252,7 +241,7 @@ and we can find it at:
 section in the file "Makefile.am".
 
 
-D.5 Codecov
+D.4 Codecov
 -----------
 
 Codecov is a service providing code  coverage reports.  We can find this
