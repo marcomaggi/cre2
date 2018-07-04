@@ -1,13 +1,13 @@
 #!/bin/bash
 #
-# Installation script to run from the Travis CI config file before
+# Installation  script to  run from  the  Travis CI  config file  before
 # attempting a build.
 #
-# Install re2 0.3.4 under the  directory "/tmp/mine".  We assume the
-# script is run from the top directory of the build tree.
+# Install re2 under the directory  "/tmp/mine".  We assume the script is
+# run from the top directory of the build tree.
 
 PROGNAME=install-re2.sh
-VERSION=2018.1.1
+VERSION=2018.7.1
 STEM="re2-${VERSION}"
 ARCHIVE="${STEM}.tar.gz"
 SOURCE_URI="https://github.com/marcomaggi/re2/archive/v${VERSION}.tar.gz"
