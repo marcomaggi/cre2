@@ -2,7 +2,7 @@ dnl @configure_input@
 dnl
 
 AC_PREREQ([2.68])
-AC_INIT([CRE2],[0.3.4],[marco.maggi-ipsu@poste.it],
+AC_INIT([CRE2],[0.3.5],[marco.maggi-ipsu@poste.it],
   [cre2],[http://github.com/marcomaggi/cre2/])
 AC_CONFIG_SRCDIR([src/])
 AC_CONFIG_MACRO_DIR([meta/autotools])
@@ -60,7 +60,7 @@ AC_SUBST([cre2_VERSION_INTERFACE_REVISION])
 AC_SUBST([cre2_VERSION_INTERFACE_AGE])
 
 dnl This is the version stored in the pkg-config data file.
-AC_SUBST([CRE2_PKG_CONFIG_VERSION],[0.3.4])
+AC_SUBST([CRE2_PKG_CONFIG_VERSION],[0.3.5])
 
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([Makefile]
