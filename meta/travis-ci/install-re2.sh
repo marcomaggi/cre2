@@ -7,7 +7,7 @@
 # run from the top directory of the build tree.
 
 PROGNAME=install-re2.sh
-VERSION=2018.7.1
+VERSION=2018.08.01
 STEM="re2-${VERSION}"
 ARCHIVE="${STEM}.tar.gz"
 SOURCE_URI="https://github.com/marcomaggi/re2/archive/v${VERSION}.tar.gz"
@@ -81,7 +81,8 @@ else
 fi
 
 echo "./configure --prefix=/tmp/mine CXX=\"$SELECTED_CXX\"" >&2
-if ! ./configure --prefix=/tmp/mine CXX="$SELECTED_CXX"
+# CXX="$SELECTED_CXX"
+if ! ./configure --prefix=/tmp/mine
 then
     printf '%s: error configuring %s\n' "$PROGNAME" "${STEM}" >&2
     exit 1

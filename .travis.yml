@@ -2,38 +2,78 @@
 #
 # Travis CI configuration for CRE2.
 
-# About compiler  packages.  We  select build by  build the  packages to
-# install; it should speed up preparation.  By putting a single "addons"
-# key the  top level: we would  cause all the compilers  to be installed
-# for all the builds in the matrix; we do not want this.
-
-# About compiler  selection.  We  select the compiler  we want  with the
-# "compiler" key.  This  should set the environment variable  CXX to the
-# associated compiler  executable; I am  not sure that it  actually does
-# it.  Example:  selecting "g++-7" as compiler  causes CXX to be  set to
-# "g++",  but is  it the  correct executable?   I think  not!  For  this
-# reason I explicitly select the compiler  by setting CXX on the command
-# line of "configure".  (Marco Maggi; Wed May 24, 2017)
-
-# About  dependency  packages.   We install  dependency  packages  under
-# "/tmp/mine".  So we need the following in every script:
+#page
+#### about compiler packages
 #
-#   export PATH=/tmp/mine/bin:$PATH;
-#   export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
-#   export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
+# We select build  by build the packages to install;  it should speed up
+# preparation.  By  putting a single "addons"  key at the top  level: we
+# would cause  all the compilers to  be installed for all  the builds in
+# the matrix; we do not want this.
+
+#page
+#### about compiler selection
 #
-# otherwise the installed packages will not be found and used correctly.
+# We select the  compiler we want with the "compiler"  key.  This should
+# set the environment variable CC to the associated compiler executable;
+# I have verified that it actually does so when the language is C.  I am
+# not sure that it actually does it when the language is C++.
+#
+# To check which C or C++ compiler  is actually selected, we can put the
+# following  in  every "script:"  key,  before  running the  "configure"
+# script as follows:
+#
+#    script: |
+#      echo CC=$CC; $CC --version;
+#      echo CXX=$CXX; $CXX --version;
+#      ./configure
+#
 
+#page
+#### about dependency packages
+#
+# We  install  dependency  packages under  "/tmp/mine",  so  appropriate
+# directories must  be added to  the global path  environment variables,
+# otherwise the installed packages will  not be found and used correctly
+# by the "configure" script.
+#
+# Notice that (as of May 17,  2018) Travis CI's run-time system raises a
+# warning if the first directory in the PATH environment variable is not
+# the one  that it sets.   So, for now,  we append the  custom directory
+# rather than prepend it;  this is not the best if we  want to make sure
+# that the executables we install are  found before the one installed by
+# the platform.
+#
+# We need the following in the global environment:
+#
+#   env:
+#     global:
+#       - PATH=$PATH:/tmp/mine/bin;
+#       - LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
+#       - PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
+#
+# Alternatively, we can put the following in every "script:" key, before
+# running the "configure" script as follows:
+#
+#   script: |
+#     export PATH=$PATH:/tmp/mine/bin;
+#     export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
+#     export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
+#     ./configure
+#
 
-sudo: false
+#page
+#### global configuration
+
 language: c
+
+#sudo: true
 
 # Let's just look at the project's dashboard at Travis CI's site.
 #
 notifications:
   email: false
 
-# We do no git operations, so set this to the minimum.
+# We do no git operations, so set the "git clone" depth to the minimum.
 #
 git:
   depth: 1
@@ -42,9 +82,29 @@ branches:
   only:
     - master
 
+# NOTE There must be only *one* env.global key!!!  Otherwise the earlier
+# settings will be ineffective.
 env:
   global:
     - MAKEFLAGS="-j 2"
+    - PATH=$PATH:/tmp/mine/bin
+    - LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
+    - PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
+
+#page
+#### dependencies management
+
+install:
+   - ./meta/travis-ci/install-re2.sh
+
+#page
+#### build scripts
+
+before_script:
+  # On Linux the GNU Libtool  preparation script is called "libtoolize",
+  # while on OS X it is called "glibtoolize".
+  - if test "$TRAVIS_OS_NAME" = osx ; then export LIBTOOLIZE=glibtoolize; else true; fi
+  - sh ./autogen.sh;
 
 matrix:
   fast_finish: true
@@ -62,14 +122,9 @@ matrix:
             - texinfo
             - gcc-5
             - g++-5
-      install:
-        - ./meta/travis-ci/install-re2.sh
       script: |
         echo CC=$CC; $CC --version;
         echo CXX=$CXX; $CXX --version;
-        export PATH=/tmp/mine/bin:$PATH;
-        export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
-        export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
         sh ./autogen.sh;
         ./configure --enable-maintainer-mode CC=/usr/bin/gcc-5 CXX=/usr/bin/g++-5;
         make all;
@@ -87,14 +142,9 @@ matrix:
             - texinfo
             - gcc-6
             - g++-6
-      install:
-        - ./meta/travis-ci/install-re2.sh
       script: |
         echo CC=$CC; $CC --version;
         echo CXX=$CXX; $CXX --version;
-        export PATH=/tmp/mine/bin:$PATH;
-        export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
-        export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
         sh ./autogen.sh;
         ./configure --enable-maintainer-mode CC=/usr/bin/gcc-6 CXX=/usr/bin/g++-6;
         make all;
@@ -112,16 +162,31 @@ matrix:
             - texinfo
             - gcc-7
             - g++-7
-      install:
-        - ./meta/travis-ci/install-re2.sh
       script: |
         echo CC=$CC; $CC --version;
         echo CXX=$CXX; $CXX --version;
-        export PATH=/tmp/mine/bin:$PATH;
-        export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
-        export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
         sh ./autogen.sh;
         ./configure --enable-maintainer-mode CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7;
+        make all;
+        make check;
+
+    # Plain build under Ubuntu GNU+Linux "trusty", GCC 8.
+    - os: linux
+      dist: trusty
+      compiler: gcc-8
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - texinfo
+            - gcc-8
+            - g++-8
+      script: |
+        echo CC=$CC; $CC --version;
+        echo CXX=$CXX; $CXX --version;
+        sh ./autogen.sh;
+        ./configure --enable-maintainer-mode CC=/usr/bin/gcc-8 CXX=/usr/bin/g++-8;
         make all;
         make check;
 
@@ -136,16 +201,11 @@ matrix:
           packages:
             - texinfo
       compiler: clang
-      install:
-        - export CRE2_REQUESTED_CXX=$(which clang++); ./meta/travis-ci/install-re2.sh
       script: |
         echo CC=$CC; $CC --version;
         echo CXX=$CXX; $CXX --version;
-        export PATH=/tmp/mine/bin:$PATH;
-        export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
-        export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
         sh ./autogen.sh;
-        ./configure --enable-maintainer-mode;
+        ./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes';
         make all;
         make check;
 
@@ -154,16 +214,11 @@ matrix:
     - os: osx
       osx_image: xcode7.3
       compiler: clang
-      install:
-        - export CRE2_REQUESTED_CXX=/usr/bin/clang++; ./meta/travis-ci/install-re2.sh
       script: |
         echo CC=$CC; $CC --version;
         echo CXX=$CXX; $CXX --version;
-        export PATH=/tmp/mine/bin:$PATH;
-        export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
-        export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
-        LIBTOOLIZE=glibtoolize sh ./autogen.sh;
-        ./configure --enable-maintainer-mode;
+        sh ./autogen.sh;
+        ./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes';
         make all;
         make check;
 
@@ -172,44 +227,43 @@ matrix:
     - os: osx
       osx_image: xcode8.3
       compiler: clang
-      install:
-        - export CRE2_REQUESTED_CXX=/usr/bin/clang++; ./meta/travis-ci/install-re2.sh
       script: |
         echo CC=$CC; $CC --version;
         echo CXX=$CXX; $CXX --version;
-        export PATH=/tmp/mine/bin:$PATH;
-        export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
-        export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
-        LIBTOOLIZE=glibtoolize sh ./autogen.sh;
-        ./configure --enable-maintainer-mode;
+        sh ./autogen.sh;
+        ./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes';
         make all;
         make check;
 
-    # Codecov support under Ubuntu GNU+Linux "trusty", GCC 7.
+    # Codecov support under Ubuntu GNU+Linux "trusty", GCC 8.
     - os: linux
       dist: trusty
-      compiler: gcc-7
+      compiler: gcc-8
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
           packages:
             - texinfo
-            - gcc-7
-            - g++-7
-      install:
-        - ./meta/travis-ci/install-re2.sh
+            - gcc-8
+            - g++-8
       script: |
         echo CC=$CC; $CC --version;
         echo CXX=$CXX; $CXX --version;
-        export PATH=/tmp/mine/bin:$PATH;
-        export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
-        export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
         sh ./autogen.sh;
-        ./configure --enable-maintainer-mode CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7 CFLAGS='-O0 --coverage' CXXFLAGS='-O0 --coverage';
+        ./configure --enable-maintainer-mode CC=/usr/bin/gcc-8 CXX=/usr/bin/g++-8 CFLAGS='-O0 --coverage' CXXFLAGS='-O0 --coverage';
         make all;
         make check;
       after_success:
-        bash <(curl -s https://codecov.io/bash) -xgcov-7
+        bash <(curl -s https://codecov.io/bash) -xgcov-8
+
+#page
+#### done
 
 ### end of file
+# Local Variables:
+# paragraph-start: "#[ \t].+\\|$"
+# paragraph-separate: "#[ \t]*$"
+# fill-prefix: "# "
+# page-delimiter: "^#page"
+# End:
