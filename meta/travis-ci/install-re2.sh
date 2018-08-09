@@ -24,7 +24,7 @@ elif test -x /usr/bin/g++-6; then SELECTED_CXX=/usr/bin/g++-6
 elif test -x /usr/bin/g++-5; then SELECTED_CXX=/usr/bin/g++-5
 else
     printf '%s: required C++ compiler not present (CRE2_REQUESTED_CXX=%s)\n' "$PROGNAME" "$CRE2_REQUESTED_CXX" >&2
-    exit 1
+#    exit 1
 fi
 
 printf '%s: selected CXX=%s\n' "$PROGNAME" "$SELECTED_CXX" >&2
