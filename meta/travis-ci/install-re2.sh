@@ -16,23 +16,23 @@ TOP_SRCDIR="/tmp/${STEM}"
 
 # We  expect  CRE2_REQUESTED_CXX to  be  set  in  the environment  if  a
 # specific compiler is requested.
-SELECTED_CXX="$CRE2_REQUESTED_CXX"
-if   test -n "$CRE2_REQUESTED_CXX" -a -x "$CRE2_REQUESTED_CXX"
-then SELECTED_CXX="$CRE2_REQUESTED_CXX"
-elif test -x /usr/bin/g++-7; then SELECTED_CXX=/usr/bin/g++-7
-elif test -x /usr/bin/g++-6; then SELECTED_CXX=/usr/bin/g++-6
-elif test -x /usr/bin/g++-5; then SELECTED_CXX=/usr/bin/g++-5
-else
-    printf '%s: required C++ compiler not present (CRE2_REQUESTED_CXX=%s)\n' "$PROGNAME" "$CRE2_REQUESTED_CXX" >&2
-#    exit 1
-fi
+# SELECTED_CXX="$CRE2_REQUESTED_CXX"
+# if   test -n "$CRE2_REQUESTED_CXX" -a -x "$CRE2_REQUESTED_CXX"
+# then SELECTED_CXX="$CRE2_REQUESTED_CXX"
+# elif test -x /usr/bin/g++-7; then SELECTED_CXX=/usr/bin/g++-7
+# elif test -x /usr/bin/g++-6; then SELECTED_CXX=/usr/bin/g++-6
+# elif test -x /usr/bin/g++-5; then SELECTED_CXX=/usr/bin/g++-5
+# else
+#     printf '%s: required C++ compiler not present (CRE2_REQUESTED_CXX=%s)\n' "$PROGNAME" "$CRE2_REQUESTED_CXX" >&2
+#     exit 1
+# fi
 
-printf '%s: selected CXX=%s\n' "$PROGNAME" "$SELECTED_CXX" >&2
-if ! "$SELECTED_CXX" --version
-then
-    printf '%s: error showing CXX compiler version %s\n' "$PROGNAME" "${ARCHIVE}" >&2
-    exit 1
-fi
+# printf '%s: selected CXX=%s\n' "$PROGNAME" "$SELECTED_CXX" >&2
+# if ! "$SELECTED_CXX" --version
+# then
+#     printf '%s: error showing CXX compiler version %s\n' "$PROGNAME" "${ARCHIVE}" >&2
+#     exit 1
+# fi
 
 test -d /tmp/mine || {
     if ! mkdir /tmp/mine
@@ -81,7 +81,7 @@ else
 fi
 
 echo "./configure --prefix=/tmp/mine CXX=\"$SELECTED_CXX\"" >&2
-# CXX="$SELECTED_CXX"
+#if ! ./configure --prefix=/tmp/mine # CXX="$SELECTED_CXX"
 if ! ./configure --prefix=/tmp/mine
 then
     printf '%s: error configuring %s\n' "$PROGNAME" "${STEM}" >&2
