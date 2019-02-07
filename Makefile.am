@@ -60,7 +60,7 @@ TESTS			= $(check_PROGRAMS)
 ## --------------------------------------------------------------------
 
 cre2_common_sources			= tests/cre2-test.h
-cre2_common_cflags			=
+cre2_common_cflags			= $(PTHREAD_CFLAGS) $(MMUX_CFLAGS)
 cre2_common_ldadd			= libcre2.la $(PTHREAD_LIBS) $(RE2_LIBS)
 
 tests_test_version_SOURCES		= tests/test-version.c $(cre2_common_sources)
@@ -102,6 +102,10 @@ tests_test_find_and_consume_match_LDADD	= $(cre2_common_ldadd)
 tests_test_replace_SOURCES		= tests/test-replace.c $(cre2_common_sources)
 tests_test_replace_CFLAGS		= $(cre2_common_cflags)
 tests_test_replace_LDADD		= $(cre2_common_ldadd)
+
+tests_test_set_SOURCES			= tests/test-set.c $(cre2_common_sources)
+tests_test_set_CFLAGS			= $(cre2_common_cflags)
+tests_test_set_LDADD			= $(cre2_common_ldadd)
 
 tests_test_misc_SOURCES			= tests/test-misc.c $(cre2_common_sources)
 tests_test_misc_CFLAGS			= $(cre2_common_cflags)

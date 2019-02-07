@@ -17,15 +17,19 @@
 #      with some other test.
 #
 AC_DEFUN([MMUX_CHECK_RE2],[
+  AC_REQUIRE([AX_PTHREAD])
+
   AC_LANG_PUSH([C++])
-  AC_CHECK_HEADERS([re2/re2.h],,[AC_MSG_ERROR([test for RE2 header failed])])
+  AC_CHECK_HEADERS([re2/re2.h],,[AC_MSG_ERROR([test for re2 header failed])])
   AC_LANG_POP([C++])
 
-  AC_CACHE_CHECK([for RE2 library],
+  AC_CACHE_CHECK([for library re2],
     [mmux_cv_re2_libs],
     [AC_LANG_PUSH([C++])
      AS_VAR_COPY([my_cre2_saved_ldflags],[LDFLAGS])
-     AS_VAR_APPEND([LDFLAGS],[-lre2])
+     AS_VAR_COPY([my_cre2_saved_cxxflags],[CXXFLAGS])
+     AS_VAR_APPEND([CXXFLAGS],[" ${PTHREAD_CFLAGS}"])
+     AS_VAR_APPEND([LDFLAGS],[" -lre2 ${PTHREAD_LIBS}"])
      AC_LINK_IFELSE([AC_LANG_PROGRAM([
 #include <re2/re2.h>
        ],
@@ -33,6 +37,7 @@ AC_DEFUN([MMUX_CHECK_RE2],[
        [AS_VAR_SET([mmux_cv_re2_libs],[-lre2])],
        [AC_MSG_ERROR([test for RE2 library failed])])
        AS_VAR_COPY([LDFLAGS],[my_cre2_saved_ldflags])
+       AS_VAR_COPY([CXXFLAGS],[my_cre2_saved_cxxflags])
        AC_LANG_POP([C++])])
    AC_SUBST([RE2_LIBS],[$mmux_cv_re2_libs])
 ])
