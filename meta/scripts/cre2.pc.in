@@ -20,7 +20,7 @@ sysconfdir=@sysconfdir@
 
 Name: @PACKAGE_NAME@
 Description: C wrapper for re2, a regular expressions library
-Version: @CRE2_PKG_CONFIG_VERSION@
+Version: @MMUX_PKG_CONFIG_VERSION@
 Requires: re2 >= 0.0.0
 Libs: -L${libdir} -lcre2
 Cflags: -I${includedir}
