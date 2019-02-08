@@ -588,7 +588,7 @@ we may want to start by customising this program:
 @example
 /* compile and run with:
 
-   $ g++ -Wall -o proof proof.cpp -lre2 && ./proof
+   $ g++ -pthread -Wall -o proof proof.cpp -lre2 && ./proof
 */
 
 #include <re2/re2.h>
@@ -597,7 +597,7 @@ we may want to start by customising this program:
 static void try_match (RE2::Options& opt, const char * text);
 
 int
-main (int argc, const char *const argv[])
+main (void)
 @{
   RE2::Options opt;
   opt.set_never_nl(true);
@@ -610,7 +610,7 @@ try_match (RE2::Options& opt, const char * text)
   RE2 re("abcdef", opt);
   assert(re.ok());
   assert(RE2::FullMatch(text, re));
-  //assert(RE2::PartialMatch(text, re));
+  assert(RE2::PartialMatch(text, re));
 @}
 @end example
 
