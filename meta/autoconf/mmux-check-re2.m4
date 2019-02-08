@@ -32,8 +32,17 @@ AC_DEFUN([MMUX_CHECK_RE2],[
      AS_VAR_APPEND([LDFLAGS],[" -lre2 ${PTHREAD_LIBS}"])
      AC_LINK_IFELSE([AC_LANG_PROGRAM([
 #include <re2/re2.h>
-       ],
-       [re2::StringPiece pattern_re2("", 0);])],
+#include <assert.h>
+       ],[
+RE2::Options opt;
+opt.set_never_nl(true);
+{
+  RE2 re("ab[cd]+ef", opt);
+  assert(re.ok());
+  assert(RE2::FullMatch("abcddcef", re));
+  assert(RE2::PartialMatch("abcddcef123", re));
+}
+       ])],
        [AS_VAR_SET([mmux_cv_re2_libs],[-lre2])],
        [AC_MSG_ERROR([test for RE2 library failed])])
        AS_VAR_COPY([LDFLAGS],[my_cre2_saved_ldflags])
