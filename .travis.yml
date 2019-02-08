@@ -3,24 +3,45 @@
 # Travis CI configuration for CRE2.
 
 #page
+#### about branch selection
+#
+# Travis-CI processes the file ".travis.yml" from the branch containing the git commit that triggers
+# the build.  The file ".travis.yml" needs to be  present on all active branches of the project.  It
+# is possible to select  which branches to process using a safelist (with  the keyword "only") and a
+# blocklist (with the keyword "except"):
+#
+#    branches:
+#      only:
+#      - master
+#      - stable
+#      except:
+#      - legacy
+#      - /^experimental-.*$/
+#
+# it is possible  to use regular expressions to  select branch names, by putting  the regexp between
+# slash characters.
+#
+# For details see (URL last verified Dec 21, 2018):
+#
+#    <https://docs.travis-ci.com/user/customizing-the-build/#building-specific-branches>
+#
+
+#page
 #### about compiler packages
 #
-# We select build  by build the packages to install;  it should speed up
-# preparation.  By  putting a single "addons"  key at the top  level: we
-# would cause  all the compilers to  be installed for all  the builds in
-# the matrix; we do not want this.
+# We select build  by build the packages to  install; it should speed up preparation.   By putting a
+# single "addons" key at the top level: we would cause all the compilers to be installed for all the
+# builds in the matrix; we do not want this.
 
 #page
 #### about compiler selection
 #
-# We select the  compiler we want with the "compiler"  key.  This should
-# set the environment variable CC to the associated compiler executable;
-# I have verified that it actually does so when the language is C.  I am
-# not sure that it actually does it when the language is C++.
+# We select the compiler we want with the  "compiler" key.  This should set the environment variable
+# CC to  the associated  compiler executable;  I have  verified that  it actually  does so  when the
+# language is C.  I am not sure that it actually does it when the language is C++.
 #
-# To check which C or C++ compiler  is actually selected, we can put the
-# following  in  every "script:"  key,  before  running the  "configure"
-# script as follows:
+# To check which C or C++ compiler is actually selected, we can put the following in every "script:"
+# key, before running the "configure" script as follows:
 #
 #    script: |
 #      echo CC=$CC; $CC --version;
@@ -31,17 +52,14 @@
 #page
 #### about dependency packages
 #
-# We  install  dependency  packages under  "/tmp/mine",  so  appropriate
-# directories must  be added to  the global path  environment variables,
-# otherwise the installed packages will  not be found and used correctly
-# by the "configure" script.
+# We install dependency packages under "/tmp/mine", so  appropriate directories must be added to the
+# global path  environment variables, otherwise  the installed packages will  not be found  and used
+# correctly by the "configure" script.
 #
-# Notice that (as of May 17,  2018) Travis CI's run-time system raises a
-# warning if the first directory in the PATH environment variable is not
-# the one  that it sets.   So, for now,  we append the  custom directory
-# rather than prepend it;  this is not the best if we  want to make sure
-# that the executables we install are  found before the one installed by
-# the platform.
+# Notice  that (as  of May  17, 2018)  Travis CI's  run-time system  raises a  warning if  the first
+# directory in the  PATH environment variable is not the  one that it sets.  So, for  now, we append
+# the custom directory rather than prepend it; this is not the best if we want to make sure that the
+# executables we install are found before the one installed by the platform.
 #
 # We need the following in the global environment:
 #
@@ -51,8 +69,8 @@
 #       - LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
 #       - PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
 #
-# Alternatively, we can put the following in every "script:" key, before
-# running the "configure" script as follows:
+# Alternatively, we  can put the  following in every "script:"  key, before running  the "configure"
+# script as follows:
 #
 #   script: |
 #     export PATH=$PATH:/tmp/mine/bin;
@@ -78,18 +96,21 @@ notifications:
 git:
   depth: 1
 
-branches:
-  only:
-    - master
+# branches:
+#   only:
+#     - master
 
-# NOTE There must be only *one* env.global key!!!  Otherwise the earlier
-# settings will be ineffective.
+# NOTE  There  must  be only  *one*  env.global  key!!!   Otherwise  the earlier  settings  will  be
+# ineffective.  Setting the variable  VERBOSE will cause "make check "  to print "test-suite.log" in
+# case some tests fail.
+#
 env:
   global:
     - MAKEFLAGS="-j 2"
     - PATH=$PATH:/tmp/mine/bin
     - LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
     - PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
+    - VERBOSE=yes;
 
 #page
 #### dependencies management
@@ -121,14 +142,7 @@ matrix:
           packages:
             - texinfo
             - gcc-5
-            - g++-5
-      script: |
-        echo CC=$CC; $CC --version;
-        echo CXX=$CXX; $CXX --version;
-        sh ./autogen.sh;
-        ./configure --enable-maintainer-mode CC=/usr/bin/gcc-5 CXX=/usr/bin/g++-5;
-        make all;
-        make check;
+      script: "./configure --enable-maintainer-mode; make all; make check;"
 
     # Plain build under Ubuntu GNU+Linux "trusty", GCC 6.
     - os: linux
@@ -141,14 +155,7 @@ matrix:
           packages:
             - texinfo
             - gcc-6
-            - g++-6
-      script: |
-        echo CC=$CC; $CC --version;
-        echo CXX=$CXX; $CXX --version;
-        sh ./autogen.sh;
-        ./configure --enable-maintainer-mode CC=/usr/bin/gcc-6 CXX=/usr/bin/g++-6;
-        make all;
-        make check;
+      script: "./configure --enable-maintainer-mode; make all; make check;"
 
     # Plain build under Ubuntu GNU+Linux "trusty", GCC 7.
     - os: linux
@@ -161,14 +168,7 @@ matrix:
           packages:
             - texinfo
             - gcc-7
-            - g++-7
-      script: |
-        echo CC=$CC; $CC --version;
-        echo CXX=$CXX; $CXX --version;
-        sh ./autogen.sh;
-        ./configure --enable-maintainer-mode CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7;
-        make all;
-        make check;
+      script: "./configure --enable-maintainer-mode; make all; make check;"
 
     # Plain build under Ubuntu GNU+Linux "trusty", GCC 8.
     - os: linux
@@ -181,14 +181,7 @@ matrix:
           packages:
             - texinfo
             - gcc-8
-            - g++-8
-      script: |
-        echo CC=$CC; $CC --version;
-        echo CXX=$CXX; $CXX --version;
-        sh ./autogen.sh;
-        ./configure --enable-maintainer-mode CC=/usr/bin/gcc-8 CXX=/usr/bin/g++-8;
-        make all;
-        make check;
+      script: "./configure --enable-maintainer-mode; make all; make check;"
 
     # Plain build  under Ubuntu GNU+Linux "trusty",  CLang automatically
     # selected by Travis CI.
@@ -201,69 +194,38 @@ matrix:
           packages:
             - texinfo
       compiler: clang
-      script: |
-        echo CC=$CC; $CC --version;
-        echo CXX=$CXX; $CXX --version;
-        sh ./autogen.sh;
-        ./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes';
-        make all;
-        make check;
+      script: "./configure --enable-maintainer-mode; make all CFLAGS='-Wno-unknown-attributes'; make check CFLAGS='-Wno-unknown-attributes';"
 
     # Plain build under OS X, XCode 7.3, CLang automatically selected by
     # Travis CI.
     - os: osx
       osx_image: xcode7.3
       compiler: clang
-      script: |
-        echo CC=$CC; $CC --version;
-        echo CXX=$CXX; $CXX --version;
-        sh ./autogen.sh;
-        ./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes';
-        make all;
-        make check;
+      script: "./configure --enable-maintainer-mode; make all CFLAGS='-Wno-unknown-attributes'; make check CFLAGS='-Wno-unknown-attributes';"
 
     # Plain build under OS X, XCode 8.3, CLang automatically selected by
     # Travis CI.
     - os: osx
       osx_image: xcode8.3
       compiler: clang
-      script: |
-        echo CC=$CC; $CC --version;
-        echo CXX=$CXX; $CXX --version;
-        sh ./autogen.sh;
-        ./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes';
-        make all;
-        make check;
+      script: "./configure --enable-maintainer-mode; make all CFLAGS='-Wno-unknown-attributes'; make check CFLAGS='-Wno-unknown-attributes';"
 
-    # Codecov support under Ubuntu GNU+Linux "trusty", GCC 8.
+    # Codecov support under Ubuntu GNU+Linux "trusty", GCC 7.
     - os: linux
       dist: trusty
-      compiler: gcc-8
+      compiler: gcc-7
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
           packages:
             - texinfo
-            - gcc-8
-            - g++-8
-      script: |
-        echo CC=$CC; $CC --version;
-        echo CXX=$CXX; $CXX --version;
-        sh ./autogen.sh;
-        ./configure --enable-maintainer-mode CC=/usr/bin/gcc-8 CXX=/usr/bin/g++-8 CFLAGS='-O0 --coverage' CXXFLAGS='-O0 --coverage';
-        make all;
-        make check;
+            - gcc-7
+      script: "./configure --enable-maintainer-mode CFLAGS='-O0 --coverage'; make all; make check;"
       after_success:
-        bash <(curl -s https://codecov.io/bash) -xgcov-8
+        bash <(curl -s https://codecov.io/bash) -xgcov-7
 
 #page
 #### done
 
 ### end of file
-# Local Variables:
-# paragraph-start: "#[ \t].+\\|$"
-# paragraph-separate: "#[ \t]*$"
-# fill-prefix: "# "
-# page-delimiter: "^#page"
-# End:
