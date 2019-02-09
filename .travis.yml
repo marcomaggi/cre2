@@ -195,7 +195,7 @@ matrix:
             - gcc-8
             - g++-8
       script: |
-        ./configure --enable-maintainer-mode CC=/usr/bin/gcc-8 CXX=/usr/bin/g++-8;
+        ./configure --enable-maintainer-mode CC=/usr/bin/gcc-8 CXX=/usr/bin/g++-8; cat config.log;
         make all;
         make check;
 
