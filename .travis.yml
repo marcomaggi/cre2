@@ -112,7 +112,7 @@ env:
     - MAKEFLAGS="-j 2"
     - PATH=$PATH:/tmp/mine/bin
     - CPPFLAGS="-I/tmp/mine/include"
-    - LDFLAGS="-L/tmp/mine/lib -L/tmp/mine/lib64"
+    - LDFLAGS="-L/tmp/mine/lib"
     - PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
     - LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
     - VERBOSE=yes;
