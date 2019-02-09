@@ -142,7 +142,11 @@ matrix:
           packages:
             - texinfo
             - gcc-5
-      script: "./configure --enable-maintainer-mode; make all; make check;"
+            - g++-5
+      script: |
+        ./configure --enable-maintainer-mode CC=/usr/bin/gcc-5 CXX=/usr/bin/g++-5;
+        make all;
+        make check;
 
     # Plain build under Ubuntu GNU+Linux "trusty", GCC 6.
     - os: linux
@@ -155,7 +159,11 @@ matrix:
           packages:
             - texinfo
             - gcc-6
-      script: "./configure --enable-maintainer-mode; make all; make check;"
+            - g++-6
+      script: |
+        ./configure --enable-maintainer-mode CC=/usr/bin/gcc-6 CXX=/usr/bin/g++-6;
+        make all;
+        make check;
 
     # Plain build under Ubuntu GNU+Linux "trusty", GCC 7.
     - os: linux
@@ -168,7 +176,11 @@ matrix:
           packages:
             - texinfo
             - gcc-7
-      script: "./configure --enable-maintainer-mode; make all; make check;"
+            - g++-7
+      script: |
+        ./configure --enable-maintainer-mode CC=/usr/bin/gcc-7 CXX=/usr/bin/g++-7;
+        make all;
+        make check;
 
     # Plain build under Ubuntu GNU+Linux "trusty", GCC 8.
     - os: linux
@@ -181,7 +193,11 @@ matrix:
           packages:
             - texinfo
             - gcc-8
-      script: "./configure --enable-maintainer-mode; make all; make check;"
+            - g++-8
+      script: |
+        ./configure --enable-maintainer-mode CC=/usr/bin/gcc-8 CXX=/usr/bin/g++-8;
+        make all;
+        make check;
 
     # Plain build  under Ubuntu GNU+Linux "trusty",  CLang automatically
     # selected by Travis CI.
@@ -194,23 +210,32 @@ matrix:
           packages:
             - texinfo
       compiler: clang
-      script: "./configure --enable-maintainer-mode; make all CFLAGS='-Wno-unknown-attributes'; make check CFLAGS='-Wno-unknown-attributes';"
+      script: |
+        ./configure --enable-maintainer-mode;
+        make all CFLAGS='-Wno-unknown-attributes';
+        make check CFLAGS='-Wno-unknown-attributes';
 
     # Plain build under OS X, XCode 7.3, CLang automatically selected by
     # Travis CI.
     - os: osx
       osx_image: xcode7.3
       compiler: clang
-      script: "./configure --enable-maintainer-mode; make all CFLAGS='-Wno-unknown-attributes'; make check CFLAGS='-Wno-unknown-attributes';"
+      script: |
+        ./configure --enable-maintainer-mode;
+        make all CFLAGS='-Wno-unknown-attributes';
+        make check CFLAGS='-Wno-unknown-attributes';
 
     # Plain build under OS X, XCode 8.3, CLang automatically selected by
     # Travis CI.
     - os: osx
       osx_image: xcode8.3
       compiler: clang
-      script: "./configure --enable-maintainer-mode; make all CFLAGS='-Wno-unknown-attributes'; make check CFLAGS='-Wno-unknown-attributes';"
+      script: |
+        ./configure --enable-maintainer-mode;
+        make all CFLAGS='-Wno-unknown-attributes';
+        make check CFLAGS='-Wno-unknown-attributes';
 
-    # Codecov support under Ubuntu GNU+Linux "trusty", GCC 7.
+    # Codecov support under Ubuntu GNU+Linux "trusty", GCC 8.
     - os: linux
       dist: trusty
       compiler: gcc-7
@@ -220,10 +245,14 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - texinfo
-            - gcc-7
-      script: "./configure --enable-maintainer-mode CFLAGS='-O0 --coverage'; make all; make check;"
+            - gcc-8
+            - g++-8
+      script: |
+        ./configure --enable-maintainer-mode CC=/usr/bin/gcc-8 CXX=/usr/bin/g++-8 CFLAGS='-O0 --coverage';
+        make all;
+        make check;
       after_success:
-        bash <(curl -s https://codecov.io/bash) -xgcov-7
+        bash <(curl -s https://codecov.io/bash) -xgcov-8
 
 #page
 #### done
