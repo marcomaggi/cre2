@@ -5,13 +5,9 @@
 AC_DEFUN([MMUX_CHECK_RE2],[
   AC_REQUIRE([AX_PTHREAD])
 
-  AC_CACHE_CHECK([for re2 header file],
-    [mmux_cv_re2_header],
-    [AC_LANG_PUSH([C++])
-     AC_CHECK_HEADERS([re2/re2.h],
-       [AS_VAR_SET([mmux_cv_re2_header],[yes])],
-       [AC_MSG_ERROR([test for re2 header failed])])
-     AC_LANG_POP([C++])])
+  AC_LANG_PUSH([C++])
+  AC_CHECK_HEADERS([re2/re2.h],,[AC_MSG_ERROR([test for re2 header failed])])
+  AC_LANG_POP([C++])
 
   AC_CACHE_CHECK([for re2 library],
     [mmux_cv_re2_libs],
