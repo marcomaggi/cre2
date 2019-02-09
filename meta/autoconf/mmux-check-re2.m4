@@ -30,7 +30,7 @@ opt.set_never_nl(true);
 }
        ])],
        [AS_VAR_SET([mmux_cv_re2_libs],[-lre2])],
-       [AC_MSG_ERROR([test for RE2 library failed])])
+       [AC_MSG_ERROR([test for re2 library failed])])
        AS_VAR_COPY([LDFLAGS],[my_cre2_saved_ldflags])
        AS_VAR_COPY([CXXFLAGS],[my_cre2_saved_cxxflags])
        AC_LANG_POP([C++])])
