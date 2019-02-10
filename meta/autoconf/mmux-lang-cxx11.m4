@@ -24,6 +24,7 @@ AC_DEFUN([MMUX_LANG_CXX11],[
   AX_REQUIRE_DEFINED([AX_APPEND_COMPILE_FLAGS])
   AX_REQUIRE_DEFINED([AX_GCC_VERSION])
   AX_REQUIRE_DEFINED([AX_CXX_COMPILE_STDCXX_11])
+  AC_REQUIRE([AX_IS_RELEASE])
 
   AX_CXX_COMPILE_STDCXX_11(noext,mandatory)
 
@@ -31,11 +32,19 @@ AC_DEFUN([MMUX_LANG_CXX11],[
     [AX_GCC_VERSION])
 
   AC_SUBST([MMUX_CXXFLAGS])
-  AS_VAR_IF(GCC,'yes',
+
+  # These flags are for every compiler.
+  AS_VAR_IF(ax_is_release,'no',
     [AX_APPEND_COMPILE_FLAGS([-Wall -Wextra -pedantic], [MMUX_CXXFLAGS], [-Werror])
-     AX_APPEND_COMPILE_FLAGS([-Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wrestrict], [MMUX_CXXFLAGS], [-Werror])
-     AX_APPEND_COMPILE_FLAGS([-Wnull-dereference -Wjump-misses-init -Wdouble-promotion -Wshadow], [MMUX_CXXFLAGS], [-Werror])
-     AX_APPEND_COMPILE_FLAGS([-Wformat=2 -Wmisleading-indentation], [MMUX_CXXFLAGS], [-Werror])])
+     AX_APPEND_COMPILE_FLAGS([-Wno-unused-parameter -Wno-missing-field-initializers], [MMUX_CXXFLAGS], [-Werror])])
+
+  # These flags are for GCC only.
+  AS_VAR_IF(ax_is_release,'no',
+    [AS_VAR_IF(GCC,'yes',
+      [AX_APPEND_COMPILE_FLAGS([-Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wrestrict], [MMUX_CXXFLAGS], [-Werror])
+       AX_APPEND_COMPILE_FLAGS([-Wnull-dereference -Wjump-misses-init -Wdouble-promotion -Wshadow], [MMUX_CXXFLAGS], [-Werror])
+       AX_APPEND_COMPILE_FLAGS([-Wformat=2 -Wmisleading-indentation], [MMUX_CXXFLAGS], [-Werror])])])
+
   ])
 
 ### end of file

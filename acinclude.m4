@@ -1,6 +1,7 @@
 # acinclude.m4 --
 #
 
+m4_include(meta/autoconf/ax-is-release.m4)
 m4_include(meta/autoconf/ax-require-defined.m4)
 m4_include(meta/autoconf/ax-check-compile-flag.m4)
 m4_include(meta/autoconf/ax-check-link-flag.m4)
