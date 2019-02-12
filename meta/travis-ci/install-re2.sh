@@ -7,7 +7,7 @@
 # run from the top directory of the build tree.
 
 PROGNAME=install-re2.sh
-VERSION=2019.1.1
+VERSION=2019.1.2
 STEM="re2-${VERSION}"
 ARCHIVE="${STEM}.tar.gz"
 SOURCE_URI="https://github.com/marcomaggi/re2/archive/v${VERSION}.tar.gz"
