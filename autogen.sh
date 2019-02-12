@@ -1,3 +1,4 @@
+#!/bin/bash
 # autogen.sh --
 #
 # Run this in the top source directory to rebuild the infrastructure.
