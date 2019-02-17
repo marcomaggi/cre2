@@ -2,7 +2,7 @@
 #
 
 AC_PREREQ([2.68])
-MMUX_PKG_VERSIONS([0],[3],[5])
+MMUX_PKG_VERSIONS([0],[3],[6],[devel.0])
 AC_INIT([CRE2],[MMUX_PACKAGE_VERSION],[marco.maggi-ipsu@poste.it],
   [cre2],[http://github.com/marcomaggi/cre2/])
 MMUX_INIT
@@ -74,6 +74,9 @@ AC_PROG_CXX_C_O
 
 
 #### external libraries
+
+MMUX_CHECK_PKG_CONFIG_MACROS
+PKG_INSTALLDIR
 
 AX_PTHREAD
 MMUX_CHECK_RE2

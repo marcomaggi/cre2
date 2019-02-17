@@ -10,8 +10,6 @@ AM_CPPFLAGS		= -I$(top_srcdir)/src
 
 ## --------------------------------------------------------------------
 
-EXTRA_DIST		+= meta/scripts/cre2.pc.in
-pkgconfigdir		= $(libdir)/pkgconfig
 nodist_pkgconfig_DATA	= meta/scripts/cre2.pc
 
 
@@ -60,7 +58,7 @@ TESTS			= $(check_PROGRAMS)
 ## --------------------------------------------------------------------
 
 cre2_common_sources			= tests/cre2-test.h
-cre2_common_cflags			= $(PTHREAD_CFLAGS) $(MMUX_CFLAGS)
+cre2_common_cflags			= $(AM_CFLAGS)
 cre2_common_ldadd			= libcre2.la $(PTHREAD_LIBS) $(RE2_LIBS)
 
 tests_test_version_SOURCES		= tests/test-version.c $(cre2_common_sources)
