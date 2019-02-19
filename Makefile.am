@@ -10,6 +10,12 @@ AM_CPPFLAGS		= -I$(top_srcdir)/src
 
 ## --------------------------------------------------------------------
 
+# In some  future we will  start using "pkg-config" version  0.27+ and
+# use the macro "PKG_INSTALLDIR" in "configure.ac".  When this happens
+# we will remove the definition  of "pkgconfigdir".  (Marco Maggi; Feb
+# 19, 2019)
+#
+pkgconfigdir		= $(libdir)/pkgconfig
 nodist_pkgconfig_DATA	= meta/scripts/cre2.pc
 
 

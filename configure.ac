@@ -75,8 +75,11 @@ AC_PROG_CXX_C_O
 
 #### external libraries
 
-MMUX_CHECK_PKG_CONFIG_MACROS
-PKG_INSTALLDIR
+# This macro is available since  "pkg-config" version 0.27, which is not
+# available everywhere.  In some future we will uncomment this and start
+# using it.  (Marco Maggi; Feb 19, 2019)
+#
+# PKG_INSTALLDIR
 
 AX_PTHREAD
 MMUX_CHECK_RE2
