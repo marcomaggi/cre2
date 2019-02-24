@@ -4,18 +4,12 @@ ACLOCAL_AMFLAGS		= -I meta/autotools
 AUTOMAKE_OPTIONS	= foreign
 EXTRA_DIST		= INSTALL
 dist_doc_DATA		= README COPYING LICENSE.re2
+AM_CPPFLAGS		= -I$(top_srcdir)/src
 AM_CFLAGS		= $(PTHREAD_CFLAGS) $(MMUX_CFLAGS)
 AM_CXXFLAGS		= $(PTHREAD_CFLAGS) $(MMUX_CXXFLAGS)
-AM_CPPFLAGS		= -I$(top_srcdir)/src
 
 ## --------------------------------------------------------------------
 
-# In some  future we will  start using "pkg-config" version  0.27+ and
-# use the macro "PKG_INSTALLDIR" in "configure.ac".  When this happens
-# we will remove the definition  of "pkgconfigdir".  (Marco Maggi; Feb
-# 19, 2019)
-#
-pkgconfigdir		= $(libdir)/pkgconfig
 nodist_pkgconfig_DATA	= meta/scripts/cre2.pc
 
 
@@ -38,8 +32,8 @@ cre2_AGE		= @cre2_VERSION_INTERFACE_AGE@
 include_HEADERS		= src/cre2.h
 
 lib_LTLIBRARIES		= libcre2.la
-libcre2_la_LDFLAGS	= $(PTHREAD_LIBS) $(RE2_LIBS) \
-			  -version-info $(cre2_CURRENT):$(cre2_REVISION):$(cre2_AGE)
+libcre2_la_LDFLAGS	= -version-info $(cre2_CURRENT):$(cre2_REVISION):$(cre2_AGE)	\
+			  $(AM_LDFLAGS) $(PTHREAD_LIBS) $(RE2_LIBS)
 libcre2_la_SOURCES	= src/cre2.cpp
 
 
@@ -65,7 +59,7 @@ TESTS			= $(check_PROGRAMS)
 
 cre2_common_sources			= tests/cre2-test.h
 cre2_common_cflags			= $(AM_CFLAGS)
-cre2_common_ldadd			= libcre2.la $(PTHREAD_LIBS) $(RE2_LIBS)
+cre2_common_ldadd			= $(AM_LDFLAGS) libcre2.la $(RE2_LIBS)
 
 tests_test_version_SOURCES		= tests/test-version.c $(cre2_common_sources)
 tests_test_version_CFLAGS		= $(cre2_common_cflags)
