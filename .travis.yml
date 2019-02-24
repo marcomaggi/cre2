@@ -29,7 +29,7 @@
 #page
 #### about compiler packages
 #
-# We select build  by build the packages to  install; it should speed up preparation.   By putting a
+# We select build-by-build  the packages to install;  it should speed up preparation.   By putting a
 # single "addons" key at the top level: we would cause all the compilers to be installed for all the
 # builds in the matrix; we do not want this.
 
@@ -52,30 +52,27 @@
 #page
 #### about dependency packages
 #
-# We install dependency packages under "/tmp/mine", so  appropriate directories must be added to the
+# We install dependency packages under "/usr/local", so appropriate directories must be added to the
 # global path  environment variables, otherwise  the installed packages will  not be found  and used
 # correctly by the "configure" script.
 #
 # Notice  that (as  of May  17, 2018)  Travis CI's  run-time system  raises a  warning if  the first
-# directory in the  PATH environment variable is not the  one that it sets.  So, for  now, we append
-# the custom directory rather than prepend it; this is not the best if we want to make sure that the
-# executables we install are found before the one installed by the platform.
+# directory in the PATH  environment variable is not the one that it  sets.  This causes problems if
+# we install the dependencies under the directory "/tmp".
 #
 # We need the following in the global environment:
 #
 #   env:
 #     global:
-#       - PATH=$PATH:/tmp/mine/bin;
-#       - LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
-#       - PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
+#       - PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:$PKG_CONFIG_PATH;
+#       - ACLOCAL_PATH=/usr/local/share/aclocal:$ACLOCAL_PATH;
 #
 # Alternatively, we  can put the  following in every "script:"  key, before running  the "configure"
 # script as follows:
 #
 #   script: |
-#     export PATH=$PATH:/tmp/mine/bin;
-#     export LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
-#     export PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
+#     export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:$PKG_CONFIG_PATH;
+#     export ACLOCAL_PATH=/usr/local/share/aclocal:$ACLOCAL_PATH;
 #     ./configure
 #
 
@@ -84,7 +81,9 @@
 
 language: c
 
-#sudo: true
+# We need sudo to install the dependencies under "/usr/local".
+#
+sudo: true
 
 # Let's just look at the project's dashboard at Travis CI's site.
 #
@@ -96,40 +95,47 @@ notifications:
 git:
   depth: 1
 
+# It is possible to select which branches to process.
+#
 # branches:
 #   only:
 #     - master
 
 # NOTE  There  must  be only  *one*  env.global  key!!!   Otherwise  the earlier  settings  will  be
-# ineffective.  Setting the variable  VERBOSE will cause "make check "  to print "test-suite.log" in
-# case some tests fail.
+# ineffective.
 #
-# The latest versions of this package do not  use pkg-config anymore to locate the installed re2; so
-# we have to specify the search paths for both the re2's header and library.
+# Setting the variable VERBOSE causes "make check" to output the file "test-suite.log".
 #
 env:
   global:
     - MAKEFLAGS="-j 2"
-    - PATH=$PATH:/tmp/mine/bin
-    - CPPFLAGS="-I/tmp/mine/include"
-    - LDFLAGS="-L/tmp/mine/lib"
-    - PKG_CONFIG_PATH=/tmp/mine/lib/pkgconfig:$PKG_CONFIG_PATH;
-    - LD_LIBRARY_PATH=/tmp/mine/lib:$LD_LIBRARY_PATH;
-    - VERBOSE=yes;
+    - VERBOSE=1
+    - LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH;
+    - LD_RUN_PATH=/usr/local/lib:$LD_RUN_PATH;
+    - PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:$PKG_CONFIG_PATH;
+    - ACLOCAL_PATH=/usr/local/share/aclocal:$ACLOCAL_PATH;
 
 #page
 #### dependencies management
+#
 
 install:
-   - ./meta/travis-ci/install-re2.sh
+  - ./meta/travis-ci/install-pkg-config.sh;
+  - ./meta/travis-ci/install-autoconf.sh;
+  - ./meta/travis-ci/install-automake.sh;
+  - ./meta/travis-ci/install-texinfo.sh;
+  - ./meta/travis-ci/install-re2.sh;
 
 #page
 #### build scripts
 
 before_script:
-  # On Linux the GNU Libtool  preparation script is called "libtoolize",
-  # while on OS X it is called "glibtoolize".
+  # On Linux the GNU  Libtool preparation script is called "libtoolize", while on  OS X it is called
+  # "glibtoolize".
   - if test "$TRAVIS_OS_NAME" = osx ; then export LIBTOOLIZE=glibtoolize; else true; fi
+  - echo pkg-config --version ; pkg-config --version;
+  - echo autoconf --version ; autoconf --version;
+  - echo automake --version ; automake --version;
   - sh ./autogen.sh;
 
 matrix:
@@ -145,7 +151,6 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - texinfo
             - gcc-5
             - g++-5
       script: |
@@ -162,7 +167,6 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - texinfo
             - gcc-6
             - g++-6
       script: |
@@ -179,7 +183,6 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - texinfo
             - gcc-7
             - g++-7
       script: |
@@ -196,61 +199,48 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - texinfo
             - gcc-8
             - g++-8
       script: |
         find /tmp/mine
-        (./configure --enable-maintainer-mode  CC=/usr/bin/gcc-8 CXX=/usr/bin/g++-8; result=$?; cat config.log; return $result);
+        ./configure --enable-maintainer-mode  CC=/usr/bin/gcc-8 CXX=/usr/bin/g++-8;;
         make all;
         make check;
 
-    # Plain build  under Ubuntu GNU+Linux "trusty",  CLang automatically
-    # selected by Travis CI.
+    # Plain build under Ubuntu GNU+Linux "trusty", CLang automatically selected by Travis CI.
     - os: linux
       dist: trusty
+      compiler: clang
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-          packages:
-            - texinfo
-      compiler: clang
       script: |
         ./configure --enable-maintainer-mode;
         make all CFLAGS='-Wno-unknown-attributes';
         make check CFLAGS='-Wno-unknown-attributes';
 
-    # Plain build under OS X, XCode 7.3, CLang automatically selected by
-    # Travis CI.
+    # Plain build under OS X, XCode 7.3, CLang automatically selected by Travis CI.
     - os: osx
       osx_image: xcode7.3
       compiler: clang
-      script: |
-        ./configure --enable-maintainer-mode;
-        make all CFLAGS='-Wno-unknown-attributes';
-        make check CFLAGS='-Wno-unknown-attributes';
+      script: "./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes'; make all; make check;"
 
-    # Plain build under OS X, XCode 8.3, CLang automatically selected by
-    # Travis CI.
+    # Plain build under OS X, XCode 8.3, CLang automatically selected by Travis CI.
     - os: osx
       osx_image: xcode8.3
       compiler: clang
-      script: |
-        ./configure --enable-maintainer-mode;
-        make all CFLAGS='-Wno-unknown-attributes';
-        make check CFLAGS='-Wno-unknown-attributes';
+      script: "./configure --enable-maintainer-mode CFLAGS='-Wno-unknown-attributes'; make all; make check;"
 
     # Codecov support under Ubuntu GNU+Linux "trusty", GCC 8.
     - os: linux
       dist: trusty
-      compiler: gcc-7
+      compiler: gcc-8
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - texinfo
             - gcc-8
             - g++-8
       script: |
@@ -259,8 +249,5 @@ matrix:
         make check;
       after_success:
         bash <(curl -s https://codecov.io/bash) -xgcov-8
-
-#page
-#### done
 
 ### end of file

@@ -1,88 +1,82 @@
 #!/bin/bash
 #
-# Installation  script to  run from  the  Travis CI  config file  before
+# Installation  script  to  run  from  the  Travis  config  file  before
 # attempting a build.
 #
-# Install re2 under the directory  "/tmp/mine".  We assume the script is
+# Install re2 under the directory "/usr/local".  We assume the script is
 # run from the top directory of the build tree.
 
-PROGNAME=install-re2.sh
+PROGNAME="${0##*/}"
 VERSION=2019.1.2
 STEM="re2-${VERSION}"
 ARCHIVE="${STEM}.tar.gz"
 SOURCE_URI="https://github.com/marcomaggi/re2/archive/v${VERSION}.tar.gz"
 LOCAL_ARCHIVE="/tmp/${ARCHIVE}"
 TOP_SRCDIR="/tmp/${STEM}"
+prefix=/usr/local
 
-test -d /tmp/mine || {
-    if ! mkdir /tmp/mine
-    then
-	printf '%s: error creating directory for dependency package building and installation\n' "$PROGNAME" >&2
-	exit 1
-    fi
+### ------------------------------------------------------------------------
+
+function script_error () {
+    local TEMPLATE="${1:?missing template argument to '$FUNCNAME'}"
+    shift
+    {
+	printf '%s: ' "$PROGNAME"
+	printf "$TEMPLATE" "$@"
+	printf '\n'
+    } >&2
+    exit 1
 }
 
-echo "wget \"$SOURCE_URI\" -O \"$LOCAL_ARCHIVE\"" >&2
+function script_verbose () {
+    local TEMPLATE="${1:?missing template argument to '$FUNCNAME'}"
+    shift
+    {
+	printf '%s: command: ' "$PROGNAME"
+	printf "$TEMPLATE" "$@"
+	printf '\n'
+    } >&2
+}
+
+### ------------------------------------------------------------------------
+
+script_verbose 'wget "%s" -O "%s"' "$SOURCE_URI" "$LOCAL_ARCHIVE"
 if ! wget "$SOURCE_URI" -O "$LOCAL_ARCHIVE"
-then
-    printf '%s: error downloading %s\n' "$PROGNAME" "${ARCHIVE}" >&2
-    exit 1
+then script_error 'error downloading %s' "$ARCHIVE"
 fi
 
 cd /tmp
 
-echo "tar -xzf \"$LOCAL_ARCHIVE\"" >&2
-if ! tar -xzf "$LOCAL_ARCHIVE"
-then
-    printf '%s: error unpacking %s\n' "$PROGNAME" "$LOCAL_ARCHIVE" >&2
-    exit 1
+script_verbose 'tar --extract --gzip --file="%s"' "$LOCAL_ARCHIVE"
+if ! tar --extract --gzip --file="$LOCAL_ARCHIVE"
+then script_error 'error unpacking %s' "$LOCAL_ARCHIVE"
 fi
 
-if ! cd "$TOP_SRCDIR"
-then
-    printf '%s: error changing directory to %s\n' "$PROGNAME" "${TOP_SRCDIR}" >&2
-    exit 1
+cd "$TOP_SRCDIR"
+
+script_verbose 'sh autogen.sh'
+if test "$TRAVIS_OS_NAME" = 'osx'
+then export LIBTOOLIZE=glibtoolize
+fi
+if ! sh autogen.sh
+then script_error 'error generating configuration %s' "$STEM"
 fi
 
-echo "sh autogen.sh" >&2
-if [[ "$TRAVIS_OS_NAME" == "osx" ]]
-then
-    if ! LIBTOOLIZE=glibtoolize sh autogen.sh
-    then
-	printf '%s: error configuring %s\n' "$PROGNAME" "${STEM}" >&2
-	exit 1
-    fi
-else
-    if ! sh autogen.sh
-    then
-	printf '%s: error configuring %s\n' "$PROGNAME" "${STEM}" >&2
-	exit 1
-    fi
+script_verbose './configure --prefix=/tmp/mine --enable-maintainer-mode --enable-shared --disable-static'
+if ! ./configure --prefix="$prefix" --enable-maintainer-mode --enable-shared --disable-static
+then script_error 'error configuring %s' "$STEM"
 fi
 
-echo "./configure --prefix=/tmp/mine" >&2
-if ! ./configure --prefix=/tmp/mine
-then
-    printf '%s: error configuring %s\n' "$PROGNAME" "${STEM}" >&2
-    exit 1
-fi
-
-echo "make -j2 all" >&2
+script_verbose 'make -j2 all'
 if ! make -j2 all
-then
-    printf '%s: error configuring %s\n' "$PROGNAME" "${STEM}" >&2
-    exit 1
+then script_error 'error building all %s' "$STEM"
 fi
 
-echo "make install" >&2
-if ! make install
-then
-    printf '%s: error configuring %s\n' "$PROGNAME" "${STEM}" >&2
-    exit 1
+script_verbose '(umask 0; sudo make install)'
+if ! (umask 0; sudo make install)
+then script_error 'error installing %s' "$STEM"
 fi
 
 exit 0
 
-# Local Variables:
-# mode: sh
-# End:
+### end of file
