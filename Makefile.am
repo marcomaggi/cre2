@@ -28,12 +28,12 @@ doc_cre2_TEXINFOS	= doc/fdl-1.3.texi
 cre2_CURRENT		= @cre2_VERSION_INTERFACE_CURRENT@
 cre2_REVISION		= @cre2_VERSION_INTERFACE_REVISION@
 cre2_AGE		= @cre2_VERSION_INTERFACE_AGE@
+cre2_LINKER_VERSION	= -version-info $(cre2_CURRENT):$(cre2_REVISION):$(cre2_AGE)
 
 include_HEADERS		= src/cre2.h
 
 lib_LTLIBRARIES		= libcre2.la
-libcre2_la_LDFLAGS	= -version-info $(cre2_CURRENT):$(cre2_REVISION):$(cre2_AGE)	\
-			  $(AM_LDFLAGS) $(PTHREAD_LIBS) $(RE2_LIBS)
+libcre2_la_LDFLAGS	= $(cre2_LINKER_VERSION) $(AM_LDFLAGS) $(PTHREAD_LIBS) $(RE2_LIBS)
 libcre2_la_SOURCES	= src/cre2.cpp
 
 
