@@ -20,7 +20,10 @@ AM_MAKEINFOHTMLFLAGS	= --split=node -c WORDS_IN_PAGE=0 \
 	-c PRE_BODY_CLOSE="<p>This document describes version <tt>$(PACKAGE_VERSION)</tt> of <em>$(PACKAGE_NAME)</em>.</p>"
 
 info_TEXINFOS		= doc/cre2.texi
-doc_cre2_TEXINFOS	= doc/fdl-1.3.texi
+doc_cre2_TEXINFOS	= \
+	doc/macros.texi			\
+	doc/overview-linking.texi	\
+	doc/fdl-1.3.texi
 
 
 #### libraries

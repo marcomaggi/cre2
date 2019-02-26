@@ -1,0 +1,93 @@
+@node overview linking
+@section Linking code with the library
+
+
+This package installs a data file for @command{pkg-config}, so when searching for the installed
+library with the @gnu{} Autotools, we can add the following macro use to @file{configure.ac}:
+
+@example
+PKG_CHECK_MODULES([@value{PackageAutoconfPrefix}],[@value{PackagePkgconfigModule} >= 0.1.0])
+@end example
+
+@noindent
+which will set the variables @value{PackageLibsVar} and @value{PackageCflagsVar}.  The macros for
+@gnu{} Autoconf installed by @code{pkg-config} are documented in the manual page
+@code{pkg-config(1)}.  To avoid problems with @command{pkg-config}, we need to remember that:
+
+@itemize
+@item
+The macro file defining @code{PKG_CHECK_MODULES} is installed by the package @code{pkg-config}; such
+file usually is in one of the locations:
+
+@center @file{/usr/share/aclocal/pkg.m4}
+@center @file{/usr/local/share/aclocal/pkg.m4}
+
+@item
+The macro file is located by @command{aclocal}, which in turn is installed by the package @gnu{}
+Automake; @command{aclocal} is used by @command{autoreconf}.  We must make sure that
+@command{aclocal} finds all the installed macro files; for this purpose we can use the environment
+variable @env{ACLOCAL_PATH}.  To include all the common possible directories, we can add the
+following chunk of Bourne shell code to our shell profile file:
+
+@smallexample
+ACLOCAL_PATH=
+for dir in \
+    /share/aclocal              \
+    /usr/share/aclocal          \
+    /usr/local/share/aclocal
+do
+    if test -d "$dir"
+    then
+        if test -n "$ACLOCAL_PATH"
+        then ACLOCAL_PATH=$@{dir@}:$@{ACLOCAL_PATH@}
+        else ACLOCAL_PATH=$@{dir@}
+        fi
+    fi
+done
+export ACLOCAL_PATH
+@end smallexample
+
+@item
+The executable @command{pkg-config} searches for the package data files in a set of directories; we
+can configure the search path with the environment variable @env{PKG_CONFIG_PATH}.  To include all
+the common possible directories, we can add the following chunk of Bourne shell code to our shell
+profile file:
+
+@example
+PKG_CONFIG_PATH=
+for dir in \
+    /lib/pkgconfig              \
+    /lib64/pkgconfig            \
+    /share/pkgconfig            \
+    /usr/lib/pkgconfig          \
+    /usr/lib64/pkgconfig        \
+    /usr/share/pkgconfig        \
+    /usr/local/lib/pkgconfig    \
+    /usr/local/lib64/pkgconfig  \
+    /usr/local/share/pkgconfig
+do
+    if test -d "$dir"
+    then
+        if test -n "$PKG_CONFIG_PATH"
+        then PKG_CONFIG_PATH=$@{dir@}:$@{PKG_CONFIG_PATH@}
+        else PKG_CONFIG_PATH=$@{dir@}
+        fi
+    fi
+done
+export PKG_CONFIG_PATH
+@end example
+
+@end itemize
+
+Alternatively we can use the raw @gnu{} Autoconf macros:
+
+@example
+AC_CHECK_LIB([@value{PackageLibstem}],[@value{PackageApiPrefixLower}version_string],,
+  [AC_MSG_FAILURE([test for @value{TITLE} library failed])])
+AC_CHECK_HEADERS([@value{PackageHeader}],,
+  [AC_MSG_FAILURE([test for @value{TITLE} header failed])])
+@end example
+
+@c Local Variables:
+@c mode: texinfo
+@c End:
