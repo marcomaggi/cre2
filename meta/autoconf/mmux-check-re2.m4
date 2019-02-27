@@ -15,7 +15,7 @@ AC_DEFUN([MMUX_CHECK_RE2],[
      AS_VAR_COPY([my_cre2_saved_cxxflags],[CXXFLAGS])
      AS_VAR_COPY([my_cre2_saved_ldflags],[LDFLAGS])
      AS_VAR_APPEND([CXXFLAGS],[" ${PTHREAD_CFLAGS}"])
-     AS_VAR_APPEND([LDFLAGS],[" -lre2 ${PTHREAD_LIBS}"])
+     AS_VAR_APPEND([LDFLAGS], [" ${PTHREAD_LIBS} -L${libdir} -lre2"])
      AC_LINK_IFELSE([AC_LANG_PROGRAM([
 #include <re2/re2.h>
 #include <assert.h>
@@ -29,7 +29,7 @@ opt.set_never_nl(true);
   assert(RE2::PartialMatch("abcddcef123", re));
 }
        ])],
-       [AS_VAR_SET([mmux_cv_re2_libs],[-lre2])],
+       [AS_VAR_SET([mmux_cv_re2_libs],["-L${libdir} -lre2"])],
        [AC_MSG_ERROR([test for re2 library failed])])
        AS_VAR_COPY([LDFLAGS],[my_cre2_saved_ldflags])
        AS_VAR_COPY([CXXFLAGS],[my_cre2_saved_cxxflags])
