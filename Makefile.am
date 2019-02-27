@@ -68,6 +68,8 @@ cre2_common_cppflags			= $(AM_CPPFLAGS)
 cre2_common_cflags			= $(AM_CFLAGS) $(PTHREAD_CFLAGS) $(RE2_CFLAGS)
 cre2_common_ldadd			= $(AM_LDFLAGS) libcre2.la $(PTHREAD_LIBS) $(RE2_LIBS)
 
+## --------------------------------------------------------------------
+
 tests_test_version_SOURCES		= tests/test-version.c $(cre2_common_sources)
 tests_test_version_CPPFLAGS		= $(cre2_common_cppflags)
 tests_test_version_CFLAGS		= $(cre2_common_cflags)
