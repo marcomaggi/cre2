@@ -140,8 +140,8 @@ typedef enum cre2_anchor_t {
 } cre2_anchor_t;
 
 typedef struct cre2_range_t {
-  long	start;	/* inclusive start index for bytevector */
-  long	past;	/* exclusive end index for bytevector */
+  int64_t	start;	/* inclusive start index for bytevector */
+  int64_t	past;	/* exclusive end index for bytevector */
 } cre2_range_t;
 
 cre2_decl int cre2_match	(const cre2_regexp_t * re,
