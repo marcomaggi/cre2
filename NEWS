@@ -1,5 +1,11 @@
 -*- utf-8-unix -*-
 
+Notes for revision 0.3.6
+------------------------
+
+* Fixed missing inclusion of "<stdint.h>".
+
+
 Notes for revision 0.3.5
 ------------------------
 
