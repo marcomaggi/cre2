@@ -21,6 +21,8 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+
 #ifndef cre2_decl
 #  define cre2_decl	extern
 #endif
