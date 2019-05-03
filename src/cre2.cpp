@@ -238,7 +238,7 @@ cre2_named_groups_iter_next(cre2_named_groups_iter_t* iter, const char ** name, 
 
   *index = iter->it->second;
   *name = iter->it->first.c_str();
-  iter->it = iter->it++;
+  iter->it++;
 
   return true;
 }
