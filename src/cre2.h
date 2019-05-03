@@ -128,7 +128,7 @@ cre2_decl int cre2_program_size		(const cre2_regexp_t *re);
 /* named capture information */
 cre2_decl int cre2_find_named_capturing_groups  (const cre2_regexp_t *re, const char *name);
 cre2_decl cre2_named_groups_iter_t * cre2_named_groups_iter_new(const cre2_regexp_t *re);
-cre2_decl bool cre2_named_groups_iter_next(cre2_named_groups_iter_t* iter, char ** name, int *index);
+cre2_decl bool cre2_named_groups_iter_next(cre2_named_groups_iter_t* iter, const char ** name, int *index);
 cre2_decl void cre2_named_groups_iter_delete(cre2_named_groups_iter_t *iter);
 
 /* invalidated by further re use */
