@@ -91,6 +91,8 @@ typedef struct cre2_string_t {
 
 typedef void	cre2_regexp_t;
 
+typedef struct cre2_named_groups_iter_t cre2_named_groups_iter_t;
+
 /* This definition  must be  kept in sync  with the definition  of "enum
    ErrorCode" in the file "re2.h" of the original RE2 distribution. */
 typedef enum cre2_error_code_t {
@@ -121,8 +123,13 @@ cre2_decl void    cre2_delete	(cre2_regexp_t *re);
 cre2_decl const char * cre2_pattern	(const cre2_regexp_t *re);
 cre2_decl int cre2_error_code		(const cre2_regexp_t *re);
 cre2_decl int cre2_num_capturing_groups	(const cre2_regexp_t *re);
-cre2_decl int cre2_find_named_capturing_groups  (const cre2_regexp_t *re, const char *name);
 cre2_decl int cre2_program_size		(const cre2_regexp_t *re);
+
+/* named capture information */
+cre2_decl int cre2_find_named_capturing_groups  (const cre2_regexp_t *re, const char *name);
+cre2_decl cre2_named_groups_iter_t * cre2_named_groups_iter_new(const cre2_regexp_t *re);
+cre2_decl bool cre2_named_groups_iter_next(cre2_named_groups_iter_t* iter, char ** name, int *index);
+cre2_decl void cre2_named_groups_iter_delete(cre2_named_groups_iter_t *iter);
 
 /* invalidated by further re use */
 cre2_decl const char *cre2_error_string(const cre2_regexp_t *re);
