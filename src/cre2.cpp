@@ -233,14 +233,17 @@ cre2_named_groups_iter_next(cre2_named_groups_iter_t* iter, const char ** name, 
   {
     *name = NULL;
     *index = -1;
+
     return false;
   }
+  else
+  {
+    *index = iter->it->second;
+    *name = iter->it->first.c_str();
+    iter->it++;
 
-  *index = iter->it->second;
-  *name = iter->it->first.c_str();
-  iter->it++;
-
-  return true;
+    return true;
+  }
 }
 void
 cre2_named_groups_iter_delete(cre2_named_groups_iter_t *iter)
