@@ -44,6 +44,7 @@ tests_test_easy_matching_SOURCES	= tests/test-easy-matching.c $(CRE2_COMMON_TEST
 tests_test_full_match_SOURCES		= tests/test-full-match.c $(CRE2_COMMON_TEST_SOURCES)
 tests_test_partial_match_SOURCES	= tests/test-partial-match.c $(CRE2_COMMON_TEST_SOURCES)
 tests_test_consume_match_SOURCES	= tests/test-consume-match.c $(CRE2_COMMON_TEST_SOURCES)
+tests_test_capture_names_iter_SOURCES	= tests/test-capture-names-iter.c $(CRE2_COMMON_TEST_SOURCES)
 tests_test_find_and_consume_match_SOURCES = tests/test-find-and-consume-match.c $(CRE2_COMMON_TEST_SOURCES)
 tests_test_replace_SOURCES		= tests/test-replace.c $(CRE2_COMMON_TEST_SOURCES)
 tests_test_misc_SOURCES			= tests/test-misc.c $(CRE2_COMMON_TEST_SOURCES)
@@ -57,6 +58,7 @@ check_PROGRAMS		= \
 	tests/test-full-match			\
 	tests/test-partial-match		\
 	tests/test-consume-match		\
+	tests/test-capture-names-iter   \
 	tests/test-find-and-consume-match	\
 	tests/test-replace			\
 	tests/test-set				\
