@@ -698,10 +698,11 @@ if (opt) @{
   cre2_opt_set_log_errors(opt, 0);
   rex = cre2_new("ciao", 4, opt);
   if (rex) @{
-    if (!cre2_error_code(rex))
+    if (!cre2_error_code(rex)) @{
       /* successfully built */
-    else
+    @} else @{
       /* an error occurred while compiling rex */
+    @}
     cre2_delete(rex);
   @} else @{
     /* rex memory allocation error */
@@ -711,6 +712,20 @@ if (opt) @{
   /* opt memory allocation error */
 @}
 @end example
+
+@menu
+* regexps typedefs::            Type definitions for regular expressions.
+* regexps ctors::               Regular expression constructors
+                                and destructors.
+* regexps inspection::          Inspecting regular expressions.
+* regexps groups::              Inspecting named capturing groups.
+* regexps errors::              Inspecting regular expressions related
+                                errors.
+@end menu
+
+@c page
+@node regexps typedefs
+@section Type definitions for regular expressions
 
 
 @deftp {Opaque Type} cre2_regexp_t
@@ -802,6 +817,10 @@ Pattern too large (compile failed).
 @end table
 @end deftp
 
+@c page
+@node regexps ctors
+@section Regular expression constructors and destructors
+
 
 @deftypefun {cre2_regexp_t *} cre2_new (const char * @var{pattern}, int @var{pattern_len}, const cre2_options_t * @var{opt})
 Build and return a new regular expression object representing the
@@ -821,6 +840,10 @@ Finalise a regular expression object releasing all the associated
 resources.
 @end deftypefun
 
+@c page
+@node regexps inspection
+@section Inspecting regular expressions
+
 
 @deftypefun {const char *} cre2_pattern (const cre2_regexp_t * @var{rex})
 Whether @var{rex} is a successfully built regular expression object or
@@ -828,6 +851,19 @@ not: return a pointer to the pattern string.  The returned pointer is
 valid only while @var{rex} is alive: if @cfunc{cre2_delete} is applied
 to @var{rex} the pointer becomes invalid.
 @end deftypefun
+
+
+@deftypefun int cre2_program_size (const cre2_regexp_t * @var{rex})
+If @var{rex} is a successfully built regular expression object: return a
+non--negative integer representing the program size, a very approximate
+measure of a regexp's ``cost''; larger numbers are more expensive than
+smaller numbers.  If an error occurred while building @var{rex}: return
+@code{-1}.
+@end deftypefun
+
+@c page
+@node regexps groups
+@section Inspecting named capturing groups
 
 
 @deftypefun int cre2_num_capturing_groups (const cre2_regexp_t * @var{rex})
@@ -879,14 +915,9 @@ cre2_opt_delete(opt);
 @end example
 @end deftypefun
 
-
-@deftypefun int cre2_program_size (const cre2_regexp_t * @var{rex})
-If @var{rex} is a successfully built regular expression object: return a
-non--negative integer representing the program size, a very approximate
-measure of a regexp's ``cost''; larger numbers are more expensive than
-smaller numbers.  If an error occurred while building @var{rex}: return
-@code{-1}.
-@end deftypefun
+@c page
+@node regexps errors
+@section Inspecting regular expressions related errors
 
 
 @deftypefun int cre2_error_code (const cre2_regexp_t * @var{rex})
