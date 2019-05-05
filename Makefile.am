@@ -31,7 +31,7 @@ libcre2_la_SOURCES	= src/cre2.cpp
 AM_MAKEINFOFLAGS	= --no-split
 
 info_TEXINFOS		= doc/cre2.texi
-doc_cre2_TEXINFOS	= doc/fdl-1.3.texi
+doc_cre2_TEXINFOS	= doc/fdl-1.3.texi doc/macros.texi
 
 ## --------------------------------------------------------------------
 

@@ -5,403 +5,7 @@
 @c %**end of header
 
 @include version.texi
-
-@c page
-@c ------------------------------------------------------------
-@c License macros.
-@c ------------------------------------------------------------
-
-@macro gnu{}
-@acronym{GNU}
-@end macro
-
-@macro gpl{}
-@acronym{GPL}
-@end macro
-
-@macro fdl{}
-@acronym{FDL}
-@end macro
-
-@macro bsd{}
-@acronym{BSD}
-@end macro
-
-@c ------------------------------------------------------------
-@c Software related macros.
-@c ------------------------------------------------------------
-
-@macro bash{}
-@command{bash}
-@end macro
-
-@macro gmp{}
-@acronym{GMP}
-@end macro
-
-@macro gcc{}
-@acronym{GCC}
-@end macro
-
-@macro glibc{}
-@gnu{} C Library
-@end macro
-
-@c ------------------------------------------------------------
-@c Network protocols acronyms.
-@c ------------------------------------------------------------
-
-@macro dns{}
-@acronym{DNS}
-@end macro
-
-@macro ftp{}
-@acronym{FTP}
-@end macro
-
-@macro dhcp{}
-@acronym{DHCP}
-@end macro
-
-@macro icmp{}
-@acronym{ICMP}
-@end macro
-
-@macro http{}
-@acronym{HTTP}
-@end macro
-
-@macro https{}
-@acronym{HTTP}
-@end macro
-
-@macro imap{}
-@acronym{IMAP}
-@end macro
-
-@macro ip{}
-@acronym{IP}
-@end macro
-
-@macro tcp{}
-@acronym{TCP}
-@end macro
-
-@macro udp{}
-@acronym{UDP}
-@end macro
-
-@macro ppp{}
-@acronym{PPP}
-@end macro
-
-@macro sftp{}
-@acronym{FTP}
-@end macro
-
-@macro smtp{}
-@acronym{SMTP}
-@end macro
-
-@macro snmp{}
-@acronym{SNMP}
-@end macro
-
-@macro ssh{}
-@acronym{SSH}
-@end macro
-
-@macro ssl{}
-@acronym{SSL}
-@end macro
-
-@macro tls{}
-@acronym{TLS}
-@end macro
-
-@c ------------------------------------------------------------
-@c Miscellaneous acronyms.
-@c ------------------------------------------------------------
-
-@macro adsl{}
-@acronym{ADSL}
-@end macro
-
-@macro alsa{}
-@acronym{ALSA}
-@end macro
-
-@macro ansi{}
-@acronym{ANSI}
-@end macro
-
-@macro api{}
-@acronym{API}
-@end macro
-
-@macro ascii{}
-@acronym{ASCII}
-@end macro
-
-@macro asciiz{}
-@acronym{ASCIIZ}
-@end macro
-
-@macro cdrom{}
-@acronym{CDROM}
-@end macro
-
-@macro cli{}
-@acronym{CLI}
-@end macro
-
-@macro cpu{}
-@acronym{CPU}
-@end macro
-
-@macro gui{}
-@acronym{GUI}
-@end macro
-
-@macro ieee{}
-@acronym{IEEE}
-@end macro
-
-@macro isp{}
-@acronym{ISP}
-@end macro
-
-@macro iso{}
-@acronym{ISO}
-@end macro
-
-@macro mime{}
-@acronym{MIME}
-@end macro
-
-@macro mpeg{}
-@acronym{MPEG}
-@end macro
-
-@macro posix{}
-@acronym{POSIX}
-@end macro
-
-@macro ram{}
-@acronym{RAM}
-@end macro
-
-@macro rfc{}
-@acronym{RFC}
-@end macro
-
-@c Remember that @url is already used by Texinfo.
-@macro urla{}
-@acronym{URL}
-@end macro
-
-@macro usb{}
-@acronym{USB}
-@end macro
-
-@macro utf{}
-@acronym{UTF}
-@end macro
-
-@macro uri{}
-@acronym{URI}
-@end macro
-
-@macro xmla{}
-@acronym{XML}
-@end macro
-
-
-@c ------------------------------------------------------------
-@c Arguments macros.
-@c ------------------------------------------------------------
-
-@macro vari{ARG}
-@var{\ARG\1}
-@end macro
-
-@macro varii{ARG}
-@var{\ARG\2}
-@end macro
-
-@macro variii{ARG}
-@var{\ARG\3}
-@end macro
-
-@macro variv{ARG}
-@var{\ARG\4}
-@end macro
-
-@macro varn{ARG}
-@var{\ARG\n}
-@end macro
-
-@macro vark{ARG}
-@var{\ARG\k}
-@end macro
-
-@macro varj{ARG}
-@var{\ARG\j}
-@end macro
-
-@c ------------------------------------------------------------
-
-@macro meta{ARG}
-<\ARG\>
-@end macro
-
-@macro metai{ARG}
-@meta{\ARG\1}
-@end macro
-
-@macro metaii{ARG}
-@meta{\ARG\2}
-@end macro
-
-@macro metaiii{ARG}
-@meta{\ARG\3}
-@end macro
-
-@macro metaiv{ARG}
-@meta{\ARG\4}
-@end macro
-
-@macro metan{ARG}
-@meta{\ARG\n}
-@end macro
-
-@macro metak{ARG}
-@meta{\ARG\k}
-@end macro
-
-@macro metaj{ARG}
-@meta{\ARG\j}
-@end macro
-
-@c ------------------------------------------------------------
-@c C language macros.
-@c ------------------------------------------------------------
-
-@macro cfunc{NAME}
-@code{\NAME\()}
-@end macro
-
-@macro cnull{}
-@code{NULL}
-@end macro
-
-@c ------------------------------------------------------------
-@c Scheme language macros.
-@c ------------------------------------------------------------
-
-@macro clos{}
-@acronym{CLOS}
-@end macro
-
-@macro library{NAME}
-@code{(\NAME\)}
-@end macro
-
-@macro repl{}
-@acronym{REPL}
-@end macro
-
-@macro rnrs{VERSION}
-@acronym{R\VERSION\RS}
-@end macro
-
-@macro srfi{}
-@acronym{SRFI}
-@end macro
-
-@ignore
-Separating the @srfi{} macro from the number with a '--' rather than a
-'-' makes the expansion look ugly in menu entries under the Info reader.
-IMHO this should not happen, but it does; so we live with this, because
-the main purpose of this document is to provide an Info version.
-@end ignore
-@macro ansrfi{NUM}
-@srfi{}-\NUM\
-@end macro
-
-@c ------------------------------------------------------------
-
-@macro func{NAME}
-@code{@sc{\NAME\}}
-@end macro
-
-@macro nil{}
-@code{()}
-@end macro
-
-@macro true{}
-@code{#t}
-@end macro
-
-@macro false{}
-@code{#f}
-@end macro
-
-@macro keyword{NAME}
-@code{#:\NAME\}
-@end macro
-
-@macro class{NAME}
-@code{<\NAME\>}
-@end macro
-
-@c ------------------------------------------------------------
-@c TCL macros.
-@c ------------------------------------------------------------
-
-@ifinfo
-@macro tclcmd{NAME}
-[\NAME\]
-@end macro
-@end ifinfo
-
-@ifnotinfo
-@macro tclcmd{NAME}
-@code{[\NAME\]}
-@end macro
-@end ifnotinfo
-
-@macro tclvar{NAME}
-@code{\NAME\}
-@end macro
-
-@macro tclcode{CODE}
-@code{[\CODE\]}
-@end macro
-
-@c ------------------------------------------------------------
-@c Macros for references to external documents.
-@c ------------------------------------------------------------
-
-@macro glibcref{NODE, TITLE}
-@ref{\NODE\,\TITLE\,\TITLE\,libc}
-@end macro
-
-@macro rsixref{NODE, TITLE}
-@ref{\NODE\,\TITLE\,\TITLE\,r6rs}
-@end macro
-
-@macro rfiveref{NODE, TITLE}
-@ref{\NODE\,\TITLE\,\TITLE\,r5rs}
-@end macro
-
-@macro ikarusref{NODE, TITLE}
-@ref{\NODE\,\TITLE\,\TITLE\,ikarus}
-@end macro
-
-@macro bibref{TAG}
-@code{[\TAG\]}
-@end macro
+@include macros.texi
 
 @c page
 @c ------------------------------------------------------------
@@ -750,6 +354,11 @@ The number of bytes in the referenced substring.
 @end deftp
 
 
+@deftp {Opaque Type} cre2_named_groups_iter_t
+Opaque type for iterators over named capturing groups.
+@end deftp
+
+
 @deftp {Enumeration Typedef} cre2_error_code_t
 Enumeration type for error codes returned by @cfunc{cre2_error_code}.
 It contains the following symbols:
@@ -914,6 +523,131 @@ cre2_delete(rex);
 cre2_opt_delete(opt);
 @end example
 @end deftypefun
+
+@c ------------------------------------------------------------------------
+
+@subsubheading Iterating over named capturing groups
+
+
+@deftypefun {cre2_named_groups_iter_t *} cre2_named_groups_iter_new (const cre2_regexp_t * @var{re})
+Build and return a new named capturing groups iterator.
+@end deftypefun
+
+
+@deftypefun void cre2_named_groups_iter_delete (cre2_named_groups_iter_t * @var{iter})
+Finalise and delete a named capturing groups iterator.
+@end deftypefun
+
+
+@deftypefun bool cre2_named_groups_iter_next (cre2_named_groups_iter_t * @var{iter}, const char ** @var{namep}, int * @var{indexp})
+Search the next named capturing group.
+
+When a group is found: return @ctrue{}; store in the variable referenced by @var{namep} a pointer to
+the string representing the name; store in the variable referenced by @var{indexp} an integer
+representing the index of the capturing group.
+
+When no more groups are present: return @cfalse{}; store @cnull{} in the variable referenced by
+@var{namep}; store @samp{-1} in the variable referenced by @var{indexp}.
+@end deftypefun
+
+
+As example, let's see this:
+
+@example
+cre2_regexp_t               * rex  = NULL;
+cre2_named_groups_iter_t    * iter = NULL;
+
+const char rex_pattern[] = "\
+January:[[:blank:]]+(?P<january>[[:digit:]]+)\n\
+February:[[:blank:]]+(?P<january>[[:digit:]]+)\n\
+March:[[:blank:]]+(?P<march>[[:digit:]]+)\n\
+April:[[:blank:]]+(?P<april>[[:digit:]]+)\n\
+May:[[:blank:]]+(?P<may>[[:digit:]]+)\n\
+June:[[:blank:]]+(?P<june>[[:digit:]]+)\n\
+July:[[:blank:]]+(?P<july>[[:digit:]]+)\n\
+August:[[:blank:]]+(?P<august>[[:digit:]]+)\n\
+September:[[:blank:]]+(?P<september>[[:digit:]]+)\n\
+October:[[:blank:]]+(?P<october>[[:digit:]]+)\n\
+November:[[:blank:]]+(?P<november>[[:digit:]]+)\n\
+December:[[:blank:]]+(?P<december>[[:digit:]]+)\n";
+
+const char *   text     = "\
+January: 8\n\
+February: 3\n\
+March: 3\n\
+April: 4\n\
+May: 9\n\
+June: 4\n\
+July: 7\n\
+August: 5\n\
+September: 9\n\
+October: 2\n\
+November: 1\n\
+December: 6\n";
+int            text_len = strlen(text);
+
+int            rv;
+int            nmatch = 20;
+cre2_string_t  match[nmatch];
+
+/* Let's build the regular expression. */
+rex  = cre2_new(rex_pattern, strlen(rex_pattern), NULL);
+if (!rex) @{
+  goto done;
+@}
+if (cre2_error_code(rex)) @{
+  goto done;
+@}
+
+/* Now match the pattern. */
+rv = cre2_match(rex, text, text_len, 0, text_len,
+                CRE2_ANCHOR_BOTH, match, nmatch);
+if (! rv) @{
+  goto done;
+@}
+
+/* Build the named groups iterator. */
+iter = cre2_named_groups_iter_new(rex);
+if (!iter) @{
+  goto done;
+@}
+
+/* Perform the iteration. */
+@{
+  char const *name;
+  int        index;
+
+  while (cre2_named_groups_iter_next(iter, &name, &index)) @{
+    printf("group: %d, %s\n", index, name);
+  @}
+@}
+
+/* Final cleanup. */
+done:
+if (iter) @{
+  cre2_named_groups_iter_delete(iter);
+@}
+if (rex) @{
+  cre2_delete(rex);
+@}
+@end example
+
+@noindent
+this code prints:
+
+@example
+group: 4, april
+group: 8, august
+group: 12, december
+group: 1, january
+group: 7, july
+group: 6, june
+group: 3, march
+group: 5, may
+group: 11, november
+group: 10, october
+group: 9, september
+@end example
 
 @c page
 @node regexps errors

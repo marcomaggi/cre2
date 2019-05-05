@@ -208,6 +208,7 @@ cre2_program_size (const cre2_regexp_t *re)
   return TO_CONST_RE2(re)->ProgramSize();
 }
 
+
 /** --------------------------------------------------------------------
  ** Named capture group iteration.
  ** ----------------------------------------------------------------- */
@@ -229,19 +230,14 @@ cre2_named_groups_iter_new(const cre2_regexp_t *re)
 bool
 cre2_named_groups_iter_next(cre2_named_groups_iter_t* iter, const char ** name, int *index)
 {
-  if (iter->it == iter->re->NamedCapturingGroups().end())
-  {
+  if (iter->it == iter->re->NamedCapturingGroups().end()) {
     *name = NULL;
     *index = -1;
-
     return false;
-  }
-  else
-  {
+  } else {
     *index = iter->it->second;
     *name = iter->it->first.c_str();
     ++iter->it;
-
     return true;
   }
 }
@@ -250,6 +246,7 @@ cre2_named_groups_iter_delete(cre2_named_groups_iter_t *iter)
 {
   delete iter;
 }
+
 
 /** --------------------------------------------------------------------
  ** Matching with precompiled regular expressions objects.
