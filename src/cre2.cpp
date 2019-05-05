@@ -208,6 +208,48 @@ cre2_program_size (const cre2_regexp_t *re)
   return TO_CONST_RE2(re)->ProgramSize();
 }
 
+/** --------------------------------------------------------------------
+ ** Named capture group iteration.
+ ** ----------------------------------------------------------------- */
+
+struct cre2_named_groups_iter_t
+{
+  const RE2 * re;
+  std::map<std::string, int>::const_iterator it;
+};
+
+cre2_named_groups_iter_t *
+cre2_named_groups_iter_new(const cre2_regexp_t *re)
+{
+  cre2_named_groups_iter_t * iter = new (std::nothrow)cre2_named_groups_iter_t;
+  iter->re = TO_CONST_RE2(re);
+  iter->it = iter->re->NamedCapturingGroups().begin();
+  return iter;
+}
+bool
+cre2_named_groups_iter_next(cre2_named_groups_iter_t* iter, const char ** name, int *index)
+{
+  if (iter->it == iter->re->NamedCapturingGroups().end())
+  {
+    *name = NULL;
+    *index = -1;
+
+    return false;
+  }
+  else
+  {
+    *index = iter->it->second;
+    *name = iter->it->first.c_str();
+    ++iter->it;
+
+    return true;
+  }
+}
+void
+cre2_named_groups_iter_delete(cre2_named_groups_iter_t *iter)
+{
+  delete iter;
+}
 
 /** --------------------------------------------------------------------
  ** Matching with precompiled regular expressions objects.
