@@ -1,5 +1,11 @@
 -*- utf-8-unix -*-
 
+Notes for revision 0.4.0
+------------------------
+
+* Added iterator over names of named captured patterns.
+
+
 Notes for revision 0.3.6
 ------------------------
 
