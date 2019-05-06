@@ -54,6 +54,7 @@ check_PROGRAMS		= \
 	tests/test-full-match			\
 	tests/test-partial-match		\
 	tests/test-consume-match		\
+	tests/test-capture-names-iter		\
 	tests/test-find-and-consume-match	\
 	tests/test-replace			\
 	tests/test-set				\
@@ -109,6 +110,11 @@ tests_test_consume_match_SOURCES	= tests/test-consume-match.c $(cre2_common_sour
 tests_test_consume_match_CPPFLAGS	= $(cre2_common_cppflags)
 tests_test_consume_match_CFLAGS		= $(cre2_common_cflags)
 tests_test_consume_match_LDADD		= $(cre2_common_ldadd)
+
+tests_test_capture_names_iter_SOURCES	= tests/test-capture-names-iter.c $(cre2_common_sources)
+tests_test_capture_names_CPPFLAGS	= $(cre2_common_cppflags)
+tests_test_capture_names_CFLAGS		= $(cre2_common_cflags)
+tests_test_capture_names_LDADD		= $(cre2_common_ldadd)
 
 tests_test_find_and_consume_match_SOURCES = tests/test-find-and-consume-match.c $(cre2_common_sources)
 tests_test_find_and_consume_match_CPPFLAGS= $(cre2_common_cppflags)

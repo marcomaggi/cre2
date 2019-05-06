@@ -483,6 +483,10 @@ Revised^6 Report on the algorithmic language Scheme
 @code{\NAME\}
 @end macro
 
+@macro trait{NAME}
+@code{\NAME\}
+@end macro
+
 @macro stdin{}
 @code{stdin}
 @end macro

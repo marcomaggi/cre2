@@ -284,10 +284,11 @@ if (opt) @{
   cre2_opt_set_log_errors(opt, 0);
   rex = cre2_new("ciao", 4, opt);
   if (rex) @{
-    if (!cre2_error_code(rex))
+    if (!cre2_error_code(rex)) @{
       /* successfully built */
-    else
+    @} else @{
       /* an error occurred while compiling rex */
+    @}
     cre2_delete(rex);
   @} else @{
     /* rex memory allocation error */
@@ -297,6 +298,20 @@ if (opt) @{
   /* opt memory allocation error */
 @}
 @end example
+
+@menu
+* regexps typedefs::            Type definitions for regular expressions.
+* regexps ctors::               Regular expression constructors
+                                and destructors.
+* regexps inspection::          Inspecting regular expressions.
+* regexps groups::              Inspecting named capturing groups.
+* regexps errors::              Inspecting regular expressions related
+                                errors.
+@end menu
+
+@c page
+@node regexps typedefs
+@section Type definitions for regular expressions
 
 
 @deftp {Opaque Type} cre2_regexp_t
@@ -318,6 +333,11 @@ Pointer to the first byte in the referenced substring.
 @item int length
 The number of bytes in the referenced substring.
 @end table
+@end deftp
+
+
+@deftp {Opaque Type} cre2_named_groups_iter_t
+Opaque type for iterators over named capturing groups.
 @end deftp
 
 
@@ -388,6 +408,10 @@ Pattern too large (compile failed).
 @end table
 @end deftp
 
+@c page
+@node regexps ctors
+@section Regular expression constructors and destructors
+
 
 @deftypefun {cre2_regexp_t *} cre2_new (const char * @var{pattern}, int @var{pattern_len}, const cre2_options_t * @var{opt})
 Build and return a new regular expression object representing the
@@ -407,6 +431,10 @@ Finalise a regular expression object releasing all the associated
 resources.
 @end deftypefun
 
+@c page
+@node regexps inspection
+@section Inspecting regular expressions
+
 
 @deftypefun {const char *} cre2_pattern (const cre2_regexp_t * @var{rex})
 Whether @var{rex} is a successfully built regular expression object or
@@ -414,6 +442,19 @@ not: return a pointer to the pattern string.  The returned pointer is
 valid only while @var{rex} is alive: if @cfunc{cre2_delete} is applied
 to @var{rex} the pointer becomes invalid.
 @end deftypefun
+
+
+@deftypefun int cre2_program_size (const cre2_regexp_t * @var{rex})
+If @var{rex} is a successfully built regular expression object: return a
+non--negative integer representing the program size, a very approximate
+measure of a regexp's ``cost''; larger numbers are more expensive than
+smaller numbers.  If an error occurred while building @var{rex}: return
+@code{-1}.
+@end deftypefun
+
+@c page
+@node regexps groups
+@section Inspecting named capturing groups
 
 
 @deftypefun int cre2_num_capturing_groups (const cre2_regexp_t * @var{rex})
@@ -465,14 +506,134 @@ cre2_opt_delete(opt);
 @end example
 @end deftypefun
 
+@c ------------------------------------------------------------------------
 
-@deftypefun int cre2_program_size (const cre2_regexp_t * @var{rex})
-If @var{rex} is a successfully built regular expression object: return a
-non--negative integer representing the program size, a very approximate
-measure of a regexp's ``cost''; larger numbers are more expensive than
-smaller numbers.  If an error occurred while building @var{rex}: return
-@code{-1}.
+@subsubheading Iterating over named capturing groups
+
+
+@deftypefun {cre2_named_groups_iter_t *} cre2_named_groups_iter_new (const cre2_regexp_t * @var{re})
+Build and return a new named capturing groups iterator.
 @end deftypefun
+
+
+@deftypefun void cre2_named_groups_iter_delete (cre2_named_groups_iter_t * @var{iter})
+Finalise and delete a named capturing groups iterator.
+@end deftypefun
+
+
+@deftypefun bool cre2_named_groups_iter_next (cre2_named_groups_iter_t * @var{iter}, const char ** @var{namep}, int * @var{indexp})
+Search the next named capturing group.
+
+When a group is found: return @ctrue{}; store in the variable referenced by @var{namep} a pointer to
+the string representing the name; store in the variable referenced by @var{indexp} an integer
+representing the index of the capturing group.
+
+When no more groups are present: return @cfalse{}; store @cnull{} in the variable referenced by
+@var{namep}; store @samp{-1} in the variable referenced by @var{indexp}.
+@end deftypefun
+
+
+As example, let's see this:
+
+@example
+cre2_regexp_t               * rex  = NULL;
+cre2_named_groups_iter_t    * iter = NULL;
+
+const char rex_pattern[] = "\
+January:[[:blank:]]+(?P<january>[[:digit:]]+)\n\
+February:[[:blank:]]+(?P<january>[[:digit:]]+)\n\
+March:[[:blank:]]+(?P<march>[[:digit:]]+)\n\
+April:[[:blank:]]+(?P<april>[[:digit:]]+)\n\
+May:[[:blank:]]+(?P<may>[[:digit:]]+)\n\
+June:[[:blank:]]+(?P<june>[[:digit:]]+)\n\
+July:[[:blank:]]+(?P<july>[[:digit:]]+)\n\
+August:[[:blank:]]+(?P<august>[[:digit:]]+)\n\
+September:[[:blank:]]+(?P<september>[[:digit:]]+)\n\
+October:[[:blank:]]+(?P<october>[[:digit:]]+)\n\
+November:[[:blank:]]+(?P<november>[[:digit:]]+)\n\
+December:[[:blank:]]+(?P<december>[[:digit:]]+)\n";
+
+const char *   text     = "\
+January: 8\n\
+February: 3\n\
+March: 3\n\
+April: 4\n\
+May: 9\n\
+June: 4\n\
+July: 7\n\
+August: 5\n\
+September: 9\n\
+October: 2\n\
+November: 1\n\
+December: 6\n";
+int            text_len = strlen(text);
+
+int            rv;
+int            nmatch = 20;
+cre2_string_t  match[nmatch];
+
+/* Let's build the regular expression. */
+rex  = cre2_new(rex_pattern, strlen(rex_pattern), NULL);
+if (!rex) @{
+  goto done;
+@}
+if (cre2_error_code(rex)) @{
+  goto done;
+@}
+
+/* Now match the pattern. */
+rv = cre2_match(rex, text, text_len, 0, text_len,
+                CRE2_ANCHOR_BOTH, match, nmatch);
+if (! rv) @{
+  goto done;
+@}
+
+/* Build the named groups iterator. */
+iter = cre2_named_groups_iter_new(rex);
+if (!iter) @{
+  goto done;
+@}
+
+/* Perform the iteration. */
+@{
+  char const *name;
+  int        index;
+
+  while (cre2_named_groups_iter_next(iter, &name, &index)) @{
+    printf("group: %d, %s\n", index, name);
+  @}
+@}
+
+/* Final cleanup. */
+done:
+if (iter) @{
+  cre2_named_groups_iter_delete(iter);
+@}
+if (rex) @{
+  cre2_delete(rex);
+@}
+@end example
+
+@noindent
+this code prints:
+
+@example
+group: 4, april
+group: 8, august
+group: 12, december
+group: 1, january
+group: 7, july
+group: 6, june
+group: 3, march
+group: 5, may
+group: 11, november
+group: 10, october
+group: 9, september
+@end example
+
+@c page
+@node regexps errors
+@section Inspecting regular expressions related errors
 
 
 @deftypefun int cre2_error_code (const cre2_regexp_t * @var{rex})

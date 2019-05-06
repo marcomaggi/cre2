@@ -2,7 +2,7 @@
   Source  file	for  CRE2, a  C	 language  wrapper  for RE2:  a	 regular
   expressions library by Google.
 
-  Copyright (c) 2012, 2016 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (c) 2012, 2016, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
   Copyright (c) 2011 Keegan McAllister
   All rights reserved.
 
@@ -193,7 +193,7 @@ cre2_find_named_capturing_groups (const cre2_regexp_t *re, const char* group_nam
 {
   const std::map<std::string, int>& m = TO_CONST_RE2(re)->NamedCapturingGroups();
   std::map<std::string, int>::const_iterator it = m.find(group_name);
-  
+
   if(it != m.end()) {
     return it->second;
   }
@@ -206,6 +206,45 @@ int
 cre2_program_size (const cre2_regexp_t *re)
 {
   return TO_CONST_RE2(re)->ProgramSize();
+}
+
+
+/** --------------------------------------------------------------------
+ ** Named capture group iteration.
+ ** ----------------------------------------------------------------- */
+
+struct cre2_named_groups_iter_t
+{
+  const RE2 * re;
+  std::map<std::string, int>::const_iterator it;
+};
+
+cre2_named_groups_iter_t *
+cre2_named_groups_iter_new(const cre2_regexp_t *re)
+{
+  cre2_named_groups_iter_t * iter = new (std::nothrow)cre2_named_groups_iter_t;
+  iter->re = TO_CONST_RE2(re);
+  iter->it = iter->re->NamedCapturingGroups().begin();
+  return iter;
+}
+bool
+cre2_named_groups_iter_next(cre2_named_groups_iter_t* iter, const char ** name, int *index)
+{
+  if (iter->it == iter->re->NamedCapturingGroups().end()) {
+    *name = NULL;
+    *index = -1;
+    return false;
+  } else {
+    *index = iter->it->second;
+    *name = iter->it->first.c_str();
+    ++iter->it;
+    return true;
+  }
+}
+void
+cre2_named_groups_iter_delete(cre2_named_groups_iter_t *iter)
+{
+  delete iter;
 }
 
 
@@ -654,17 +693,18 @@ cre2_set_add(cre2_set *set, const char *pattern, size_t pattern_len, char *error
 {
   RE2::Set *s = TO_RE2_SET(set);
   re2::StringPiece regex(pattern, static_cast<int>(pattern_len));
-  if (error == NULL || error_len <= 0) {
+  if ((NULL == error) || (0 == error_len)) {
     return s->Add(regex, NULL);
+  } else {
+    std::string err;
+    int regex_index = s->Add(regex, &err);
+    if (regex_index < 0) {
+      size_t len = err.size() < error_len - 1 ? err.size() : error_len - 1;
+      err.copy(error, len);
+      error[len] = '\0';
+    }
+    return regex_index;
   }
-  std::string err;
-  int regex_index = s->Add(regex, &err);
-  if (regex_index < 0) {
-    size_t len = err.size() < error_len - 1 ? err.size() : error_len - 1;
-    err.copy(error, len);
-    error[len] = '\0';
-  }
-  return regex_index;
 }
 
 // Add pattern without NULL byte. Don't store error message.

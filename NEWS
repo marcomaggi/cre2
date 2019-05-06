@@ -10,6 +10,18 @@ Notes for revision 0.3.6-devel.0
   data file for re2 when built with the CMake stuff.
 
 
+Notes for revision 0.4.0
+------------------------
+
+* Added iterator over names of named captured patterns.
+
+
+Notes for revision 0.3.6
+------------------------
+
+* Fixed missing inclusion of "<stdint.h>".
+
+
 Notes for revision 0.3.5
 ------------------------
 
