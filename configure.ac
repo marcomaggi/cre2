@@ -79,7 +79,17 @@ PKG_PREREQ([0.29])
 PKG_INSTALLDIR
 
 AX_PTHREAD
-MMUX_CHECK_RE2
+
+# This  defines RE2_LIBS  and  RE2_CFLAGS.  We  do  not specify  version
+# requirements  for the  "re2"  pkg-config module  because the  original
+# "re2.pc" file from Google does not specify any version number.  (Marco
+# Maggi; Apr 30, 2017)
+PKG_CHECK_MODULES([RE2],[re2])
+
+# Tested on my system: good.  Tested  on Travis CI: fails to detect re2.
+# Why it does not work?  (Marco Maggi; May 6, 2019)
+#
+# MMUX_CHECK_RE2
 
 AC_CACHE_SAVE
 
