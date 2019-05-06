@@ -134,7 +134,6 @@ main (void)
   /* ------------------------------------------------------------------ */
   /* This is an example for the documentation. */
   {
-    cre2_regexp_t		* rex  = NULL;
     cre2_named_groups_iter_t	* iter = NULL;
 
     const char rex_pattern[] = "January:[[:blank:]]+(?P<january>[[:digit:]]+)\n\
@@ -169,7 +168,7 @@ December: 6\n";
     int            nmatch = 20;
     cre2_string_t  match[nmatch];
 
-    rex  = cre2_new(rex_pattern, strlen(rex_pattern), NULL);
+    cre2_regexp_t  * rex = cre2_new(rex_pattern, strlen(rex_pattern), NULL);
     if (!rex) {
       fprintf(stderr, "error building rex\n");
       goto done;
