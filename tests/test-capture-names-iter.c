@@ -134,8 +134,6 @@ main (void)
   /* ------------------------------------------------------------------ */
   /* This is an example for the documentation. */
   {
-    cre2_named_groups_iter_t	* iter = NULL;
-
     const char rex_pattern[] = "January:[[:blank:]]+(?P<january>[[:digit:]]+)\n\
 February:[[:blank:]]+(?P<january>[[:digit:]]+)\n\
 March:[[:blank:]]+(?P<march>[[:digit:]]+)\n\
@@ -184,26 +182,31 @@ December: 6\n";
       goto done;
     }
 
-    iter = cre2_named_groups_iter_new(rex);
-    if (!iter) {
-      fprintf(stderr, "error building iterator\n");
-      goto done;
-    }
-
     {
-      char const *name;
-      int	 index;
+      cre2_named_groups_iter_t	* iter = cre2_named_groups_iter_new(rex);
 
-      while (cre2_named_groups_iter_next(iter, &name, &index)) {
-	printf("group: %d, %s\n", index, name);
+      if (!iter) {
+	fprintf(stderr, "error building iterator\n");
+	goto internal_done;
+      }
+
+      {
+	char const *name;
+	int	 index;
+
+	while (cre2_named_groups_iter_next(iter, &name, &index)) {
+	  printf("group: %d, %s\n", index, name);
+	}
+      }
+
+    internal_done:
+
+      if (iter) {
+	cre2_named_groups_iter_delete(iter);
       }
     }
 
-    done:
-
-    if (iter) {
-      cre2_named_groups_iter_delete(iter);
-    }
+  done:
     if (rex) {
       cre2_delete(rex);
     }
