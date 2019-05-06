@@ -2,7 +2,7 @@
 #
 
 AC_PREREQ([2.68])
-MMUX_PKG_VERSIONS([0],[4],[0],[devel.0])
+MMUX_PKG_VERSIONS([0],[4],[0],[devel.1])
 AC_INIT([CRE2],[MMUX_PACKAGE_VERSION],[marco.maggi-ipsu@poste.it],
   [cre2],[http://github.com/marcomaggi/cre2/])
 MMUX_INIT
