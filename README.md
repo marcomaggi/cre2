@@ -1,9 +1,8 @@
 # cre2
 
 [![Build Status](https://travis-ci.org/marcomaggi/cre2.svg?branch=master)](https://travis-ci.org/marcomaggi/cre2)
-[![Coverity passed](https://scan.coverity.com/projects/12593/badge.svg)](https://scan.coverity.com/projects/marcomaggi-cre2)
 [![codecov](https://codecov.io/gh/marcomaggi/cre2/branch/master/graph/badge.svg)](https://codecov.io/gh/marcomaggi/cre2)
-
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/2b1c485f45fc4a7da5ceb22b6e793491)](https://www.codacy.com/app/marcomaggi/cre2?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=marcomaggi/cre2&amp;utm_campaign=Badge_Grade)
 
 ## Introduction
 
@@ -12,14 +11,15 @@ is implemented in C++.  RE2 is a fast, safe, thread-friendly alternative
 to  backtracking regular  expression engines  like those  used in  PCRE,
 Perl, and Python.
 
-  This distribution makes  use of the GNU Autotools.  The  last time the
+  This  distribution  makes use  of  the  GNU  Autotools; it  relies  on
+`pkg-config`  to  find the  installed  re2  library  The last  time  the
 maintainer updated  this paragraph,  he had tested  this package  with a
 checkout of re2 on Apr 11, 2017.
 
 
 ## License
 
-Copyright (c) 2012, 2013, 2015-2017 Marco Maggi <marco.maggi-ipsu@poste.it><br/>
+Copyright (c) 2012, 2013, 2015-2017, 2019 Marco Maggi <marco.maggi-ipsu@poste.it><br/>
 Copyright (c) 2011 Keegan McAllister<br/>
 All rights reserved.
 
@@ -152,6 +152,8 @@ interface.
   Guillaume Massé  (https://github.com/MasseGuillaume) contributed fixes
 and the implementation of `cre2_find_named_capturing_groups()`.
 
+  Will    Speak    (https://github.com/iwillspeak)    contributed    the
+implementation of the named capturing groups iterator.
 
 ## Bugs, vulnerabilities and contributions
 
@@ -159,7 +161,6 @@ Bug  and vulnerability  reports are  appreciated, all  the vulnerability
 reports are public; register them at  the Issue Tracker at the project's
 Github site.  For contributions and patches please use the Pull Requests
 feature at the project's Github site.
-
 
 ## Resources
 
@@ -183,7 +184,6 @@ the GNU Project software can be found here:
 
 [http://www.gnu.org/](http://www.gnu.org/)
 
-
 ## Badges and static analysis
 
 ### Travis CI
@@ -197,19 +197,6 @@ project's dashboard at:
 Usage of this  service is configured through the  file `.travis.yml` and
 the scripts under the directory `meta/travis-ci`.
 
-
-### Coverity Scan
-
-Coverity Scan is  a service providing the results of  static analysis on
-open source coding projects.  We can find this project's dashboard at:
-
-[https://scan.coverity.com/projects/marcomaggi-cre2](https://scan.coverity.com/projects/marcomaggi-cre2)
-
-Usage of this  service is implemented with make rules;  see the relevant
-section in the file `Makefile.am`.  To access the service a unique token
-is needed: this token is private and is owned by the current maintainer.
-
-
 ### Clang's Static Analyzer
 
 The Clang Static Analyzer is a source code analysis tool that finds bugs
@@ -221,7 +208,6 @@ and we can find it at:
 Usage of this  service is implemented with make rules;  see the relevant
 section in the file `Makefile.am`.
 
-
 ### Codecov
 
 Codecov is a service providing code  coverage reports.  We can find this
@@ -232,4 +218,14 @@ project's dashboard at:
 Usage of  this service is  implemented through direct  interface between
 GitHub and Codecov  sites; it configured through  the file `codecov.yml`
 and appropriate entries in Travis CI's matrix of builds.
+
+### Codacy
+
+Codacy is  an online service  providing code  review.  We can  find this
+project's dashboard at:
+
+[https://www.codacy.com/app/marcomaggi/cre2](https://www.codacy.com/app/marcomaggi/cre2)
+
+Usage of this service is  implemented through direct integration between
+GitHub and Codacy sites.
 

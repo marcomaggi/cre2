@@ -1,17 +1,9 @@
 -*- coding: utf-8-unix -*-
 
-Notes for revision 0.3.6-devel.0
---------------------------------
-
-* Package infrastructure development.
-
-* This  release  does  *not*  use "pkg-config"  anymore  to  locate  the
-  installed re2  package: the  upstream re2 package  does not  install a
-  data file for re2 when built with the CMake stuff.
-
-
 Notes for revision 0.4.0
 ------------------------
+
+* Package infrastructure development.
 
 * Added iterator over names of named captured patterns.
 

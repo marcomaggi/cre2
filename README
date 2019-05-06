@@ -25,7 +25,8 @@ is implemented in C++.  RE2 is a fast, safe, thread-friendly alternative
 to  backtracking regular  expression engines  like those  used in  PCRE,
 Perl, and Python.
 
-  This distribution makes  use of the GNU Autotools.  The  last time the
+  This  distribution  makes use  of  the  GNU  Autotools; it  relies  on
+pkg-config  to  find the  installed  re2  library.   The last  time  the
 maintainer updated  this paragraph,  he had tested  this package  with a
 checkout of re2 on Apr 11, 2017.
 
@@ -33,7 +34,7 @@ checkout of re2 on Apr 11, 2017.
 2. License
 ----------
 
-Copyright (c) 2012, 2013, 2015, 2016, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+Copyright (c) 2012, 2013, 2015, 2016, 2017, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 Copyright (c) 2011 Keegan McAllister
 All rights reserved.
 
@@ -151,8 +152,11 @@ wrong usage of variable-length arrays.
   afiaux    (https://github.com/afiaux)   contributed    the   RE2:Set()
 interface.
 
-  Guillaume MassÃ©  (https://github.com/MasseGuillaume) contributed fixes
+  Guillaume Massé (https://github.com/MasseGuillaume) contributed fixes
 and the implementation of "cre2_find_named_capturing_groups()".
+
+  Will    Speak    (https://github.com/iwillspeak)    contributed    the
+implementation of the named capturing --> groups iterator.
 
 
 B. Bugs, vulnerabilities and contributions
