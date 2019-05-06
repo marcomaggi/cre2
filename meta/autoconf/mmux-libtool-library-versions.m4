@@ -2,7 +2,7 @@
 #
 # Set version numbers for libraries built with GNU Libtool.
 #
-#   MM_LIBTOOL_LIBRARY_VERSIONS(stem,current,revision,age)
+#   MMUX_LIBTOOL_LIBRARY_VERSIONS(stem,current,revision,age)
 #
 AC_DEFUN([MMUX_LIBTOOL_LIBRARY_VERSIONS],
   [$1_VERSION_INTERFACE_CURRENT=$2

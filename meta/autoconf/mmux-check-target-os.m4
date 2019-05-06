@@ -42,7 +42,7 @@ AC_DEFUN([MMUX_CHECK_TARGET_OS],
      [AS_VAR_SET([MMUX_ON_CYGWIN],[1])
       AC_MSG_NOTICE([detected OS: CYGWIN])],
      [*darwin*],
-     [AS_VAR_SET([MMUX_ON_CYGWIN],[1])
+     [AS_VAR_SET([MMUX_ON_DARWIN],[1])
       AC_MSG_NOTICE([detected OS: DARWIN])])
 
    AM_CONDITIONAL([ON_LINUX], [test "x$MMUX_ON_LINUX"  = x1])
