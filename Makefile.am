@@ -7,6 +7,7 @@ dist_doc_DATA		= README COPYING LICENSE.re2
 AM_CPPFLAGS		= -I$(top_srcdir)/src
 AM_CFLAGS		= $(MMUX_CFLAGS)
 AM_CXXFLAGS		= $(MMUX_CXXFLAGS)
+CLEANFILES		=
 
 AM_DISTCHECK_CONFIGURE_FLAGS	= CC="$(CC)" CXX="$(CXX)"
 
@@ -17,8 +18,11 @@ nodist_pkgconfig_DATA	= meta/scripts/cre2.pc
 
 #### documentation
 
+EXTRA_DIST		+= doc/cre2.style.css
+CLEANFILES		+= doc/cre2.css
+
 AM_MAKEINFOFLAGS	= --no-split
-AM_MAKEINFOHTMLFLAGS	= --split=node -c WORDS_IN_PAGE=0 \
+AM_MAKEINFOHTMLFLAGS	= --split=node -c WORDS_IN_PAGE=0 --css-ref=cre2.css \
 	-c PRE_BODY_CLOSE="<p>This document describes version <tt>$(PACKAGE_VERSION)</tt> of <em>$(PACKAGE_NAME)</em>.</p>"
 
 info_TEXINFOS		= doc/cre2.texi
@@ -26,6 +30,23 @@ doc_cre2_TEXINFOS	= \
 	doc/macros.texi			\
 	doc/overview-linking.texi	\
 	doc/fdl-1.3.texi
+
+## --------------------------------------------------------------------
+
+doc/cre2.html/$(am__dirstamp): doc/$(am__dirstamp)
+	@$(MKDIR_P) doc/cre2.html/
+	@: > doc/cre2.html/$(am__dirstamp)
+
+doc/cre2.html/cre2.css: doc/cre2.style.css doc/cre2.html/$(am__dirstamp)
+	$(INSTALL) -m 0444 "$(top_srcdir)/doc/cre2.style.css" "$(builddir)/doc/cre2.html/cre2.css"
+
+## --------------------------------------------------------------------
+
+html-local: doc/cre2.html/cre2.css
+
+install-html-local:
+	$(MKDIR_P) "$(DESTDIR)$(htmldir)/cre2.html/"
+	$(INSTALL) -m 0444 $(builddir)/doc/cre2.html/cre2.css "$(DESTDIR)$(htmldir)/cre2.html/"
 
 
 #### libraries

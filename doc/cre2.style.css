@@ -1,0 +1,42 @@
+/* weblog.css */
+
+body {
+    max-width: 25cm;
+    margin: 0;
+    padding: 0;
+    margin-top: 1.5em;
+    margin-left: 3em;
+    margin-right: 3em;
+    background: #E1F0C4;
+    text-align: justify;
+    font-family: Times, Helvetica, Arial, sans-serif;
+    font-size: large;
+    /* color: #909B78; */
+    color: #606B48;
+}
+
+/* code { */
+/*     font-size: large; */
+/* } */
+
+samp {
+    font-size: large;
+}
+
+/* h2 code { */
+/*     font-size: xx-large; */
+/* } */
+
+/* h3 code { */
+/*     font-size: xx-large; */
+/* } */
+
+.example {
+    font-size: large;
+}
+
+ACRONYM {
+    font-variant: small-caps;
+}
+
+/* end of file */
