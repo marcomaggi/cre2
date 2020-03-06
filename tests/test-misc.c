@@ -7,7 +7,7 @@
 
 	Test file for miscellaneous functions.
 
-  Copyright (C) 2012, 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2012, 2017 Marco Maggi <mrc.mgg@gmail.com>
 
   See the COPYING file.
 */

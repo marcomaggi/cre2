@@ -7,7 +7,7 @@
 
 	Helpers for test files.
 
-  Copyright (C) 2016 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2016 Marco Maggi <mrc.mgg@gmail.com>
 
   See the COPYING file.
 */

@@ -29,13 +29,13 @@
 
 @c To be used as @value{AUTHOR_EMAIL} whenever we need to include the
 @c email of the *single* author of this document.
-@set AUTHOR_EMAIL               @email{marco.maggi-ipsu@@poste.it}
+@set AUTHOR_EMAIL               @email{mrc.mgg@@gmail.com}
 
 @set AUTHOR_URL                 @url{http://github.com/marcomaggi}
 
 @c To be used as @value{COPYRIGHT_YEARS} whenever we need to include the
 @c list of copyright years.
-@set COPYRIGHT_YEARS            2012, 2013, 2015, 2016, 2017
+@set COPYRIGHT_YEARS            2012, 2013, 2015, 2016, 2017, 2020
 
 @c ------------------------------------------------------------
 
