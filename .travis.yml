@@ -231,6 +231,7 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
       script: |
+        export CXX=clang++
         echo CC=$CC; $CC --version;
         echo CXX=$CXX; $CXX --version;
         ./configure --enable-maintainer-mode;
@@ -242,6 +243,7 @@ matrix:
       osx_image: xcode7.3
       compiler: clang
       script: |
+        export CXX=clang++
         echo CC=$CC; $CC --version;
         echo CXX=$CXX; $CXX --version;
         ./configure --enable-maintainer-mode;
@@ -253,6 +255,7 @@ matrix:
       osx_image: xcode8.3
       compiler: clang
       script: |
+        export CXX=clang++
         echo CC=$CC; $CC --version;
         echo CXX=$CXX; $CXX --version;
         ./configure --enable-maintainer-mode;
