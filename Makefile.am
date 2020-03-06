@@ -67,74 +67,61 @@ TESTS			= $(check_PROGRAMS)
 ## --------------------------------------------------------------------
 
 cre2_common_sources			= tests/cre2-test.h
-cre2_common_cppflags			= $(AM_CPPFLAGS)
-cre2_common_cflags			= $(AM_CFLAGS) $(PTHREAD_CFLAGS) $(RE2_CFLAGS)
-cre2_common_ldadd			= $(AM_LDFLAGS) libcre2.la $(PTHREAD_LIBS) $(RE2_LIBS)
+cre2_common_cflags			= $(AM_CFLAGS)
+cre2_common_ldadd			= $(AM_LDFLAGS) libcre2.la
 
 ## --------------------------------------------------------------------
 
 tests_test_version_SOURCES		= tests/test-version.c $(cre2_common_sources)
-tests_test_version_CPPFLAGS		= $(cre2_common_cppflags)
 tests_test_version_CFLAGS		= $(cre2_common_cflags)
 tests_test_version_LDADD		= $(cre2_common_ldadd)
 
 tests_test_options_SOURCES		= tests/test-options.c $(cre2_common_sources)
-tests_test_options_CPPFLAGS		= $(cre2_common_cppflags)
 tests_test_options_CFLAGS		= $(cre2_common_cflags)
 tests_test_options_LDADD		= $(cre2_common_ldadd)
 
 tests_test_rex_alloc_SOURCES		= tests/test-rex-alloc.c $(cre2_common_sources)
-tests_test_rex_alloc_CPPFLAGS		= $(cre2_common_cppflags)
 tests_test_rex_alloc_CFLAGS		= $(cre2_common_cflags)
 tests_test_rex_alloc_LDADD		= $(cre2_common_ldadd)
 
 tests_test_matching_SOURCES		= tests/test-matching.c $(cre2_common_sources)
-tests_test_matching_CPPFLAGS		= $(cre2_common_cppflags)
 tests_test_matching_CFLAGS		= $(cre2_common_cflags)
 tests_test_matching_LDADD		= $(cre2_common_ldadd)
 
 tests_test_easy_matching_SOURCES	= tests/test-easy-matching.c $(cre2_common_sources)
-tests_test_easy_matching_CPPFLAGS	= $(cre2_common_cppflags)
 tests_test_easy_matching_CFLAGS		= $(cre2_common_cflags)
 tests_test_easy_matching_LDADD		= $(cre2_common_ldadd)
 
 tests_test_full_match_SOURCES		= tests/test-full-match.c $(cre2_common_sources)
-tests_test_full_match_CPPFLAGS		= $(cre2_common_cppflags)
 tests_test_full_match_CFLAGS		= $(cre2_common_cflags)
 tests_test_full_match_LDADD		= $(cre2_common_ldadd)
 
 tests_test_partial_match_SOURCES	= tests/test-partial-match.c $(cre2_common_sources)
-tests_test_partial_match_CPPFLAGS	= $(cre2_common_cppflags)
 tests_test_partial_match_CFLAGS		= $(cre2_common_cflags)
 tests_test_partial_match_LDADD		= $(cre2_common_ldadd)
 
 tests_test_consume_match_SOURCES	= tests/test-consume-match.c $(cre2_common_sources)
-tests_test_consume_match_CPPFLAGS	= $(cre2_common_cppflags)
 tests_test_consume_match_CFLAGS		= $(cre2_common_cflags)
 tests_test_consume_match_LDADD		= $(cre2_common_ldadd)
 
 tests_test_capture_names_iter_SOURCES	= tests/test-capture-names-iter.c $(cre2_common_sources)
-tests_test_capture_names_iter_CPPFLAGS	= $(cre2_common_cppflags)
 tests_test_capture_names_iter_CFLAGS	= $(cre2_common_cflags)
 tests_test_capture_names_iter_LDADD	= $(cre2_common_ldadd)
 
 tests_test_find_and_consume_match_SOURCES = tests/test-find-and-consume-match.c $(cre2_common_sources)
-tests_test_find_and_consume_match_CPPFLAGS= $(cre2_common_cppflags)
+
 tests_test_find_and_consume_match_CFLAGS= $(cre2_common_cflags)
 tests_test_find_and_consume_match_LDADD	= $(cre2_common_ldadd)
 
 tests_test_replace_SOURCES		= tests/test-replace.c $(cre2_common_sources)
-tests_test_replace_CPPFLAGS		= $(cre2_common_cppflags)
 tests_test_replace_CFLAGS		= $(cre2_common_cflags)
 tests_test_replace_LDADD		= $(cre2_common_ldadd)
 
 tests_test_set_SOURCES			= tests/test-set.c $(cre2_common_sources)
-tests_test_set_CPPFLAGS			= $(cre2_common_cppflags)
 tests_test_set_CFLAGS			= $(cre2_common_cflags)
 tests_test_set_LDADD			= $(cre2_common_ldadd)
 
 tests_test_misc_SOURCES			= tests/test-misc.c $(cre2_common_sources)
-tests_test_misc_CPPFLAGS		= $(cre2_common_cppflags)
 tests_test_misc_CFLAGS			= $(cre2_common_cflags)
 tests_test_misc_LDADD			= $(cre2_common_ldadd)
 
