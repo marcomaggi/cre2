@@ -2,7 +2,7 @@
 #
 
 AC_PREREQ([2.68])
-MMUX_PKG_VERSIONS([0],[4],[0],[devel.1])
+MMUX_PKG_VERSIONS([0],[4],[0],[devel.2])
 AC_INIT([CRE2],[MMUX_PACKAGE_VERSION],[marco.maggi-ipsu@poste.it],
   [cre2],[http://github.com/marcomaggi/cre2/])
 MMUX_INIT
@@ -10,7 +10,7 @@ MMUX_LIBTOOL_LIBRARY_VERSIONS([cre2],0,0,0)
 AC_REVISION([1.0])
 AC_COPYRIGHT([This license is meant to be the "BSD-3-Clause".
 
-Copyright (c) 2012, 2013, 2015, 2016, 2017, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
+Copyright (c) 2012, 2013, 2015, 2016, 2017, 2019, 2020 Marco Maggi <marco.maggi-ipsu@poste.it>
 Copyright (c) 2011 Keegan McAllister
 All rights reserved.
 
