@@ -8,6 +8,8 @@ AM_CPPFLAGS		= -I$(top_srcdir)/src
 AM_CFLAGS		= $(MMUX_CFLAGS)
 AM_CXXFLAGS		= $(MMUX_CXXFLAGS)
 
+AM_DISTCHECK_CONFIGURE_FLAGS	= CC="$(CC)" CXX="$(CXX)"
+
 ## --------------------------------------------------------------------
 
 nodist_pkgconfig_DATA	= meta/scripts/cre2.pc
