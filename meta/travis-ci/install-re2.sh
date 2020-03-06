@@ -7,10 +7,10 @@
 # run from the top directory of the build tree.
 
 PROGNAME="${0##*/}"
-VERSION=2019.1.2
+VERSION=2020-03-03
 STEM="re2-${VERSION}"
 ARCHIVE="${STEM}.tar.gz"
-SOURCE_URI="https://github.com/marcomaggi/re2/archive/v${VERSION}.tar.gz"
+SOURCE_URI="https://github.com/google/re2/archive/${VERSION}.tar.gz"
 LOCAL_ARCHIVE="/tmp/${ARCHIVE}"
 TOP_SRCDIR="/tmp/${STEM}"
 prefix=/usr/local
@@ -53,19 +53,6 @@ then script_error 'error unpacking %s' "$LOCAL_ARCHIVE"
 fi
 
 cd "$TOP_SRCDIR"
-
-script_verbose 'sh autogen.sh'
-if test "$TRAVIS_OS_NAME" = 'osx'
-then export LIBTOOLIZE=glibtoolize
-fi
-if ! sh autogen.sh
-then script_error 'error generating configuration %s' "$STEM"
-fi
-
-script_verbose './configure --prefix=/tmp/mine --enable-maintainer-mode --enable-shared --disable-static'
-if ! ./configure --prefix="$prefix" --enable-maintainer-mode --enable-shared --disable-static
-then script_error 'error configuring %s' "$STEM"
-fi
 
 script_verbose 'make -j2 all'
 if ! make -j2 all
