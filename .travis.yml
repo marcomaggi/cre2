@@ -206,6 +206,22 @@ matrix:
         make all;
         make check;
 
+    # Plain build under Ubuntu GNU+Linux "trusty", GCC 9.
+    - os: linux
+      dist: trusty
+      compiler: gcc-8
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - gcc-8
+            - g++-8
+      script: |
+        ./configure --enable-maintainer-mode CC=/usr/bin/gcc-8 CXX=/usr/bin/g++-8; cat config.log;
+        make all;
+        make check;
+
     # Plain build under Ubuntu GNU+Linux "trusty", CLang automatically selected by Travis CI.
     - os: linux
       dist: trusty
