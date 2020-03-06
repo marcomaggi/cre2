@@ -209,16 +209,16 @@ matrix:
     # Plain build under Ubuntu GNU+Linux "trusty", GCC 9.
     - os: linux
       dist: trusty
-      compiler: gcc-8
+      compiler: gcc-9
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - gcc-8
-            - g++-8
+            - gcc-9
+            - g++-9
       script: |
-        ./configure --enable-maintainer-mode CC=/usr/bin/gcc-8 CXX=/usr/bin/g++-8; cat config.log;
+        ./configure --enable-maintainer-mode CC=/usr/bin/gcc-9 CXX=/usr/bin/g++-9; cat config.log;
         make all;
         make check;
 
