@@ -4,7 +4,7 @@
 
 set -ex
 
-prefix=/usr/local
+prefix=/opt/re2/2020-11-01
 if test -d /lib64
 then libdir=${prefix}/lib64
 else libdir=${prefix}/lib

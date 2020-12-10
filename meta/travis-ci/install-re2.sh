@@ -7,7 +7,7 @@
 # run from the top directory of the build tree.
 
 PROGNAME="${0##*/}"
-VERSION=2020-03-03
+VERSION=2020-11-01
 STEM="re2-${VERSION}"
 ARCHIVE="${STEM}.tar.gz"
 SOURCE_URI="https://github.com/google/re2/archive/${VERSION}.tar.gz"
