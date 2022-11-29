@@ -216,7 +216,7 @@ cre2_program_size (const cre2_regexp_t *re)
 struct cre2_named_groups_iter_t
 {
   const RE2 * re;
-  std::map<std::string, int>::const_iterator it;
+  std::map<int, std::string>::const_iterator it;
 };
 
 cre2_named_groups_iter_t *
@@ -224,19 +224,19 @@ cre2_named_groups_iter_new(const cre2_regexp_t *re)
 {
   cre2_named_groups_iter_t * iter = new (std::nothrow)cre2_named_groups_iter_t;
   iter->re = TO_CONST_RE2(re);
-  iter->it = iter->re->NamedCapturingGroups().begin();
+  iter->it = iter->re->CapturingGroupNames().begin();
   return iter;
 }
 bool
 cre2_named_groups_iter_next(cre2_named_groups_iter_t* iter, const char ** name, int *index)
 {
-  if (iter->it == iter->re->NamedCapturingGroups().end()) {
+  if (iter->it == iter->re->CapturingGroupNames().end()) {
     *name = NULL;
     *index = -1;
     return false;
   } else {
-    *index = iter->it->second;
-    *name = iter->it->first.c_str();
+    *index = iter->it->first;
+    *name = iter->it->second.c_str();
     ++iter->it;
     return true;
   }
