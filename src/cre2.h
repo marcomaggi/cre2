@@ -330,8 +330,8 @@ cre2_decl int cre2_set_add(cre2_set *set, const char *pattern, size_t pattern_le
 cre2_decl int cre2_set_add_simple(cre2_set *set, const char *pattern);
 
 /* Compile the regex set into a DFA. Must be called after add and before match.
- * Returns 1 on success, 0 on error */
-cre2_decl int cre2_set_compile(cre2_set *set);
+ * Returns true on success, false on error */
+cre2_decl bool cre2_set_compile(cre2_set *set);
 
 /* Match the set of regex against text and store indices of matching regexes in match array.
  * Returns the number of regexes which match. */

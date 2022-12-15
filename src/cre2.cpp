@@ -718,11 +718,11 @@ cre2_set_add_simple(cre2_set *set, const char *pattern)
 
 
 // Compile the regex set into a DFA. Must be called after add and before match.
-int
+bool
 cre2_set_compile(cre2_set *set)
 {
   RE2::Set *s = TO_RE2_SET(set);
-  return static_cast<int>(s->Compile());
+  return s->Compile();
 }
 
 // Match the set of regex against text and store indices of matching regexes in match array.
