@@ -61,9 +61,11 @@ MBFLPP_COMPILE		= $(MBFLPP_ENV) $(MBFLPP) $(AM_MBFLPP_FLAGS) $(MBFL_FLAGS)
 
 RM	= /bin/rm --force --verbose
 
-.PHONY: all clean
+.PHONY: all clean script
 
-all: $(MBFL_TARGETS)
+all: pod1
+
+script: $(MBFL_TARGETS)
 
 clean:
 	$(RM) $(MBFL_TARGETS)
@@ -73,13 +75,33 @@ clean:
 
 ## ------------------------------------------------------------------------
 
-.PHONY: pod1
+.PHONY: pod1 pod1-abseil pod1-googletest
 
-pod1:
+pod1: pod1-re2 pod1-benchmark pod1-googletest pod1-abseil script
+
+pod1-abseil: script
 	bash ./build-re2.bash build abseil				\
 		--builddir=POD1						\
 		--install-prefix=/opt/re2/2024-07-02			\
-		--abseil-tarball=POD1/abseil-cpp-20240722.0.tar.gz
+		--tarball=POD1/abseil-cpp-20240722.0.tar.gz
 
+pod1-googletest: script
+	bash ./build-re2.bash build googletest				\
+		--builddir=POD1						\
+		--install-prefix=/opt/re2/2024-07-02			\
+		--tarball=POD1/googletest-1.15.2.tar.gz
+
+pod1-benchmark: script
+	true
+# bash ./build-re2.bash build benchmark				\
+# 	--builddir=POD1						\
+# 	--install-prefix=/opt/re2/2024-07-02			\
+# 	--tarball=POD1/benchmark-1.9.0.tar.gz
+
+pod1-re2: script
+	bash ./build-re2.bash build re2					\
+		--builddir=POD1						\
+		--install-prefix=/opt/re2/2024-07-02			\
+		--tarball=POD1/re2-2024-07-02.tar.gz
 
 ### end of file

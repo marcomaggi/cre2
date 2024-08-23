@@ -88,9 +88,7 @@ mbfl_location_enable_cleanup_atexit
 #                   keyword		default-value	brief-option	long-option	has-argument  description
 mbfl_declare_option BUILDDIR		''		''		builddir	witharg	      'The build directory.'
 mbfl_declare_option INSTALL_PREFIX	''		''		install-prefix	witharg	      'The install directory prefix.'
-
-mbfl_declare_option ABSEIL_TARBALL	''		''		abseil-tarball	witharg	      'Path to abseil tarball.'
-
+mbfl_declare_option TARBALL		''		''		tarball		witharg	      'Path to abseil tarball.'
 
 
 #### declaration of script actions tree
@@ -155,7 +153,7 @@ function script_before_parsing_options_BUILD_ABSEIL () {
 function script_action_BUILD_ABSEIL () {
     # Gather values from the command line options.
     declare -r ABSEIL_BUILDDIR=QQ(script_option_BUILDDIR)
-    declare -r ABSEIL_TARBALL=QQ(script_option_ABSEIL_TARBALL)
+    declare -r ABSEIL_TARBALL=QQ(script_option_TARBALL)
     declare -r ABSEIL_INSTALL_PREFIX=QQ(script_option_INSTALL_PREFIX)
 
     mbfl_declare_varref(ABSEIL_ABS_BUILDDIR)
@@ -267,9 +265,6 @@ function script_action_BUILD_ABSEIL () {
     {
 	mbfl_location_handler_change_directory QQ(ABSEIL_ABS_TOP_SRCDIR)
 
-	# Add lines to "CMakeLists.txt".
-	#printf -v ABSEIL_CONFIG_LINE 'set(CMAKE_INSTALL_PREFIX "%s")' QQ(ABSEIL_INSTALLDIR)
-
 	mbfl_message_verbose_printf 'configuring the package\n'
 	if ! program_cmake . --install-prefix QQ(ABSEIL_ABS_INSTALL_PREFIX)
 	then
@@ -339,7 +334,368 @@ function script_before_parsing_options_BUILD_GOOGLETEST () {
 \t${script_PROGNAME} build googletest"
 }
 function script_action_BUILD_GOOGLETEST () {
-    false
+    # Gather values from the command line options.
+    declare -r GOOGLETEST_BUILDDIR=QQ(script_option_BUILDDIR)
+    declare -r GOOGLETEST_TARBALL=QQ(script_option_TARBALL)
+    declare -r GOOGLETEST_INSTALL_PREFIX=QQ(script_option_INSTALL_PREFIX)
+
+    mbfl_declare_varref(GOOGLETEST_ABS_BUILDDIR)
+    mbfl_declare_varref(GOOGLETEST_ABS_INSTALL_PREFIX)
+    mbfl_declare_varref(GOOGLETEST_ABS_TARBALL)
+    mbfl_declare_varref(GOOGLETEST_TAILNAME)
+    mbfl_declare_varref(GOOGLETEST_VERSION)
+    mbfl_declare_varref(GOOGLETEST_ABS_TOP_SRCDIR)
+
+    # Validate and normalise the directory in which we unpack the archive and build the package.
+    {
+	mbfl_message_verbose_printf 'validating package build directory: "%s"\n' QQ(GOOGLETEST_BUILDDIR)
+
+	if ! mbfl_directory_is_writable QQ(GOOGLETEST_BUILDDIR) print_error
+	then exit_failure
+	fi
+	if ! mbfl_directory_is_executable QQ(GOOGLETEST_BUILDDIR) print_error
+	then exit_failure
+	fi
+	if ! mbfl_file_realpath_var _(GOOGLETEST_ABS_BUILDDIR) QQ(GOOGLETEST_BUILDDIR)
+	then
+	    mbfl_message_error_printf 'normalising package builddir: "%s"'  QQ(GOOGLETEST_BUILDDIR)
+	    exit_failure
+	fi
+
+	mbfl_message_verbose_printf 'package build directory: "%s"\n' QQ(GOOGLETEST_ABS_BUILDDIR)
+    }
+
+    # Validate and normalise the directory prefix under which we will install the package.
+    {
+	mbfl_message_verbose_printf 'validating package install prefix: "%s"\n' QQ(GOOGLETEST_INSTALL_PREFIX)
+
+	if ! mbfl_file_is_directory QQ(GOOGLETEST_INSTALL_PREFIX) print_error
+	then exit_failure
+	fi
+	if ! mbfl_file_realpath_var _(GOOGLETEST_ABS_INSTALL_PREFIX) QQ(GOOGLETEST_INSTALL_PREFIX)
+	then
+	    mbfl_message_error_printf 'normalising package install prefix: "%s"'  QQ(GOOGLETEST_INSTALL_PREFIX)
+	    exit_failure
+	fi
+
+	mbfl_message_verbose_printf 'package install prefix: "%s"\n' QQ(GOOGLETEST_INSTALL_PREFIX)
+    }
+
+    # Validate and normalise the tarball pathname.
+    {
+	mbfl_message_verbose_printf 'validating package tarball pathname: "%s"\n' QQ(GOOGLETEST_TARBALL)
+
+	if ! mbfl_file_is_readable QQ(GOOGLETEST_TARBALL) print_error
+	then exit_failure
+	fi
+	if ! mbfl_file_realpath_var _(GOOGLETEST_ABS_TARBALL) QQ(GOOGLETEST_TARBALL)
+	then
+	    mbfl_message_error_printf 'normalising package pathname: "%s"'  QQ(GOOGLETEST_TARBALL)
+	    exit_failure
+	fi
+
+	mbfl_message_verbose_printf 'package tarball pathname: "%s"\n' QQ(GOOGLETEST_ABS_TARBALL)
+    }
+
+    # Extract the version number from the tarball filename.
+    {
+	declare -r TAILNAME_REX='googletest-([0-9]+\.[0-9]+\.[0-9]+).tar.gz'
+
+	mbfl_file_tail_var _(GOOGLETEST_TAILNAME) QQ(GOOGLETEST_ABS_TARBALL)
+
+	if [[ QQ(GOOGLETEST_TAILNAME) =~ $TAILNAME_REX ]]
+	then GOOGLETEST_VERSION=mbfl_slot_ref(BASH_REMATCH, 1)
+	else
+	    mbfl_message_error_printf 'cannot extract version number from tarball tailname: "%s"'  QQ(GOOGLETEST_TAILNAME)
+	    exit_failure
+	fi
+
+	mbfl_message_verbose_printf 'package version specification: "%s"\n' QQ(GOOGLETEST_VERSION)
+    }
+
+    # Unpack the tarball in the build directory.
+    {
+	mbfl_message_verbose_printf 'unpacking the archive\n'
+	declare TAR_FLAGS='--gunzip'
+
+	if mbfl_option_verbose_program
+	then TAR_FLAGS+=' --verbose'
+	fi
+
+	if ! mbfl_tar_extract_from_file QQ(GOOGLETEST_ABS_BUILDDIR) QQ(GOOGLETEST_ABS_TARBALL) $TAR_FLAGS
+	then
+	    mbfl_message_error_printf 'unpacking googletest'
+	    exit_failure
+	fi
+    }
+
+    # After unpacking: validate the top source directory of the unpacked archive.
+    {
+	printf -v GOOGLETEST_ABS_TOP_SRCDIR '%s/googletest-%s' QQ(GOOGLETEST_ABS_BUILDDIR) QQ(GOOGLETEST_VERSION)
+	mbfl_message_verbose_printf 'validating package top source directory: "%s"\n' QQ(GOOGLETEST_ABS_TOP_SRCDIR)
+
+	if ! mbfl_directory_is_writable QQ(GOOGLETEST_ABS_TOP_SRCDIR) print_error
+	then exit_failure
+	fi
+	if ! mbfl_directory_is_executable QQ(GOOGLETEST_ABS_TOP_SRCDIR) print_error
+	then exit_failure
+	fi
+
+	mbfl_message_verbose_printf 'package top source directory: "%s"\n' QQ(GOOGLETEST_ABS_TOP_SRCDIR)
+    }
+
+    mbfl_location_enter
+    {
+	mbfl_location_handler_change_directory QQ(GOOGLETEST_ABS_TOP_SRCDIR)
+
+	mbfl_message_verbose_printf 'configuring the package\n'
+	if ! program_cmake . --install-prefix QQ(GOOGLETEST_ABS_INSTALL_PREFIX)
+	then
+	    mbfl_message_error_printf 'running cmake'
+	    exit_failure
+	fi
+
+	mbfl_message_verbose_printf 'building the package\n'
+	if ! program_make
+	then
+	    mbfl_message_error_printf 'running make'
+	    exit_failure
+	fi
+
+	mbfl_message_verbose_printf 'installing the package\n'
+	if ! (umask 0; mbfl_program_declare_sudo_user 'root'; program_make install)
+	then
+	    mbfl_message_error_printf 'running make'
+	    exit_failure
+	fi
+    }
+    mbfl_location_leave
+
+    # Remove the unpacked source directory.
+    {
+	declare GOOGLETEST_INSTALL_MANIFEST
+	mbfl_declare_varref(USERNAME)
+
+	printf -v GOOGLETEST_INSTALL_MANIFEST '%s/install_manifest.txt' QQ(GOOGLETEST_ABS_TOP_SRCDIR)
+	if mbfl_file_is_file QQ(GOOGLETEST_INSTALL_MANIFEST)
+	then
+	    if ! mbfl_system_whoami_var _(USERNAME)
+	    then
+		mbfl_message_error_printf 'cannot determine the username using "whoami"'
+		exit_failure
+	    fi
+
+	    mbfl_message_verbose_printf 'changing to "%s" owner of: "%s"\n' QQ(USERNAME) QQ(GOOGLETEST_INSTALL_MANIFEST)
+
+	    mbfl_program_declare_sudo_user 'root'
+	    if ! mbfl_exec_chown QQ(USERNAME) QQ(GOOGLETEST_INSTALL_MANIFEST)
+	    then
+		mbfl_message_error_printf 'cannot change the owner of: "%s"' QQ(GOOGLETEST_INSTALL_MANIFEST)
+		exit_failure
+	    fi
+	fi
+
+	mbfl_message_verbose_printf 'removing the source directory: "%s"\n' QQ(GOOGLETEST_ABS_TOP_SRCDIR)
+	if ! mbfl_file_remove QQ(GOOGLETEST_ABS_TOP_SRCDIR)
+	then
+	    mbfl_message_error_printf 'removing the source directory: "%s"\n' QQ(GOOGLETEST_ABS_TOP_SRCDIR)
+	    exit_failure
+	fi
+    }
+
+    mbfl_message_verbose_printf 'done\n'
+}
+
+
+#### build the prerequisite project: benchmark
+
+function script_before_parsing_options_BUILD_BENCHMARK () {
+    script_USAGE="usage: ${script_PROGNAME} build benchmark [options]"
+    script_DESCRIPTION='Build the package "benchmark".'
+    script_EXAMPLES="Usage examples:
+\n\
+\t${script_PROGNAME} build benchmark"
+}
+function script_action_BUILD_BENCHMARK () {
+    # Gather values from the command line options.
+    declare -r BENCHMARK_BUILDDIR=QQ(script_option_BUILDDIR)
+    declare -r BENCHMARK_TARBALL=QQ(script_option_TARBALL)
+    declare -r BENCHMARK_INSTALL_PREFIX=QQ(script_option_INSTALL_PREFIX)
+
+    mbfl_declare_varref(BENCHMARK_ABS_BUILDDIR)
+    mbfl_declare_varref(BENCHMARK_ABS_INSTALL_PREFIX)
+    mbfl_declare_varref(BENCHMARK_ABS_TARBALL)
+    mbfl_declare_varref(BENCHMARK_TAILNAME)
+    mbfl_declare_varref(BENCHMARK_VERSION)
+    mbfl_declare_varref(BENCHMARK_ABS_TOP_SRCDIR)
+
+    # Validate and normalise the directory in which we unpack the archive and build the package.
+    {
+	mbfl_message_verbose_printf 'validating package build directory: "%s"\n' QQ(BENCHMARK_BUILDDIR)
+
+	if ! mbfl_directory_is_writable QQ(BENCHMARK_BUILDDIR) print_error
+	then exit_failure
+	fi
+	if ! mbfl_directory_is_executable QQ(BENCHMARK_BUILDDIR) print_error
+	then exit_failure
+	fi
+	if ! mbfl_file_realpath_var _(BENCHMARK_ABS_BUILDDIR) QQ(BENCHMARK_BUILDDIR)
+	then
+	    mbfl_message_error_printf 'normalising package builddir: "%s"'  QQ(BENCHMARK_BUILDDIR)
+	    exit_failure
+	fi
+
+	mbfl_message_verbose_printf 'package build directory: "%s"\n' QQ(BENCHMARK_ABS_BUILDDIR)
+    }
+
+    # Validate and normalise the directory prefix under which we will install the package.
+    {
+	mbfl_message_verbose_printf 'validating package install prefix: "%s"\n' QQ(BENCHMARK_INSTALL_PREFIX)
+
+	if ! mbfl_file_is_directory QQ(BENCHMARK_INSTALL_PREFIX) print_error
+	then exit_failure
+	fi
+	if ! mbfl_file_realpath_var _(BENCHMARK_ABS_INSTALL_PREFIX) QQ(BENCHMARK_INSTALL_PREFIX)
+	then
+	    mbfl_message_error_printf 'normalising package install prefix: "%s"'  QQ(BENCHMARK_INSTALL_PREFIX)
+	    exit_failure
+	fi
+
+	mbfl_message_verbose_printf 'package install prefix: "%s"\n' QQ(BENCHMARK_INSTALL_PREFIX)
+    }
+
+    # Validate and normalise the tarball pathname.
+    {
+	mbfl_message_verbose_printf 'validating package tarball pathname: "%s"\n' QQ(BENCHMARK_TARBALL)
+
+	if ! mbfl_file_is_readable QQ(BENCHMARK_TARBALL) print_error
+	then exit_failure
+	fi
+	if ! mbfl_file_realpath_var _(BENCHMARK_ABS_TARBALL) QQ(BENCHMARK_TARBALL)
+	then
+	    mbfl_message_error_printf 'normalising package pathname: "%s"'  QQ(BENCHMARK_TARBALL)
+	    exit_failure
+	fi
+
+	mbfl_message_verbose_printf 'package tarball pathname: "%s"\n' QQ(BENCHMARK_ABS_TARBALL)
+    }
+
+    # Extract the version number from the tarball filename.
+    {
+	declare -r TAILNAME_REX='benchmark-([0-9]+\.[0-9]+\.[0-9]+).tar.gz'
+
+	mbfl_file_tail_var _(BENCHMARK_TAILNAME) QQ(BENCHMARK_ABS_TARBALL)
+
+	if [[ QQ(BENCHMARK_TAILNAME) =~ $TAILNAME_REX ]]
+	then BENCHMARK_VERSION=mbfl_slot_ref(BASH_REMATCH, 1)
+	else
+	    mbfl_message_error_printf 'cannot extract version number from tarball tailname: "%s"'  QQ(BENCHMARK_TAILNAME)
+	    exit_failure
+	fi
+
+	mbfl_message_verbose_printf 'package version specification: "%s"\n' QQ(BENCHMARK_VERSION)
+    }
+
+    # Unpack the tarball in the build directory.
+    {
+	mbfl_message_verbose_printf 'unpacking the archive\n'
+	declare TAR_FLAGS='--gunzip'
+
+	if mbfl_option_verbose_program
+	then TAR_FLAGS+=' --verbose'
+	fi
+
+	if ! mbfl_tar_extract_from_file QQ(BENCHMARK_ABS_BUILDDIR) QQ(BENCHMARK_ABS_TARBALL) $TAR_FLAGS
+	then
+	    mbfl_message_error_printf 'unpacking benchmark'
+	    exit_failure
+	fi
+    }
+
+    # After unpacking: validate the top source directory of the unpacked archive.
+    {
+	printf -v BENCHMARK_ABS_TOP_SRCDIR '%s/benchmark-%s' QQ(BENCHMARK_ABS_BUILDDIR) QQ(BENCHMARK_VERSION)
+	mbfl_message_verbose_printf 'validating package top source directory: "%s"\n' QQ(BENCHMARK_ABS_TOP_SRCDIR)
+
+	if ! mbfl_directory_is_writable QQ(BENCHMARK_ABS_TOP_SRCDIR) print_error
+	then exit_failure
+	fi
+	if ! mbfl_directory_is_executable QQ(BENCHMARK_ABS_TOP_SRCDIR) print_error
+	then exit_failure
+	fi
+
+	mbfl_message_verbose_printf 'package top source directory: "%s"\n' QQ(BENCHMARK_ABS_TOP_SRCDIR)
+    }
+
+    mbfl_location_enter
+    {
+	mbfl_location_handler_change_directory QQ(BENCHMARK_ABS_TOP_SRCDIR)
+
+	mbfl_message_verbose_printf 'configuring the package\n'
+
+	if ! program_cmake -E make_directory "build" --install-prefix QQ(BENCHMARK_ABS_INSTALL_PREFIX) \
+	     -DGOOGLETEST_PATH=QQ(BENCHMARK_ABS_BUILDDIR)
+	then
+	    mbfl_message_error_printf 'running cmake'
+	    exit_failure
+	fi
+
+	if ! program_cmake -DCMAKE_BUILD_TYPE=Release -S . -B "build" --install-prefix QQ(BENCHMARK_ABS_INSTALL_PREFIX) \
+	     -DGOOGLETEST_PATH=/opt/re2/2024-07-02
+	then
+	    mbfl_message_error_printf 'running cmake'
+	    exit_failure
+	fi
+
+	if ! program_cmake  --build "build" --config Release --install-prefix QQ(BENCHMARK_ABS_INSTALL_PREFIX) \
+	     -DGOOGLETEST_PATH=/opt/re2/2024-07-02
+	then
+	    mbfl_message_error_printf 'running cmake'
+	    exit_failure
+	fi
+
+	mbfl_message_verbose_printf 'installing the package\n'
+	if ! (umask 0; mbfl_program_declare_sudo_user 'root'; program_make install)
+	then
+	    mbfl_message_error_printf 'running make'
+	    exit_failure
+	fi
+    }
+    mbfl_location_leave
+
+    # Remove the unpacked source directory.
+    {
+	declare BENCHMARK_INSTALL_MANIFEST
+	mbfl_declare_varref(USERNAME)
+
+	printf -v BENCHMARK_INSTALL_MANIFEST '%s/install_manifest.txt' QQ(BENCHMARK_ABS_TOP_SRCDIR)
+	if mbfl_file_is_file QQ(BENCHMARK_INSTALL_MANIFEST)
+	then
+	    if ! mbfl_system_whoami_var _(USERNAME)
+	    then
+		mbfl_message_error_printf 'cannot determine the username using "whoami"'
+		exit_failure
+	    fi
+
+	    mbfl_message_verbose_printf 'changing to "%s" owner of: "%s"\n' QQ(USERNAME) QQ(BENCHMARK_INSTALL_MANIFEST)
+
+	    mbfl_program_declare_sudo_user 'root'
+	    if ! mbfl_exec_chown QQ(USERNAME) QQ(BENCHMARK_INSTALL_MANIFEST)
+	    then
+		mbfl_message_error_printf 'cannot change the owner of: "%s"' QQ(BENCHMARK_INSTALL_MANIFEST)
+		exit_failure
+	    fi
+	fi
+
+	mbfl_message_verbose_printf 'removing the source directory: "%s"\n' QQ(BENCHMARK_ABS_TOP_SRCDIR)
+	if ! mbfl_file_remove QQ(BENCHMARK_ABS_TOP_SRCDIR)
+	then
+	    mbfl_message_error_printf 'removing the source directory: "%s"\n' QQ(BENCHMARK_ABS_TOP_SRCDIR)
+	    exit_failure
+	fi
+    }
+
+    mbfl_message_verbose_printf 'done\n'
 }
 
 
@@ -353,98 +709,177 @@ function script_before_parsing_options_BUILD_RE2 () {
 \t${script_PROGNAME} build re2"
 }
 function script_action_BUILD_RE2 () {
-    false
+    # Gather values from the command line options.
+    declare -r RE2_BUILDDIR=QQ(script_option_BUILDDIR)
+    declare -r RE2_TARBALL=QQ(script_option_TARBALL)
+    declare -r RE2_INSTALL_PREFIX=QQ(script_option_INSTALL_PREFIX)
+
+    mbfl_declare_varref(RE2_ABS_BUILDDIR)
+    mbfl_declare_varref(RE2_ABS_INSTALL_PREFIX)
+    mbfl_declare_varref(RE2_ABS_TARBALL)
+    mbfl_declare_varref(RE2_TAILNAME)
+    mbfl_declare_varref(RE2_VERSION)
+    mbfl_declare_varref(RE2_ABS_TOP_SRCDIR)
+
+    # Validate and normalise the directory in which we unpack the archive and build the package.
+    {
+	mbfl_message_verbose_printf 'validating package build directory: "%s"\n' QQ(RE2_BUILDDIR)
+
+	if ! mbfl_directory_is_writable QQ(RE2_BUILDDIR) print_error
+	then exit_failure
+	fi
+	if ! mbfl_directory_is_executable QQ(RE2_BUILDDIR) print_error
+	then exit_failure
+	fi
+	if ! mbfl_file_realpath_var _(RE2_ABS_BUILDDIR) QQ(RE2_BUILDDIR)
+	then
+	    mbfl_message_error_printf 'normalising package builddir: "%s"'  QQ(RE2_BUILDDIR)
+	    exit_failure
+	fi
+
+	mbfl_message_verbose_printf 'package build directory: "%s"\n' QQ(RE2_ABS_BUILDDIR)
+    }
+
+    # Validate and normalise the directory prefix under which we will install the package.
+    {
+	mbfl_message_verbose_printf 'validating package install prefix: "%s"\n' QQ(RE2_INSTALL_PREFIX)
+
+	if ! mbfl_file_is_directory QQ(RE2_INSTALL_PREFIX) print_error
+	then exit_failure
+	fi
+	if ! mbfl_file_realpath_var _(RE2_ABS_INSTALL_PREFIX) QQ(RE2_INSTALL_PREFIX)
+	then
+	    mbfl_message_error_printf 'normalising package install prefix: "%s"'  QQ(RE2_INSTALL_PREFIX)
+	    exit_failure
+	fi
+
+	mbfl_message_verbose_printf 'package install prefix: "%s"\n' QQ(RE2_INSTALL_PREFIX)
+    }
+
+    # Validate and normalise the tarball pathname.
+    {
+	mbfl_message_verbose_printf 'validating package tarball pathname: "%s"\n' QQ(RE2_TARBALL)
+
+	if ! mbfl_file_is_readable QQ(RE2_TARBALL) print_error
+	then exit_failure
+	fi
+	if ! mbfl_file_realpath_var _(RE2_ABS_TARBALL) QQ(RE2_TARBALL)
+	then
+	    mbfl_message_error_printf 'normalising package pathname: "%s"'  QQ(RE2_TARBALL)
+	    exit_failure
+	fi
+
+	mbfl_message_verbose_printf 'package tarball pathname: "%s"\n' QQ(RE2_ABS_TARBALL)
+    }
+
+    # Extract the version number from the tarball filename.
+    {
+	declare -r TAILNAME_REX='re2-([0-9]+[0-9]+[0-9]+[0-9]+\-[0-9]+[0-9]+\-[0-9]+[0-9]+).tar.gz'
+
+	mbfl_file_tail_var _(RE2_TAILNAME) QQ(RE2_ABS_TARBALL)
+
+	if [[ QQ(RE2_TAILNAME) =~ $TAILNAME_REX ]]
+	then RE2_VERSION=mbfl_slot_ref(BASH_REMATCH, 1)
+	else
+	    mbfl_message_error_printf 'cannot extract version number from tarball tailname: "%s"'  QQ(RE2_TAILNAME)
+	    exit_failure
+	fi
+
+	mbfl_message_verbose_printf 'package version specification: "%s"\n' QQ(RE2_VERSION)
+    }
+
+    # Unpack the tarball in the build directory.
+    {
+	mbfl_message_verbose_printf 'unpacking the archive\n'
+	declare TAR_FLAGS='--gunzip'
+
+	if mbfl_option_verbose_program
+	then TAR_FLAGS+=' --verbose'
+	fi
+
+	if ! mbfl_tar_extract_from_file QQ(RE2_ABS_BUILDDIR) QQ(RE2_ABS_TARBALL) $TAR_FLAGS
+	then
+	    mbfl_message_error_printf 'unpacking re2'
+	    exit_failure
+	fi
+    }
+
+    # After unpacking: validate the top source directory of the unpacked archive.
+    {
+	printf -v RE2_ABS_TOP_SRCDIR '%s/re2-%s' QQ(RE2_ABS_BUILDDIR) QQ(RE2_VERSION)
+	mbfl_message_verbose_printf 'validating package top source directory: "%s"\n' QQ(RE2_ABS_TOP_SRCDIR)
+
+	if ! mbfl_directory_is_writable QQ(RE2_ABS_TOP_SRCDIR) print_error
+	then exit_failure
+	fi
+	if ! mbfl_directory_is_executable QQ(RE2_ABS_TOP_SRCDIR) print_error
+	then exit_failure
+	fi
+
+	mbfl_message_verbose_printf 'package top source directory: "%s"\n' QQ(RE2_ABS_TOP_SRCDIR)
+    }
+
+    mbfl_location_enter
+    {
+	mbfl_location_handler_change_directory QQ(RE2_ABS_TOP_SRCDIR)
+
+	mbfl_message_verbose_printf 'configuring the package\n'
+	if ! program_cmake . --install-prefix QQ(RE2_ABS_INSTALL_PREFIX)
+	then
+	    mbfl_message_error_printf 'running cmake'
+	    exit_failure
+	fi
+
+	mbfl_message_verbose_printf 'building the package\n'
+	if ! program_make
+	then
+	    mbfl_message_error_printf 'running make'
+	    exit_failure
+	fi
+
+	mbfl_message_verbose_printf 'installing the package\n'
+	if ! (umask 0; mbfl_program_declare_sudo_user 'root'; program_make install)
+	then
+	    mbfl_message_error_printf 'running make'
+	    exit_failure
+	fi
+    }
+    mbfl_location_leave
+
+    # Remove the unpacked source directory.
+    {
+	declare RE2_INSTALL_MANIFEST
+	mbfl_declare_varref(USERNAME)
+
+	printf -v RE2_INSTALL_MANIFEST '%s/install_manifest.txt' QQ(RE2_ABS_TOP_SRCDIR)
+	if mbfl_file_is_file QQ(RE2_INSTALL_MANIFEST)
+	then
+	    if ! mbfl_system_whoami_var _(USERNAME)
+	    then
+		mbfl_message_error_printf 'cannot determine the username using "whoami"'
+		exit_failure
+	    fi
+
+	    mbfl_message_verbose_printf 'changing to "%s" owner of: "%s"\n' QQ(USERNAME) QQ(RE2_INSTALL_MANIFEST)
+
+	    mbfl_program_declare_sudo_user 'root'
+	    if ! mbfl_exec_chown QQ(USERNAME) QQ(RE2_INSTALL_MANIFEST)
+	    then
+		mbfl_message_error_printf 'cannot change the owner of: "%s"' QQ(RE2_INSTALL_MANIFEST)
+		exit_failure
+	    fi
+	fi
+
+	mbfl_message_verbose_printf 'removing the source directory: "%s"\n' QQ(RE2_ABS_TOP_SRCDIR)
+	if ! mbfl_file_remove QQ(RE2_ABS_TOP_SRCDIR)
+	then
+	    mbfl_message_error_printf 'removing the source directory: "%s"\n' QQ(RE2_ABS_TOP_SRCDIR)
+	    exit_failure
+	fi
+    }
+
+    mbfl_message_verbose_printf 'done\n'
 }
-
-
-# @c ------------------------------------------------------------------------
-
-# @subsubheading Installing the prerequisite @samp{googletest}
-
-# This is a library for C++ code:
-
-# @center @url{https://github.com/abseil/abseil-cpp}
-
-# Download the latest release and unpack it:
-
-# @example
-# $ tar xvzf googletest-1.15.2.tar.gz
-# $ cd googletest-1.15.2
-# $ cmake .
-# $ make
-# @end example
-
-# @noindent
-# to install under @file{/opt/re2/2024-07-02} we must edit the file @file{cmake_install.cmake} and
-# prepend the following at the beginning:
-
-# @example
-# set(CMAKE_INSTALL_PREFIX "/opt/re2/2024-07-02")
-# @end example
-
-# @noindent
-# then:
-
-# @example
-# $ (umask 0 ; sudo make install)
-# @end example
-
-# @c ------------------------------------------------------------------------
-
-# @subsubheading Installing the prerequisite Google @samp{benchmark}
-
-# This is a library for C++ code:
-
-# @center @url{https://github.com/google/benchmark}
-
-# Download the latest release and unpack it and follow the instructions in the @file{README} file:
-
-# @example
-# $ tar xvzf benchmark-1.9.0.tar.gz
-# $ cd benchmark-1.9.0
-# $ cmake -E make_directory "build"
-# $ cmake -DCMAKE_BUILD_TYPE=Release -S . -B "build"
-# $ cmake --build "build" --config Release
-# @end example
-
-# @noindent
-# but it failed for me (Aug 22, 2024).
-
-# @c ------------------------------------------------------------------------
-
-# @subsubheading Installing the re2
-
-# Download the latest release and unpack:
-
-# @example
-# $ tar xvzf re2-2024-07-02.tar.gz
-# $ cd re2-2024-07-02
-# @end example
-
-# @noindent
-# edit the file @file{CMakeLists} and add the following at the beginning:
-
-# @example
-# set(CMAKE_MODULE_PATH "/opt/re2/2024-07-02/lib64/cmake")
-# set(CMAKE_PREFIX_PATH "/opt/re2/2024-07-02")
-# set(CMAKE_INSTALL_PREFIX "/opt/re2/2024-07-02")
-# @end example
-
-# @noindent
-# turn on building of shared libraries:
-
-# @example
-# option(BUILD_SHARED_LIBS "build shared libraries" ON)
-# @end example
-
-# @noindent
-# then:
-
-# @example
-# $ cmake .
-# $ make
-# $ (umask 0 ; sudo make install)
-# @end example
 
 
 #### script action functions: second level, action root "help"
