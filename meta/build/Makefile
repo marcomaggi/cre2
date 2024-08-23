@@ -59,9 +59,14 @@ MBFLPP_COMPILE		= $(MBFLPP_ENV) $(MBFLPP) $(AM_MBFLPP_FLAGS) $(MBFL_FLAGS)
 
 ## ------------------------------------------------------------------------
 
-.PHONY: all
+RM	= /bin/rm --force --verbose
+
+.PHONY: all clean
 
 all: $(MBFL_TARGETS)
+
+clean:
+	$(RM) $(MBFL_TARGETS)
 
 %.bash : %.bash.m4
 	$(MBFLPP_COMPILE) --output=$@ $<
