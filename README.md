@@ -8,9 +8,9 @@ to  backtracking regular  expression engines  like those  used in  PCRE,
 Perl, and Python.
 
   This  distribution  makes use  of  the  GNU  Autotools; it  relies  on
-`pkg-config`  to  find the  installed  re2  library  The last  time  the
+`pkg-config`  to find  the installed  re2  library.  The  last time  the
 maintainer updated  this paragraph,  he had tested  this package  with a
-checkout of re2 on Apr 11, 2017.
+release of RE2 2024-07-02.
 
 
 ## License
