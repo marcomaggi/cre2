@@ -10,7 +10,7 @@ MMUX_LIBTOOL_LIBRARY_VERSIONS([cre2],0,0,0)
 AC_REVISION([1.0])
 AC_COPYRIGHT([This license is meant to be the "BSD-3-Clause".
 
-Copyright (c) 2012, 2013, 2015, 2016, 2017, 2019, 2020 Marco Maggi <mrc.mgg@gmail.com>
+Copyright (c) 2012, 2013, 2015, 2016, 2017, 2019, 2020, 2024 Marco Maggi <mrc.mgg@gmail.com>
 Copyright (c) 2011 Keegan McAllister
 All rights reserved.
 
@@ -80,16 +80,8 @@ PKG_INSTALLDIR
 
 AX_PTHREAD
 
-# This  defines RE2_LIBS  and  RE2_CFLAGS.  We  do  not specify  version
-# requirements  for the  "re2"  pkg-config module  because the  original
-# "re2.pc" file from Google does not specify any version number.  (Marco
-# Maggi; Apr 30, 2017)
+# This defines RE2_LIBS and RE2_CFLAGS.
 PKG_CHECK_MODULES([RE2],[re2])
-
-# Tested on my system: good.  Tested  on Travis CI: fails to detect re2.
-# Why it does not work?  (Marco Maggi; May 6, 2019)
-#
-# MMUX_CHECK_RE2
 
 AC_CACHE_SAVE
 

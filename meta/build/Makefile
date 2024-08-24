@@ -5,48 +5,16 @@
 #    $ make MBFLPP_FLAGS="..."
 #
 
-# The directory in which all the tarballs are located.
-PACKAGES_ARCHIVES_DIR	= ~/var/build/lib/
+RM	= /bin/rm --force --verbose
 
-# The directory under which all the tarballs will be unpacked and built.
-PACKAGES_ROOT_BUILDDIR	= ~/var/build/lib/
+.PHONY: all clean
 
-# The installation prefix of all the packages.
-PACKAGES_INSTALL_PREFIX	= /opt/re2/
+all: pod1
 
-## ------------------------------------------------------------------------
+clean: clean-script
 
-ABSEIL_VERSION			?= 20240722.0
-ABSEIL_STEM			?= abseil-cpp
-ABSEIL_TARBALL_FILENAME		?= $(ABSEIL_STEM)-$(ABSEIL_VERSION).tar.gz
-ABSEIL_TARBALL_ABSNAME		?= $(PACKAGES_ARCHIVES_DIR)/$(ABSEIL_TARBALL_FILENAME)
-ABSEIL_TOP_SRCDIR		?= $(PACKAGES_ROOT_BUILDDIR)/$(ABSEIL_STEM)-$(ABSEIL_VERSION)
-
-## ------------------------------------------------------------------------
-
-GOOGLETEST_VERSION		= 1.15.2
-GOOGLETEST_STEM			= googletest
-GOOGLETEST_TARBALL_FILENAME	= $(GOOGLETEST_STEM)-$(GOOGLETEST_VERSION).tar.gz
-GOOGLETEST_TARBALL_ABSNAME	= $(PACKAGES_ARCHIVES_DIR)/$(GOOGLETEST_TARBALL_FILENAME)
-GOOGLETEST_TOP_SRCDIR		= $(PACKAGES_ROOT_BUILDDIR)/$(GOOGLETEST_STEM)-$(GOOGLETEST_VERSION)
-
-## ------------------------------------------------------------------------
-
-BENCHMARK_VERSION		= 1.9.0
-BENCHMARK_STEM			= benchmark
-BENCHMARK_TARBALL_FILENAME	= $(BENCHMARK_STEM)-$(BENCHMARK_VERSION).tar.gz
-BENCHMARK_TARBALL_ABSNAME	= $(PACKAGES_ARCHIVES_DIR)/$(BENCHMARK_TARBALL_FILENAME)
-BENCHMARK_TOP_SRCDIR		= $(PACKAGES_ROOT_BUILDDIR)/$(BENCHMARK_STEM)-$(BENCHMARK_VERSION)
-
-## ------------------------------------------------------------------------
-
-RE2_VERSION			= 2024-07-02
-RE2_STEM			= re2
-RE2_TARBALL_FILENAME		= $(RE2_STEM)-$(RE2_VERSION).tar.gz
-RE2_TARBALL_ABSNAME		= $(PACKAGES_ARCHIVES_DIR)/$(RE2_TARBALL_FILENAME)
-RE2_TOP_SRCDIR			= $(PACKAGES_ROOT_BUILDDIR)/$(RE2_STEM)-$(RE2_VERSION)
-
-## ------------------------------------------------------------------------
+
+#### script
 
 MBFL_TARGETS		= build-re2.bash
 MBFL_SOURCES		= build-re2.bash.m4
@@ -57,52 +25,55 @@ MBFLPP_ENV		=
 AM_MBFLPP_FLAGS		= --add-bash --define=__LIBMBFL_LINKER__=$(MBFL_LINKER_LIBRARY)
 MBFLPP_COMPILE		= $(MBFLPP_ENV) $(MBFLPP) $(AM_MBFLPP_FLAGS) $(MBFL_FLAGS)
 
-## ------------------------------------------------------------------------
-
-RM	= /bin/rm --force --verbose
-
-.PHONY: all clean script
-
-all: pod1
+.PHONY: script clean-script
 
 script: $(MBFL_TARGETS)
 
-clean:
+clean-script:
 	$(RM) $(MBFL_TARGETS)
 
 %.bash : %.bash.m4
 	$(MBFLPP_COMPILE) --output=$@ $<
 
-## ------------------------------------------------------------------------
+
+#### stuff for POD1
 
-.PHONY: pod1 pod1-abseil pod1-googletest
+POD1_PACKAGE_ABSEIL	= abseil-cpp-20240722.0.tar.gz
+POD1_PACKAGE_GOOGLETEST	= googletest-1.15.2.tar.gz
+POD1_PACKAGE_RE2	= re2-2024-07-02.tar.gz
+
+POD1_INSTALLDIR		= /opt/re2/2024-07-02
+POD1_SHARED_INSTALLDIR	= $(POD1_INSTALLDIR)/shared
+POD1_STATIC_INSTALLDIR	= $(POD1_INSTALLDIR)/static
+
+.PHONY: pod1
+.PHONY: pod1-shared pod1-shared-abseil pod1-shared-googletest pod1-shared-re2
+.PHONY: pod1-static pod1-static-abseil pod1-static-googletest pod1-static-re2
+
+pod1: pod1-shared pod1-static
 
 # Watch out for the order of the prerequisites: it is left-to-right!
-pod1: script pod1-abseil pod1-googletest pod1-benchmark pod1-re2
+pod1-shared: script pod1-shared-abseil pod1-shared-googletest pod1-shared-re2
+pod1-static: script pod1-static-abseil pod1-static-googletest pod1-static-re2
 
-pod1-abseil: script
+## ------------------------------------------------------------------------
+
+pod1-shared-abseil: script
 	bash ./build-re2.bash build abseil				\
 		--builddir=POD1						\
-		--install-prefix=/opt/re2/2024-07-02			\
-		--tarball=POD1/abseil-cpp-20240722.0.tar.gz
+		--install-prefix=$(POD1_SHARED_INSTALLDIR)		\
+		--tarball=./POD1/$(POD1_PACKAGE_ABSEIL)
 
-pod1-googletest: script
+pod1-shared-googletest: script
 	bash ./build-re2.bash build googletest				\
 		--builddir=POD1						\
-		--install-prefix=/opt/re2/2024-07-02			\
-		--tarball=POD1/googletest-1.15.2.tar.gz
+		--install-prefix=$(POD1_SHARED_INSTALLDIR)		\
+		--tarball=./POD1/$(POD1_PACKAGE_GOOGLETEST)
 
-pod1-benchmark: script
-	true
-# bash ./build-re2.bash build benchmark				\
-# 	--builddir=POD1						\
-# 	--install-prefix=/opt/re2/2024-07-02			\
-# 	--tarball=POD1/benchmark-1.9.0.tar.gz
-
-pod1-re2: script
+pod1-shared-re2: script pod1-shared-abseil pod1-shared-googletest
 	bash ./build-re2.bash build re2					\
 		--builddir=POD1						\
-		--install-prefix=/opt/re2/2024-07-02			\
-		--tarball=POD1/re2-2024-07-02.tar.gz
+		--install-prefix=$(POD1_SHARED_INSTALLDIR)		\
+		--tarball=./POD1/$(POD1_PACKAGE_RE2)
 
 ### end of file

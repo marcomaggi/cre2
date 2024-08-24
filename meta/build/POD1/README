@@ -1,0 +1,16 @@
+-*- coding: utf-8-unix -*-
+
+This is  the README file  for the directory  "$top_srcdir/meta/POD1"; in
+this directory we should put the following tarballs:
+
+    abseil-cpp-20240722.0.tar.gz
+    googletest-1.15.2.tar.gz
+    re2-2024-07-02.tar.gz
+
+### end of file
+# Local Variables:
+# mode: text
+# fill-column: 72
+# paragraph-start: "*"
+# ispell-local-dictionary: "en_GB-ise-w_accents"
+# End:

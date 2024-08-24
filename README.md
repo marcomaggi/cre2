@@ -1,9 +1,5 @@
 # cre2
 
-[![Build Status](https://travis-ci.org/marcomaggi/cre2.svg?branch=master)](https://travis-ci.org/marcomaggi/cre2)
-[![codecov](https://codecov.io/gh/marcomaggi/cre2/branch/master/graph/badge.svg)](https://codecov.io/gh/marcomaggi/cre2)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/2b1c485f45fc4a7da5ceb22b6e793491)](https://www.codacy.com/app/marcomaggi/cre2?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=marcomaggi/cre2&amp;utm_campaign=Badge_Grade)
-
 ## Introduction
 
 The CRE2 distribution is a C language wrapper for the RE2 library, which
@@ -19,7 +15,7 @@ checkout of re2 on Apr 11, 2017.
 
 ## License
 
-Copyright (c) 2012, 2013, 2015-2017, 2019 Marco Maggi <marco.maggi-ipsu@poste.it><br/>
+Copyright (c) 2012, 2013, 2015-2017, 2019, 2024 Marco Maggi <mrc.mgg@gmail.com><br/>
 Copyright (c) 2011 Keegan McAllister<br/>
 All rights reserved.
 
@@ -162,6 +158,69 @@ reports are public; register them at  the Issue Tracker at the project's
 Github site.  For contributions and patches please use the Pull Requests
 feature at the project's Github site.
 
+## Installing re2 and its dependencies
+
+This may be a challenge, depending on how much of a cmake connoisseur we
+are.
+
+In general, we have to remember that:  if we install both the shared and
+the static libraries:  when compiling with common  command line options,
+the static libraries will take precedence.   This package is meant to be
+used  with  shared  libraries,  but  it should  work  fine  with  static
+libraries, too.
+
+Let's suppose  we want to install  all the packages under  the directory
+"/opt/re2/2024-07-02"; on  a Unix system,  we will  need to put  in some
+profile configuration file something like:
+
+```
+RE2_PREFIX=/opt/re2/2024-07-02
+RE2_LIBDIR=${RE2_PREFIX}/lib64
+export LD_LIBRARY_PATH=${RE2_LIBDIR}:$LD_LIBRARY_PATH
+export PKG_CONFIG_PATH=${RE2_LIBDIR}/pkgconfig:$PKG_CONFIG_PATH
+```
+
+as a first attempt: no other search path should be upgraded, let's leave
+to the packages to find include files and everything else.
+
+When  configuring,  building  and installing  the  prerequisite  package
+`abseil` we should follow the instructions  in its README file; but here
+is a hint to configure the package to build shared libraries:
+
+```
+$ cmake .  \
+    --install-prefix "$RE2_PREFIX"      \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo   \
+    -DCMAKE_CXX_FLAGS:STRING="-fPIC"    \
+    -DCMAKE_CXX_STANDARD=17             \
+    -DBUILD_SHARED_LIBS=ON              \
+    -DCMAKE_BUILD_TYPE=Release          \
+    -DABSL_PROPAGATE_CXX_STD=ON
+```
+
+When  configuring,  building  and installing  the  prerequisite  package
+`googletest` we should  follow the instructions in its  README file; but
+here is a hint to configure the package to build shared libraries:
+
+```
+$ cmake .  \
+    --install-prefix "$RE2_PREFIX"      \
+    -DBUILD_SHARED_LIBS=ON              \
+    -DCMAKE_CXX_FLAGS:STRING="-fPIC"
+```
+
+  When configuring, building and installing  the package `re2` itself we
+should follow the instructions in its README file; but here is a hint to
+configure the package to build shared libraries:
+
+```
+$ cmake .  \
+    --install-prefix "$RE2_PREFIX"      \
+    -DBUILD_SHARED_LIBS=ON              \
+    -DCMAKE_CXX_FLAGS:STRING="-fPIC"    \
+    -DCMAKE_BUILD_TYPE=Release
+```
+
 ## Resources
 
 The latest release of this package can be downloaded from:
@@ -183,49 +242,4 @@ the documentation is available online:
 the GNU Project software can be found here:
 
 [http://www.gnu.org/](http://www.gnu.org/)
-
-## Badges and static analysis
-
-### Travis CI
-
-Travis CI is  a hosted, distributed continuous  integration service used
-to build and test software projects  hosted at GitHub.  We can find this
-project's dashboard at:
-
-[https://travis-ci.org/marcomaggi/cre2](https://travis-ci.org/marcomaggi/cre2)
-
-Usage of this  service is configured through the  file `.travis.yml` and
-the scripts under the directory `meta/travis-ci`.
-
-### Clang's Static Analyzer
-
-The Clang Static Analyzer is a source code analysis tool that finds bugs
-in C, C++, and Objective-C programs.  It is distributed along with Clang
-and we can find it at:
-
-[http://clang-analyzer.llvm.org/](http://clang-analyzer.llvm.org/)
-
-Usage of this  service is implemented with make rules;  see the relevant
-section in the file `Makefile.am`.
-
-### Codecov
-
-Codecov is a service providing code  coverage reports.  We can find this
-project's dashboard at:
-
-[https://codecov.io/gh/marcomaggi/cre2](https://codecov.io/gh/marcomaggi/cre2)
-
-Usage of  this service is  implemented through direct  interface between
-GitHub and Codecov  sites; it configured through  the file `codecov.yml`
-and appropriate entries in Travis CI's matrix of builds.
-
-### Codacy
-
-Codacy is  an online service  providing code  review.  We can  find this
-project's dashboard at:
-
-[https://www.codacy.com/app/marcomaggi/cre2](https://www.codacy.com/app/marcomaggi/cre2)
-
-Usage of this service is  implemented through direct integration between
-GitHub and Codacy sites.
 

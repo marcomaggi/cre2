@@ -1,4 +1,4 @@
--*- utf-8-unix -*-
+-*- coding: utf-8-unix -*-
 
 			   C wrapper for re2
 			   =================
@@ -14,7 +14,7 @@ Topics
   A. Credits
   B. Bugs, vulnerabilities and contributions
   C. Resources
-  D. Badges and static analysis
+  D. Installing re2 and its dependencies
 
 
 1. Introduction
@@ -34,7 +34,7 @@ checkout of re2 on Apr 11, 2017.
 2. License
 ----------
 
-Copyright (c) 2012, 2013, 2015, 2016, 2017, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
+Copyright (c) 2012, 2013, 2015, 2016, 2017, 2019, 2024 Marco Maggi <mrc.mgg@gmail.com>
 Copyright (c) 2011 Keegan McAllister
 All rights reserved.
 
@@ -152,7 +152,7 @@ wrong usage of variable-length arrays.
   afiaux    (https://github.com/afiaux)   contributed    the   RE2:Set()
 interface.
 
-  Guillaume Massé (https://github.com/MasseGuillaume) contributed fixes
+  Guillaume MassÃ© (https://github.com/MasseGuillaume) contributed fixes
 and the implementation of "cre2_find_named_capturing_groups()".
 
   Will    Speak    (https://github.com/iwillspeak)    contributed    the
@@ -203,60 +203,61 @@ the GNU Project software can be found here:
 			 <http://www.gnu.org/>
 
 
-D. Badges and static analysis
------------------------------
+D. Installing re2 and its dependencies
+--------------------------------------
 
-D.1 Travis CI
--------------
+This may be a challenge, depending on how much of a cmake connoisseur we
+are.
 
-Travis CI is  a hosted, distributed continuous  integration service used
-to build and test software projects  hosted at GitHub.  We can find this
-project's dashboard at:
+  In general,  we have to remember  that: if we install  both the shared
+and  the  static libraries:  when  compiling  with common  command  line
+options, the  static libraries  will take  precedence.  This  package is
+meant to  be used with  shared libraries, but  it should work  fine with
+static libraries, too.
 
-		<https://travis-ci.org/marcomaggi/cre2>
+  Let's suppose we want to install  all the packages under the directory
+"/opt/re2/2024-07-02"; on  a Unix system,  we will  need to put  in some
+profile configuration file something like:
 
-  Usage of this service is configured through the file ".travis.yml" and
-the scripts under the directory "meta/travis-ci".
+    RE2_PREFIX=/opt/re2/2024-07-02
+    RE2_LIBDIR=${RE2_PREFIX}/lib64
+    export LD_LIBRARY_PATH=${RE2_LIBDIR}:$LD_LIBRARY_PATH
+    export PKG_CONFIG_PATH=${RE2_LIBDIR}/pkgconfig:$PKG_CONFIG_PATH
 
+as a first attempt: no other search path should be upgraded, let's leave
+to the packages to find include files and everything else.
 
-D.2 Coverity Scan
------------------
+  When  configuring, building  and installing  the prerequisite  package
+"abseil" we should follow the instructions  in its README file; but here
+is a hint to configure the package to build shared libraries:
 
-Coverity Scan is  a service providing the results of  static analysis on
-open source coding projects.  We can find this project's dashboard at:
+    $ cmake .						\
+	--install-prefix "$RE2_PREFIX"			\
+	-DCMAKE_BUILD_TYPE=RelWithDebInfo		\
+	-DCMAKE_CXX_FLAGS:STRING="-fPIC"		\
+	-DCMAKE_CXX_STANDARD=17				\
+	-DBUILD_SHARED_LIBS=ON				\
+	-DCMAKE_BUILD_TYPE=Release			\
+	-DABSL_PROPAGATE_CXX_STD=ON
 
-	  <https://scan.coverity.com/projects/marcomaggi-cre2>
+  When  configuring, building  and installing  the prerequisite  package
+"googletest" we should  follow the instructions in its  README file; but
+here is a hint to configure the package to build shared libraries:
 
-  Usage of this service is implemented with make rules; see the relevant
-section in the file "Makefile.am".  To access the service a unique token
-is needed: this token is private and is owned by the current maintainer.
+    $ cmake .						\
+        --install-prefix "$RE2_PREFIX"			\
+        -DBUILD_SHARED_LIBS=ON				\
+        -DCMAKE_CXX_FLAGS:STRING="-fPIC"
 
+  When configuring, building and installing  the package "re2" itself we
+should follow the instructions in its README file; but here is a hint to
+configure the package to build shared libraries:
 
-D.3 Clang's Static Analyzer
----------------------------
-
-The Clang Static Analyzer is a source code analysis tool that finds bugs
-in C, C++, and Objective-C programs.  It is distributed along with Clang
-and we can find it at:
-
-		   <http://clang-analyzer.llvm.org/>
-
-  Usage of this service is implemented with make rules; see the relevant
-section in the file "Makefile.am".
-
-
-D.4 Codecov
------------
-
-Codecov is a service providing code  coverage reports.  We can find this
-project's dashboard at:
-
-		<https://codecov.io/gh/marcomaggi/cre2>
-
-Usage of  this service is  implemented through direct  interface between
-GitHub and Codecov  sites; it configured through  the file `codecov.yml`
-and appropriate entries in Travis CI's matrix of builds.
-
+    $ cmake .						\
+	--install-prefix "$RE2_PREFIX"			\
+	-DBUILD_SHARED_LIBS=ON				\
+	-DCMAKE_CXX_FLAGS:STRING="-fPIC"		\
+	-DCMAKE_BUILD_TYPE=Release
 
 ### end of file
 # Local Variables:

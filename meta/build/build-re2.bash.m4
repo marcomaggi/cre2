@@ -459,7 +459,10 @@ function script_action_BUILD_GOOGLETEST () {
 	mbfl_location_handler_change_directory QQ(GOOGLETEST_ABS_TOP_SRCDIR)
 
 	mbfl_message_verbose_printf 'configuring the package\n'
-	if ! program_cmake . --install-prefix QQ(GOOGLETEST_ABS_INSTALL_PREFIX)
+	if ! program_cmake .						\
+	     --install-prefix QQ(GOOGLETEST_ABS_INSTALL_PREFIX)		\
+	     -DBUILD_SHARED_LIBS=ON					\
+	     -DCMAKE_CXX_FLAGS:STRING="-fPIC -DNDEBUG"
 	then
 	    mbfl_message_error_printf 'running cmake'
 	    exit_failure
@@ -643,14 +646,14 @@ function script_action_BUILD_BENCHMARK () {
 
 	mbfl_message_verbose_printf 'configuring the package\n'
 
-	if ! program_cmake -E make_directory "build" --install-prefix QQ(BENCHMARK_ABS_INSTALL_PREFIX) \
+	if ! program_cmake -E make_directory "build" \
 	     -DGOOGLETEST_PATH=QQ(BENCHMARK_ABS_BUILDDIR)
 	then
 	    mbfl_message_error_printf 'running cmake'
 	    exit_failure
 	fi
 
-	if ! program_cmake -DCMAKE_BUILD_TYPE=Release -S . -B "build" --install-prefix QQ(BENCHMARK_ABS_INSTALL_PREFIX) \
+	if ! program_cmake -DCMAKE_BUILD_TYPE=Release -S . -B "build" \
 	     -DGOOGLETEST_PATH=/opt/re2/2024-07-02
 	then
 	    mbfl_message_error_printf 'running cmake'
@@ -658,7 +661,7 @@ function script_action_BUILD_BENCHMARK () {
 	fi
 
 	if ! program_cmake  --build "build" --config Release --install-prefix QQ(BENCHMARK_ABS_INSTALL_PREFIX) \
-	     -DGOOGLETEST_PATH=/opt/re2/2024-07-02
+	     -DGOOGLETEST_PATH=/opt/re2/2024-07-02/shared
 	then
 	    mbfl_message_error_printf 'running cmake'
 	    exit_failure
@@ -834,8 +837,10 @@ function script_action_BUILD_RE2 () {
 	mbfl_location_handler_change_directory QQ(RE2_ABS_TOP_SRCDIR)
 
 	mbfl_message_verbose_printf 'configuring the package\n'
-	if ! program_cmake . --install-prefix QQ(RE2_ABS_INSTALL_PREFIX) \
-	     -DBUILD_SHARED_LIBS=ON
+	if ! program_cmake .					\
+	     --install-prefix QQ(RE2_ABS_INSTALL_PREFIX)	\
+	     -DBUILD_SHARED_LIBS=ON				\
+	     -DCMAKE_CXX_FLAGS:STRING="-fPIC -DNDEBUG"
 	then
 	    mbfl_message_error_printf 'running cmake'
 	    exit_failure

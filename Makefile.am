@@ -9,15 +9,6 @@ AM_CFLAGS		= $(MMUX_CFLAGS)
 AM_CXXFLAGS		= $(MMUX_CXXFLAGS)
 CLEANFILES		=
 
-# We are linking the C++ library "libre2" with a C library "libcre2",
-# so we need to link the C++ Standard Library; Libtool does not know
-# this, because we are linking by calling "gcc" rather than "g++", so
-# we have to add linker options explicitly.
-#
-# (Aug 24, 2024: Marco Maggi)
-#
-AM_LDFLAGS		= -lstdc++
-
 AM_DISTCHECK_CONFIGURE_FLAGS	= CC="$(CC)" CXX="$(CXX)"
 
 ## --------------------------------------------------------------------
@@ -94,11 +85,32 @@ check_PROGRAMS		= \
 
 TESTS			= $(check_PROGRAMS)
 
+# We can set TESTS_ENVIRONMENT from the command line of make; the
+# following is package specific.
+#
+# Remember that if the shared library "libre2" is used: it must be
+# reachable by the linker when running the test files.  To do this we
+# may have to export a correct value of LD_LIBRARY_PATH.
+#
+#AM_TESTS_ENVIRONMENT	=
+
 ## --------------------------------------------------------------------
 
 cre2_common_sources			= tests/cre2-test.h
 cre2_common_cflags			= $(AM_CFLAGS)
 cre2_common_ldadd			= $(AM_LDFLAGS) libcre2.la
+
+# We are linking the C++ library "libre2" with a C library "libcre2",
+# so we need to link the C++ Standard Library; Libtool does not know
+# this, because we are linking by calling "gcc" rather than "g++", so
+# we have to add linker options explicitly.
+#
+# (Aug 24, 2024: Marco Maggi)
+#
+
+# if ENABLE_STATIC
+# cre2_common_ldadd			+= -lstdc++
+# endif
 
 ## --------------------------------------------------------------------
 
