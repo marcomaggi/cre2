@@ -77,7 +77,8 @@ clean:
 
 .PHONY: pod1 pod1-abseil pod1-googletest
 
-pod1: pod1-re2 pod1-benchmark pod1-googletest pod1-abseil script
+# Watch out for the order of the prerequisites: it is left-to-right!
+pod1: script pod1-abseil pod1-googletest pod1-benchmark pod1-re2
 
 pod1-abseil: script
 	bash ./build-re2.bash build abseil				\

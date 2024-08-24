@@ -261,12 +261,22 @@ function script_action_BUILD_ABSEIL () {
 	mbfl_message_verbose_printf 'package top source directory: "%s"\n' QQ(ABSEIL_ABS_TOP_SRCDIR)
     }
 
+    # Configure, build and install the package.
     mbfl_location_enter
     {
 	mbfl_location_handler_change_directory QQ(ABSEIL_ABS_TOP_SRCDIR)
-
 	mbfl_message_verbose_printf 'configuring the package\n'
-	if ! program_cmake . --install-prefix QQ(ABSEIL_ABS_INSTALL_PREFIX)
+
+	# I could not compile this correctly, so I  stole the cmake flags from the SlackBuilds build
+	# script.  (Aug 24, 2024; Marco Maggi)
+	#
+	# Adding "-DABSL_PROPAGATE_CXX_STD=ON" is  suggested by the package  configuration itself in
+	# version 20240722.0, so I did it.  (Aug 24, 2024; Marco Maggi)
+	#
+	if ! program_cmake . --install-prefix QQ(ABSEIL_ABS_INSTALL_PREFIX) \
+	     -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_FLAGS:STRING="-fPIC -DNDEBUG" \
+	     -DCMAKE_CXX_STANDARD=17 -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release \
+	     -DABSL_PROPAGATE_CXX_STD=ON
 	then
 	    mbfl_message_error_printf 'running cmake'
 	    exit_failure
@@ -824,7 +834,8 @@ function script_action_BUILD_RE2 () {
 	mbfl_location_handler_change_directory QQ(RE2_ABS_TOP_SRCDIR)
 
 	mbfl_message_verbose_printf 'configuring the package\n'
-	if ! program_cmake . --install-prefix QQ(RE2_ABS_INSTALL_PREFIX)
+	if ! program_cmake . --install-prefix QQ(RE2_ABS_INSTALL_PREFIX) \
+	     -DBUILD_SHARED_LIBS=ON
 	then
 	    mbfl_message_error_printf 'running cmake'
 	    exit_failure
