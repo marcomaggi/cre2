@@ -9,6 +9,15 @@ AM_CFLAGS		= $(MMUX_CFLAGS)
 AM_CXXFLAGS		= $(MMUX_CXXFLAGS)
 CLEANFILES		=
 
+# We are linking the C++ library "libre2" with a C library "libcre2",
+# so we need to link the C++ Standard Library; Libtool does not know
+# this, because we are linking by calling "gcc" rather than "g++", so
+# we have to add linker options explicitly.
+#
+# (Aug 24, 2024: Marco Maggi)
+#
+AM_LDFLAGS		= -lstdc++
+
 AM_DISTCHECK_CONFIGURE_FLAGS	= CC="$(CC)" CXX="$(CXX)"
 
 ## --------------------------------------------------------------------
