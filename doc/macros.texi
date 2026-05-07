@@ -63,7 +63,7 @@
 @acronym{API}
 @end macro
 
-@macro ascii{}
+@macro mmuxascii{}
 @acronym{ASCII}
 @end macro
 

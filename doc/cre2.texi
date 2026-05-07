@@ -35,7 +35,7 @@
 
 @c To be used as @value{COPYRIGHT_YEARS} whenever we need to include the
 @c list of copyright years.
-@set COPYRIGHT_YEARS            2012, 2013, 2015, 2016, 2017, 2020
+@set COPYRIGHT_YEARS            2012, 2013, 2015, 2016, 2017, 2020, 2024
 
 @c ------------------------------------------------------------
 
@@ -62,10 +62,9 @@
 @c ------------------------------------------------------------
 
 @copying
-This document describes version @value{VERSION} of @value{PACKAGE}, a C
-language wrapper for the C++ library RE2: a fast, safe, thread--friendly
-alternative to backtracking regular expression engines like those used
-in PCRE, Perl, and Python.
+This document describes version @value{VERSION} of @value{PACKAGE}, a C language wrapper for the C++
+library RE2: a fast, safe, thread--friendly alternative to backtracking regular expression engines
+like those used in PCRE, Perl, and Python.
 
 The latest release can be downloaded from:
 
@@ -85,17 +84,15 @@ and as backup at:
 Copyright @copyright{} @value{COPYRIGHT_YEARS} by @value{AUTHOR} @value{AUTHOR_URL}@*
 Copyright @copyright{} 2011 by Keegan McAllister @url{http://github.com/kmcallister/}
 
-Portions of this document come from the source code of RE2 itself, see
-the file @file{LICENSE.re2} for the license notice.
+Portions of this document come from the source code of RE2 itself, see the file @file{LICENSE.re2}
+for the license notice.
 
 @quotation
-Permission is granted to copy, distribute and/or modify this document
-under the terms of the @gnu{} Free Documentation License, Version 1.3 or
-any later version published by the Free Software Foundation; with
-Invariant Sections being ``@gnu{} Free Documentation License'' and
-``@gnu{} General Public License'', no Front--Cover Texts, and no
-Back--Cover Texts.  A copy of the license is included in the section
-entitled ``@gnu{} Free Documentation License''.
+Permission is granted to copy, distribute and/or modify this document under the terms of the @gnu{}
+Free Documentation License, Version 1.3 or any later version published by the Free Software
+Foundation; with Invariant Sections being ``@gnu{} Free Documentation License'' and ``@gnu{} General
+Public License'', no Front--Cover Texts, and no Back--Cover Texts.  A copy of the license is
+included in the section entitled ``@gnu{} Free Documentation License''.
 @end quotation
 @end copying
 
@@ -301,12 +298,10 @@ if (opt) @{
 
 @menu
 * regexps typedefs::            Type definitions for regular expressions.
-* regexps ctors::               Regular expression constructors
-                                and destructors.
+* regexps ctors::               Regular expression constructors and destructors.
 * regexps inspection::          Inspecting regular expressions.
 * regexps groups::              Inspecting named capturing groups.
-* regexps errors::              Inspecting regular expressions related
-                                errors.
+* regexps errors::              Inspecting regular expressions related errors.
 @end menu
 
 @c page
