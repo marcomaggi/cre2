@@ -11,8 +11,8 @@ then libdir=${prefix}/lib64
 else libdir=${prefix}/lib
 fi
 
-CC='/usr/bin/gcc'
-CXX='/usr/bin/g++'
+#CC='/usr/bin/gcc'
+#CXX='/usr/bin/g++'
 
 ../configure \
     --config-cache				\
