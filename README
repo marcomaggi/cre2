@@ -34,7 +34,7 @@ release of RE2 2024-07-02.
 2. License
 ----------
 
-Copyright (c) 2012, 2013, 2015, 2016, 2017, 2019, 2024 Marco Maggi <mrc.mgg@gmail.com>
+Copyright (c) 2012, 2013, 2015, 2016, 2017, 2019, 2024, 2026 Marco Maggi <mrc.mgg@gmail.com>
 Copyright (c) 2011 Keegan McAllister
 All rights reserved.
 
@@ -175,24 +175,9 @@ RE2 is available at:
 
 		    <https://github.com/google/re2>
 
-and  there  exists  a  repackaging   under  the  GNU  Autotools  in  the
-repository:
-
-		  <http://github.com/marcomaggi/re2/>
-
-in the branch "autotools.marcomaggi-2016-02-15".
-
-The latest release of this package can be downloaded from:
-
-	   <https://bitbucket.org/marcomaggi/cre2/downloads>
-
-development takes place at:
+Development of CRE2 takes place at:
 
 		  <http://github.com/marcomaggi/cre2/>
-
-and as backup at:
-
-		<https://bitbucket.org/marcomaggi/cre2/>
 
 the documentation is available online:
 

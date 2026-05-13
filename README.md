@@ -15,7 +15,7 @@ release of RE2 2024-07-02.
 
 ## License
 
-Copyright (c) 2012, 2013, 2015-2017, 2019, 2024 Marco Maggi <mrc.mgg@gmail.com><br/>
+Copyright (c) 2012, 2013, 2015-2017, 2019, 2024, 2026 Marco Maggi <mrc.mgg@gmail.com><br/>
 Copyright (c) 2011 Keegan McAllister<br/>
 All rights reserved.
 
@@ -223,17 +223,9 @@ $ cmake .  \
 
 ## Resources
 
-The latest release of this package can be downloaded from:
-
-[https://bitbucket.org/marcomaggi/cre2/downloads](https://bitbucket.org/marcomaggi/cre2/downloads)
-
-development takes place at:
+Development takes place at:
 
 [http://github.com/marcomaggi/cre2/](http://github.com/marcomaggi/cre2/)
-
-and as backup at:
-
-[https://bitbucket.org/marcomaggi/cre2/](https://bitbucket.org/marcomaggi/cre2/)
 
 the documentation is available online:
 
